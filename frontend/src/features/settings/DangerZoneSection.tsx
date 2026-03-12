@@ -2,6 +2,8 @@ import { useState, useCallback } from 'react';
 import { ConfirmDialog } from '../../shared/components/ConfirmDialog';
 import { deactivateAccount } from './settings.service';
 import { useAuth } from '../auth/useAuth';
+import { AlertMessage } from '../../shared/components/AlertMessage';
+import { Button } from '../../shared/components/Button';
 import './DangerZoneSection.css';
 
 export function DangerZoneSection() {
@@ -41,22 +43,19 @@ export function DangerZoneSection() {
       </p>
 
       {deactivateError && (
-        <div className="danger-zone-error">{deactivateError}</div>
+        <AlertMessage variant="error">{deactivateError}</AlertMessage>
       )}
 
-      <button
-        className="danger-zone-button"
-        onClick={handleOpenConfirm}
-      >
+      <Button variant="danger" onClick={handleOpenConfirm}>
         Deactivate Account
-      </button>
+      </Button>
 
       {isConfirmOpen && (
         <ConfirmDialog
           title="Deactivate Account"
           message="Are you sure you want to deactivate your account? Your skills will no longer be visible."
           confirmLabel="Deactivate"
-          isDangerous={true}
+          isDangerous
           onConfirm={handleDeactivate}
           onCancel={handleCloseConfirm}
         />

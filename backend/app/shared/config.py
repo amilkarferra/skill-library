@@ -32,6 +32,7 @@ if _key_vault_url:
 
 
 class Settings(BaseSettings):
+    environment: str = "development"
     key_vault_url: str | None = None
     database_url: str
     jwt_secret: str

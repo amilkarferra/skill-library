@@ -1,14 +1,17 @@
 import { useCallback } from 'react';
 import { Check, X, User, HardDrive, Upload } from 'lucide-react';
+import { Button } from '../../shared/components/Button';
 import { formatFileSize } from '../../shared/formatters/format-file-size';
 import { formatDate } from '../../shared/formatters/format-date';
 import type { SkillVersion } from '../../shared/models/SkillVersion';
 import './ProposedVersionRow.css';
 
+type ReviewAction = 'approve' | 'reject';
+
 interface ProposedVersionRowProps {
-  version: SkillVersion;
-  skillSlug: string;
-  onReview: (slug: string, version: string, action: 'approve' | 'reject') => void;
+  readonly version: SkillVersion;
+  readonly skillSlug: string;
+  readonly onReview: (slug: string, version: string, action: ReviewAction) => void;
 }
 
 export function ProposedVersionRow({
@@ -50,20 +53,14 @@ export function ProposedVersionRow({
         </div>
       </div>
       <div className="proposed-version-actions">
-        <button
-          className="proposed-version-btn proposed-version-btn--approve"
-          onClick={handleApprove}
-        >
+        <Button variant="success" size="small" onClick={handleApprove}>
           <Check size={13} />
           Approve
-        </button>
-        <button
-          className="proposed-version-btn proposed-version-btn--reject"
-          onClick={handleReject}
-        >
+        </Button>
+        <Button variant="danger-outline" size="small" onClick={handleReject}>
           <X size={13} />
           Reject
-        </button>
+        </Button>
       </div>
     </div>
   );

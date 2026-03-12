@@ -87,44 +87,6 @@
   margin-left: 16px;
 }
 
-.request-row-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 5px 10px;
-  font-size: 12px;
-  font-weight: 500;
-  border: 1px solid var(--border-main);
-  background: var(--bg-container);
-  transition: all 0.12s;
-}
-
-.request-row-btn--accept {
-  color: var(--accent-secondary);
-  border-color: var(--accent-secondary);
-}
-
-.request-row-btn--accept:hover {
-  background: var(--success-bg);
-}
-
-.request-row-btn--reject {
-  color: var(--danger);
-  border-color: var(--danger-border);
-}
-
-.request-row-btn--reject:hover {
-  background: var(--danger-hover-bg);
-}
-
-.request-row-btn--cancel {
-  color: var(--text-muted);
-}
-
-.request-row-btn--cancel:hover {
-  color: var(--danger);
-  border-color: var(--danger-border);
-}
 
 .request-row-pending-label {
   display: inline-flex;

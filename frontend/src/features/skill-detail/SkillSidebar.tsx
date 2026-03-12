@@ -7,6 +7,7 @@ import {
   Users,
 } from 'lucide-react';
 import { fetchSkillVersionDownloadUrl } from './skill-detail.service';
+import { Button } from '../../shared/components/Button';
 import { TagList } from '../../shared/components/TagList';
 import { CollabModeBadge } from '../../shared/components/CollabModeBadge';
 import type { Skill } from '../../shared/models/Skill';
@@ -51,13 +52,10 @@ export function SkillSidebar({
   return (
     <aside className="skill-sidebar">
       {hasCurrentVersion && (
-        <button
-          className="skill-sidebar-download"
-          onClick={handleDownload}
-        >
+        <Button variant="download" size="large" isFullWidth onClick={handleDownload}>
           <Download size={16} />
           Download v{skill.currentVersion}
-        </button>
+        </Button>
       )}
 
       {isAuthenticated && (
@@ -133,14 +131,15 @@ export function SkillSidebar({
       </div>
 
       {canRequestCollab && isOpenCollab && (
-        <button
-          className="skill-sidebar-collab-request"
+        <Button
+          variant="secondary"
+          isFullWidth
           onClick={onRequestCollaboration}
           disabled={isCollabRequesting}
         >
           <Users size={14} />
           Request Collaboration
-        </button>
+        </Button>
       )}
     </aside>
   );

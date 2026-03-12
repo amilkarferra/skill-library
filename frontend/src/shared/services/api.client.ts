@@ -16,7 +16,13 @@ async function refreshAppJwtViaMsal(): Promise<boolean> {
   const hasNoRefresher = refresher === null;
   if (hasNoRefresher) return false;
 
-  const freshAzureAdToken = await refresher();
+  let freshAzureAdToken: string | null = null;
+  try {
+    freshAzureAdToken = await refresher();
+  } catch {
+    clearAppJwt();
+    return false;
+  }
   const hasNoFreshToken = !freshAzureAdToken;
   if (hasNoFreshToken) return false;
 

@@ -1,55 +1,40 @@
 .publish-skill-page {
-  max-width: 640px;
+  max-width: 900px;
   margin: 0 auto;
-}
-
-.publish-skill-card {
-  background: var(--bg-container);
-  border: 1px solid var(--border-main);
-  padding: 32px;
-  box-shadow: var(--shadow-soft);
-}
-
-.publish-skill-header {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 24px;
+  padding: 32px 24px;
 }
 
 .publish-skill-badge {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 1px solid var(--border-accent);
-  flex-shrink: 0;
-}
-
-.publish-skill-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.publish-skill-kicker {
+  display: inline-block;
+  padding: 2px 8px;
   font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.8px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
   text-transform: uppercase;
+  background: var(--accent-bg);
   color: var(--accent);
+  border: 1px solid var(--border-accent);
+  margin-bottom: 8px;
 }
 
 .publish-skill-title {
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 17px;
+  font-weight: 700;
   color: var(--text-primary);
+  margin-bottom: 4px;
 }
 
 .publish-skill-subtitle {
   font-size: 12px;
-  line-height: 1.5;
   color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.publish-state-enter {
+  animation: publishFadeSlideIn 0.4s ease-out both;
+}
+
+@keyframes publishFadeSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }

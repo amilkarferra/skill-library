@@ -1,6 +1,10 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useAuthStore } from '../../shared/stores/useAuthStore';
 import { updateProfile } from './settings.service';
+import { AlertMessage } from '../../shared/components/AlertMessage';
+import { FormField } from '../../shared/components/FormField';
+import { TextInput } from '../../shared/components/TextInput';
+import { Button } from '../../shared/components/Button';
 import './ProfileSection.css';
 
 export function ProfileSection() {
@@ -49,35 +53,24 @@ export function ProfileSection() {
       <h3 className="profile-section-title">Profile</h3>
       <form className="profile-form" onSubmit={handleSubmit}>
         {submitError && (
-          <div className="profile-form-error">{submitError}</div>
+          <AlertMessage variant="error">{submitError}</AlertMessage>
         )}
         {successMessage && (
-          <div className="profile-form-success">{successMessage}</div>
+          <AlertMessage variant="success">{successMessage}</AlertMessage>
         )}
-        <div className="profile-form-field">
-          <label
-            className="profile-form-label label-uppercase"
-            htmlFor="profileDisplayName"
-          >
-            DISPLAY NAME
-          </label>
-          <input
+        <FormField label="DISPLAY NAME" htmlFor="profileDisplayName">
+          <TextInput
             id="profileDisplayName"
-            type="text"
-            className="profile-form-input"
             value={displayName}
             onChange={handleDisplayNameChange}
             required
+            maxWidth="360px"
           />
-        </div>
+        </FormField>
         <div className="profile-form-actions">
-          <button
-            type="submit"
-            className="profile-form-submit"
-            disabled={isSubmitting}
-          >
+          <Button variant="primary" type="submit" disabled={isSubmitting}>
             {isSubmitting ? 'Saving...' : 'Save Changes'}
-          </button>
+          </Button>
         </div>
       </form>
     </div>

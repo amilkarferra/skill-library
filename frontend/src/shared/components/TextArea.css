@@ -1,0 +1,30 @@
+.text-area {
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text-primary);
+  background: var(--bg-container);
+  border: 1px solid var(--border-main);
+  outline: none;
+  resize: vertical;
+  line-height: 1.5;
+  transition: border-color 0.15s;
+}
+
+.text-area:focus {
+  border-color: var(--accent);
+}
+
+.text-area::placeholder {
+  color: var(--text-muted);
+}
+
+.text-area--tall {
+  min-height: 160px;
+}
+
+.text-area-counter {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: right;
+}

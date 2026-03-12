@@ -2,6 +2,7 @@ import { get, upload } from '../../shared/services/api.client';
 import type { Skill } from '../../shared/models/Skill';
 import type { SkillVersion } from '../../shared/models/SkillVersion';
 import type { Category } from '../../shared/models/Category';
+import type { Tag } from '../../shared/models/Tag';
 import type { FrontmatterResponse } from '../../shared/models/FrontmatterResponse';
 
 export function createSkill(formData: FormData): Promise<Skill> {
@@ -23,4 +24,8 @@ export function uploadNewVersion(
 
 export function fetchCategories(): Promise<Category[]> {
   return get<Category[]>('/categories');
+}
+
+export function fetchPopularTags(): Promise<Tag[]> {
+  return get<Tag[]>('/tags/popular');
 }

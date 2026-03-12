@@ -2,16 +2,17 @@ import { useState, useCallback } from 'react';
 import { Pencil, Trash2 } from 'lucide-react';
 import { formatDateTime } from '../../shared/formatters/format-date';
 import type { Comment } from '../../shared/models/Comment';
+import { Button } from '../../shared/components/Button';
 import './CommentItem.css';
 
 const MAX_COMMENT_EDIT_LENGTH = 2100;
 
 interface CommentItemProps {
-  comment: Comment;
-  canModify: boolean;
-  isUpdating: boolean;
-  onEdit: (commentId: number, commentText: string) => void;
-  onDelete: (commentId: number) => void;
+  readonly comment: Comment;
+  readonly canModify: boolean;
+  readonly isUpdating: boolean;
+  readonly onEdit: (commentId: number, commentText: string) => void;
+  readonly onDelete: (commentId: number) => void;
 }
 
 export function CommentItem({
@@ -56,7 +57,7 @@ export function CommentItem({
     []
   );
 
-  const wasEdited = comment.updatedAt !== comment.createdAt;
+  const hasBeenEdited = comment.updatedAt !== comment.createdAt;
 
   return (
     <div className="comment-item">
@@ -71,7 +72,7 @@ export function CommentItem({
         </div>
         <span className="comment-item-date">
           {formatDateTime(comment.createdAt)}
-          {wasEdited && ' (edited)'}
+          {hasBeenEdited && ' (edited)'}
         </span>
       </div>
 
@@ -84,19 +85,12 @@ export function CommentItem({
             maxLength={MAX_COMMENT_EDIT_LENGTH}
           />
           <div className="comment-item-edit-actions">
-            <button
-              className="comment-item-edit-save"
-              disabled={isSaveDisabled}
-              onClick={handleSaveEdit}
-            >
+            <Button variant="primary" size="small" disabled={isSaveDisabled} onClick={handleSaveEdit}>
               Save
-            </button>
-            <button
-              className="comment-item-edit-cancel"
-              onClick={handleCancelEdit}
-            >
+            </Button>
+            <Button variant="secondary" size="small" onClick={handleCancelEdit}>
               Cancel
-            </button>
+            </Button>
           </div>
         </>
       ) : (

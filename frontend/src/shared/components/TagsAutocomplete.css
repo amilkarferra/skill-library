@@ -1,0 +1,98 @@
+.tags-autocomplete-container {
+  border: 1px solid var(--border-main);
+  padding: 6px 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  min-height: 36px;
+  background: var(--bg-container);
+  transition: border-color 0.15s;
+  position: relative;
+}
+
+.tags-autocomplete-container--focused {
+  border-color: var(--accent);
+}
+
+.tags-autocomplete-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  background: var(--tag-bg);
+  color: var(--tag-color);
+  border: 1px solid var(--border-accent);
+}
+
+.tags-autocomplete-chip-remove {
+  cursor: pointer;
+  font-size: 10px;
+  opacity: 0.6;
+  border: none;
+  background: none;
+  color: inherit;
+  padding: 0;
+  line-height: 1;
+}
+
+.tags-autocomplete-chip-remove:hover {
+  opacity: 1;
+}
+
+.tags-autocomplete-input {
+  border: none;
+  outline: none;
+  font-size: 12px;
+  font-family: inherit;
+  color: var(--text-primary);
+  flex: 1;
+  min-width: 80px;
+  padding: 2px 4px;
+  background: transparent;
+}
+
+.tags-autocomplete-input:disabled {
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+.tags-autocomplete-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  border: 1px solid var(--border-main);
+  border-top: none;
+  background: var(--bg-container);
+  max-height: 160px;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.tags-autocomplete-suggestion {
+  padding: 6px 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.tags-autocomplete-suggestion:hover {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.tags-autocomplete-counter {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: right;
+  margin-top: 2px;
+  margin-left: auto;
+}
+
+.tags-autocomplete-wrapper {
+  position: relative;
+}

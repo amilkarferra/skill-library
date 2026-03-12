@@ -1,13 +1,16 @@
 import { useCallback } from 'react';
 import { Check, X, Clock, Users, GitPullRequest } from 'lucide-react';
+import { Button } from '../../shared/components/Button';
 import { formatDate } from '../../shared/formatters/format-date';
 import type { CollaborationRequest } from '../../shared/models/CollaborationRequest';
 import './RequestRow.css';
 
+type RequestAction = 'accept' | 'reject' | 'cancel';
+
 interface RequestRowProps {
-  request: CollaborationRequest;
-  isIncoming: boolean;
-  onAction: (requestId: number, action: 'accept' | 'reject' | 'cancel') => void;
+  readonly request: CollaborationRequest;
+  readonly isIncoming: boolean;
+  readonly onAction: (requestId: number, action: RequestAction) => void;
 }
 
 export function RequestRow({
@@ -21,7 +24,7 @@ export function RequestRow({
     : 'request-row request-row--sent';
   const requestLabel = buildRequestLabel(request.direction, isIncoming);
   const requestText = buildRequestText(request, isIncoming);
-  const RequestIcon = buildRequestIcon(request.direction);
+  const isInvitation = request.direction === 'invitation';
   const iconClassName = buildRequestIconClassName(isIncoming);
 
   const handleAccept = useCallback(() => {
@@ -39,7 +42,7 @@ export function RequestRow({
   return (
     <div className={rowClass}>
       <div className={iconClassName}>
-        <RequestIcon size={14} />
+        {isInvitation ? <Users size={14} /> : <GitPullRequest size={14} />}
       </div>
       <div className="request-row-info">
         <span className="request-row-type">{requestLabel}</span>
@@ -52,14 +55,14 @@ export function RequestRow({
       <div className="request-row-actions">
         {isPending && isIncoming && (
           <>
-            <button className="request-row-btn request-row-btn--accept" onClick={handleAccept}>
+            <Button variant="success" size="small" onClick={handleAccept}>
               <Check size={13} />
               Accept
-            </button>
-            <button className="request-row-btn request-row-btn--reject" onClick={handleReject}>
+            </Button>
+            <Button variant="danger-outline" size="small" onClick={handleReject}>
               <X size={13} />
               Reject
-            </button>
+            </Button>
           </>
         )}
         {isPending && !isIncoming && (
@@ -68,10 +71,10 @@ export function RequestRow({
               <Clock size={12} />
               Pending
             </span>
-            <button className="request-row-btn request-row-btn--cancel" onClick={handleCancel}>
+            <Button variant="secondary" size="small" onClick={handleCancel}>
               <X size={13} />
               Cancel
-            </button>
+            </Button>
           </>
         )}
         {!isPending && (
@@ -112,15 +115,8 @@ function buildRequestText(
   return `You requested collaboration on ${request.skillDisplayName}`;
 }
 
-function buildRequestIcon(direction: CollaborationRequest['direction']) {
-  if (direction === 'invitation') {
-    return Users;
-  }
-
-  return GitPullRequest;
-}
-
 function buildRequestIconClassName(isIncoming: boolean): string {
   const baseClassName = 'request-row-icon';
-  return isIncoming ? `${baseClassName} ${baseClassName}--incoming` : `${baseClassName} ${baseClassName}--sent`;
+  const modifier = isIncoming ? 'incoming' : 'sent';
+  return `${baseClassName} ${baseClassName}--${modifier}`;
 }

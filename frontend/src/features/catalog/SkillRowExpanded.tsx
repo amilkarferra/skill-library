@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, Download, Upload, Heart, MessageSquare, User, Box } from 'lucide-react';
+import { Button } from '../../shared/components/Button';
 import { CollabModeBadge } from '../../shared/components/CollabModeBadge';
 import { TagList } from '../../shared/components/TagList';
 import { fetchSkillVersionDownloadUrl } from '../skill-detail/skill-detail.service';
@@ -96,38 +97,26 @@ export function SkillRowExpanded({ skill }: SkillRowExpandedProps) {
       )}
       <div className="skill-row-expanded-actions">
         {hasCurrentVersion && (
-          <button
-            className="skill-row-expanded-btn skill-row-expanded-btn--primary"
-            onClick={handleDownload}
-          >
+          <Button variant="primary" size="small" onClick={handleDownload}>
             <Download size={14} />
             Download
-          </button>
+          </Button>
         )}
         {canCreateVersion && (
-          <button
-            className="skill-row-expanded-btn skill-row-expanded-btn--secondary"
-            onClick={handleCreateVersion}
-          >
+          <Button variant="download" size="small" onClick={handleCreateVersion}>
             <Upload size={14} />
             New version
-          </button>
+          </Button>
         )}
-        <button
-          className="skill-row-expanded-btn"
-          onClick={handleViewDetails}
-        >
+        <Button variant="secondary" size="small" onClick={handleViewDetails}>
           <Eye size={14} />
           View detail
-        </button>
+        </Button>
         {shouldShowReviewLink && (
-          <button
-            className="skill-row-expanded-btn"
-            onClick={handleOpenReviewPanel}
-          >
+          <Button variant="secondary" size="small" onClick={handleOpenReviewPanel}>
             <Upload size={14} />
             Review proposals
-          </button>
+          </Button>
         )}
       </div>
     </div>

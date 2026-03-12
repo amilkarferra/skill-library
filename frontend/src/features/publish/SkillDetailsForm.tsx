@@ -1,0 +1,348 @@
+import type { FormEvent } from 'react';
+import { useState, useCallback, useMemo } from 'react';
+import type { Category } from '../../shared/models/Category';
+import type { Tag } from '../../shared/models/Tag';
+import { createSkill } from './publish.service';
+import { FileBar } from './FileBar';
+import { CatalogPreviewCard } from './CatalogPreviewCard';
+import { CategoryChips } from '../../shared/components/CategoryChips';
+import { TagsAutocomplete } from '../../shared/components/TagsAutocomplete';
+import { MarkdownEditor } from '../../shared/components/MarkdownEditor';
+import { AlertMessage } from '../../shared/components/AlertMessage';
+import { Button } from '../../shared/components/Button';
+import { ApiError } from '../../shared/services/api.client';
+import './SkillDetailsForm.css';
+
+interface ExtractionResult {
+  readonly name: string;
+  readonly description: string;
+  readonly isFailed: boolean;
+}
+
+interface SkillDetailsFormProps {
+  readonly file: File;
+  readonly extraction: ExtractionResult;
+  readonly categories: readonly Category[];
+  readonly availableTags: readonly Tag[];
+  readonly onChangeFile: (file: File) => void;
+  readonly onSubmitSuccess: (skillSlug: string) => void;
+}
+
+const MAX_DISPLAY_NAME = 150;
+const MAX_SHORT_DESCRIPTION = 600;
+const MAX_TAGS = 10;
+
+export function SkillDetailsForm({
+  file,
+  extraction,
+  categories,
+  availableTags,
+  onChangeFile,
+  onSubmitSuccess,
+}: SkillDetailsFormProps) {
+  const [displayName, setDisplayName] = useState(extraction.name);
+  const [shortDescription, setShortDescription] = useState(extraction.description);
+  const [longDescription, setLongDescription] = useState('');
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [collaborationMode, setCollaborationMode] = useState<'closed' | 'open'>('closed');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [slugError, setSlugError] = useState<string | null>(null);
+  const [isDisplayNameExtracted, setIsDisplayNameExtracted] = useState(
+    extraction.name.length > 0
+  );
+  const [isShortDescriptionExtracted, setIsShortDescExtracted] = useState(
+    extraction.description.length > 0
+  );
+
+  const categoryName = useMemo(() => {
+    const matchesSelectedId = (category: Category): boolean =>
+      category.id === selectedCategoryId;
+    const category = categories.find(matchesSelectedId);
+    return category?.name ?? '';
+  }, [selectedCategoryId, categories]);
+
+  const handleDisplayNameChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const truncatedValue = event.target.value.slice(0, MAX_DISPLAY_NAME);
+      setDisplayName(truncatedValue);
+      setIsDisplayNameExtracted(false);
+      setSlugError(null);
+    }, []
+  );
+
+  const handleShortDescriptionChange = useCallback(
+    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const truncatedValue = event.target.value.slice(0, MAX_SHORT_DESCRIPTION);
+      setShortDescription(truncatedValue);
+      setIsShortDescExtracted(false);
+    }, []
+  );
+
+  const handleLongDescriptionChange = useCallback((newValue: string) => {
+    setLongDescription(newValue);
+  }, []);
+
+  const handleCategorySelect = useCallback((categoryId: number) => {
+    setSelectedCategoryId(categoryId);
+  }, []);
+
+  const handleTagsChange = useCallback((tags: string[]) => {
+    setSelectedTags(tags);
+  }, []);
+
+  const handleCollaborationModeClosedChange = useCallback(() => {
+    setCollaborationMode('closed');
+  }, []);
+
+  const handleCollaborationModeOpenChange = useCallback(() => {
+    setCollaborationMode('open');
+  }, []);
+
+  const handleSubmit = useCallback(
+    async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      setIsSubmitting(true);
+      setSubmitError(null);
+      setSlugError(null);
+
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('displayName', displayName);
+        formData.append('shortDescription', shortDescription);
+        formData.append('longDescription', longDescription);
+        formData.append('categoryId', String(selectedCategoryId));
+        formData.append('tags', JSON.stringify(selectedTags));
+        formData.append('collaborationMode', collaborationMode);
+
+        const skill = await createSkill(formData);
+        onSubmitSuccess(skill.name);
+      } catch (error) {
+        handlePublishError(error, setSlugError, setSubmitError);
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [file, displayName, shortDescription, longDescription, selectedCategoryId,
+      selectedTags, collaborationMode, onSubmitSuccess]
+  );
+
+  const hasMissingCategory = selectedCategoryId === null;
+  const isSubmitDisabled = isSubmitting || hasMissingCategory;
+  const buttonText = isSubmitting ? 'Publishing...' : 'Publish skill';
+  const isDisplayNameFieldExtracted = isDisplayNameExtracted && displayName.length > 0;
+  const isShortDescriptionFieldExtracted = isShortDescriptionExtracted && shortDescription.length > 0;
+  const displayNameFieldClass = buildFieldClassName(isDisplayNameFieldExtracted);
+  const shortDescriptionFieldClass = buildFieldClassName(isShortDescriptionFieldExtracted);
+  const hasSubmitError = submitError !== null;
+  const hasSlugError = slugError !== null;
+  const isCollaborationClosed = collaborationMode === 'closed';
+  const isCollaborationOpen = collaborationMode === 'open';
+
+  return (
+    <form className="skill-details-form" onSubmit={handleSubmit}>
+      {extraction.isFailed && (
+        <AlertMessage variant="warning">
+          Could not extract metadata from file. Please fill in the details manually.
+        </AlertMessage>
+      )}
+
+      {hasSubmitError && (
+        <AlertMessage variant="error">
+          {submitError}
+        </AlertMessage>
+      )}
+
+      <FileBar
+        fileName={file.name}
+        fileSize={file.size}
+        onChangeFile={onChangeFile}
+      />
+
+      <CatalogPreviewCard
+        displayName={displayName}
+        shortDescription={shortDescription}
+        tags={selectedTags}
+        categoryName={categoryName}
+      />
+
+      <div className="skill-details-divider" />
+
+      <label className="skill-details-section-label">Skill details</label>
+
+      <div className={displayNameFieldClass}>
+        <div className="skill-details-field-wrapper">
+          <label htmlFor="skill-display-name" className="skill-details-label">
+            Display name
+            <span className="skill-details-required">*</span>
+          </label>
+          <input
+            id="skill-display-name"
+            type="text"
+            className="skill-details-input"
+            value={displayName}
+            onChange={handleDisplayNameChange}
+            maxLength={MAX_DISPLAY_NAME}
+            required
+          />
+          {isDisplayNameFieldExtracted && (
+            <div className="skill-details-extracted-badge">Extracted</div>
+          )}
+        </div>
+        <div className="skill-details-char-count">
+          {displayName.length} / {MAX_DISPLAY_NAME}
+        </div>
+        {hasSlugError && (
+          <div className="skill-details-slug-error">
+            {slugError}
+          </div>
+        )}
+      </div>
+
+      <div className={shortDescriptionFieldClass}>
+        <div className="skill-details-field-wrapper">
+          <label htmlFor="skill-short-description" className="skill-details-label">
+            Short description
+            <span className="skill-details-required">*</span>
+          </label>
+          <textarea
+            id="skill-short-description"
+            className="skill-details-input"
+            rows={2}
+            value={shortDescription}
+            onChange={handleShortDescriptionChange}
+            maxLength={MAX_SHORT_DESCRIPTION}
+            required
+          />
+          {isShortDescriptionFieldExtracted && (
+            <div className="skill-details-extracted-badge">Extracted</div>
+          )}
+        </div>
+        <div className="skill-details-char-count">
+          {shortDescription.length} / {MAX_SHORT_DESCRIPTION}
+        </div>
+      </div>
+
+      <div className="skill-details-two-cols">
+        <div className="skill-details-field">
+          <label className="skill-details-label">
+            Category
+            <span className="skill-details-required">*</span>
+          </label>
+          <CategoryChips
+            categories={categories}
+            selectedCategoryId={selectedCategoryId}
+            onSelectCategory={handleCategorySelect}
+          />
+        </div>
+
+        <div className="skill-details-field">
+          <label className="skill-details-label">
+            Tags
+            <span className="skill-details-optional">(optional)</span>
+          </label>
+          <TagsAutocomplete
+            selectedTags={selectedTags}
+            onTagsChange={handleTagsChange}
+            availableTags={availableTags}
+            maxTags={MAX_TAGS}
+          />
+        </div>
+      </div>
+
+      <div className="skill-details-field">
+        <label className="skill-details-label">
+          Long description
+          <span className="skill-details-optional">(optional, markdown)</span>
+        </label>
+        <MarkdownEditor
+          value={longDescription}
+          onChange={handleLongDescriptionChange}
+          placeholder="Describe your skill in detail (markdown supported)"
+          rows={6}
+        />
+      </div>
+
+      <div className="skill-details-field">
+        <label className="skill-details-label">
+          Collaboration mode
+          <span className="skill-details-required">*</span>
+        </label>
+        <div className="skill-details-radio-group">
+          <label className="skill-details-radio">
+            <input
+              type="radio"
+              name="collaboration-mode"
+              value="closed"
+              checked={isCollaborationClosed}
+              onChange={handleCollaborationModeClosedChange}
+            />
+            Closed
+          </label>
+          <label className="skill-details-radio">
+            <input
+              type="radio"
+              name="collaboration-mode"
+              value="open"
+              checked={isCollaborationOpen}
+              onChange={handleCollaborationModeOpenChange}
+            />
+            Open
+          </label>
+        </div>
+        <div className="skill-details-hint">
+          Closed: only you can contribute. Open: others can request collaboration.
+        </div>
+      </div>
+
+      <div className="skill-details-actions">
+        <Button
+          variant="primary"
+          size="large"
+          type="submit"
+          disabled={isSubmitDisabled}
+        >
+          {buttonText}
+        </Button>
+      </div>
+    </form>
+  );
+}
+
+function buildFieldClassName(isExtracted: boolean): string {
+  const base = 'skill-details-field';
+  return isExtracted ? `${base} skill-details-auto-filled` : base;
+}
+
+const CONFLICT_STATUS_CODE = 409;
+const DUPLICATE_NAME_MESSAGE =
+  'A skill with this name already exists. Please choose a different name.';
+const FALLBACK_API_ERROR_MESSAGE = 'Failed to publish skill. Please try again.';
+const FALLBACK_UNKNOWN_ERROR_MESSAGE = 'An unexpected error occurred.';
+
+function handlePublishError(
+  error: unknown,
+  setSlugError: (message: string | null) => void,
+  setSubmitError: (message: string | null) => void,
+): void {
+  const isApiError = error instanceof ApiError;
+  if (!isApiError) {
+    const isStandardError = error instanceof Error;
+    const message = isStandardError
+      ? error.message
+      : FALLBACK_UNKNOWN_ERROR_MESSAGE;
+    setSubmitError(message);
+    return;
+  }
+
+  const isConflict = error.statusCode === CONFLICT_STATUS_CODE;
+  if (isConflict) {
+    setSlugError(DUPLICATE_NAME_MESSAGE);
+    return;
+  }
+
+  const message = error.message || FALLBACK_API_ERROR_MESSAGE;
+  setSubmitError(message);
+}

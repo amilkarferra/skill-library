@@ -19,34 +19,10 @@
   color: var(--text-primary);
 }
 
-.my-skills-publish-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--button-text);
-  background: var(--accent);
-  transition: background 0.15s;
-}
-
-.my-skills-publish-link:hover {
-  background: var(--accent-hover);
-}
-
 .my-skills-loading {
   padding: 32px 20px;
   font-size: 13px;
   color: var(--text-muted);
-}
-
-.my-skills-error {
-  padding: 16px 20px;
-  font-size: 13px;
-  color: var(--danger);
-  background: var(--danger-hover-bg);
-  border-bottom: 1px solid var(--danger-border);
 }
 
 .my-skills-table-wrapper {

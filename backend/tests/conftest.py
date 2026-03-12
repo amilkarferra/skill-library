@@ -19,6 +19,14 @@ def build_zip_with_skill_md(markdown_content: str, entry_name: str = "SKILL.MD")
     return buffer.getvalue()
 
 
+def build_zip_with_multiple_entries(entries: dict[str, str]) -> bytes:
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as zf:
+        for entry_path, entry_content in entries.items():
+            zf.writestr(entry_path, entry_content)
+    return buffer.getvalue()
+
+
 def build_empty_zip() -> bytes:
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as zf:

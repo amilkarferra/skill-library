@@ -1,0 +1,22 @@
+.alert-message {
+  padding: 10px 14px;
+  font-size: 13px;
+}
+
+.alert-message--error {
+  color: var(--danger);
+  background: var(--danger-hover-bg);
+  border: 1px solid var(--danger-border);
+}
+
+.alert-message--success {
+  color: var(--success-color);
+  background: var(--success-bg);
+  border: 1px solid var(--success-border);
+}
+
+.alert-message--warning {
+  color: var(--warn-color);
+  background: var(--warn-bg);
+  border: 1px solid var(--warn-border);
+}

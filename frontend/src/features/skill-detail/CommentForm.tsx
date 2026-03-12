@@ -1,14 +1,18 @@
 import { useState, useCallback } from 'react';
 import { Send } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { TextArea } from '../../shared/components/TextArea';
+import { Button } from '../../shared/components/Button';
 import './CommentForm.css';
 
 const MAX_COMMENT_LENGTH = 2000;
+const COMMENT_INPUT_BUFFER = 100;
+const MAX_COMMENT_INPUT_LENGTH = MAX_COMMENT_LENGTH + COMMENT_INPUT_BUFFER;
 
 interface CommentFormProps {
-  isAuthenticated: boolean;
-  isSubmitting: boolean;
-  onSubmit: (commentText: string) => void;
+  readonly isAuthenticated: boolean;
+  readonly isSubmitting: boolean;
+  readonly onSubmit: (commentText: string) => void;
 }
 
 export function CommentForm({
@@ -55,25 +59,20 @@ export function CommentForm({
 
   return (
     <div className="comment-form">
-      <textarea
-        className="comment-form-textarea"
+      <TextArea
         placeholder="Write a comment..."
         value={commentText}
         onChange={handleCommentTextChange}
-        maxLength={MAX_COMMENT_LENGTH + 100}
+        maxLength={MAX_COMMENT_INPUT_LENGTH}
       />
       <div className="comment-form-footer">
         <span className={charCountClass}>
           {charCount} / {MAX_COMMENT_LENGTH}
         </span>
-        <button
-          className="comment-form-submit"
-          disabled={isSubmitDisabled}
-          onClick={handleSubmit}
-        >
+        <Button variant="primary" disabled={isSubmitDisabled} onClick={handleSubmit}>
           <Send size={14} />
           Post Comment
-        </button>
+        </Button>
       </div>
     </div>
   );

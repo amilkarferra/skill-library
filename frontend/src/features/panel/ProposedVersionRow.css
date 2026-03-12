@@ -79,32 +79,3 @@
   margin-left: 16px;
 }
 
-.proposed-version-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 5px 10px;
-  font-size: 12px;
-  font-weight: 500;
-  border: 1px solid var(--border-main);
-  background: var(--bg-container);
-  transition: all 0.12s;
-}
-
-.proposed-version-btn--approve {
-  color: var(--accent-secondary);
-  border-color: var(--accent-secondary);
-}
-
-.proposed-version-btn--approve:hover {
-  background: var(--success-bg);
-}
-
-.proposed-version-btn--reject {
-  color: var(--danger);
-  border-color: var(--danger-border);
-}
-
-.proposed-version-btn--reject:hover {
-  background: var(--danger-hover-bg);
-}

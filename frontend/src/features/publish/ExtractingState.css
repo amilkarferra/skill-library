@@ -1,0 +1,38 @@
+.extracting-state {
+  padding: 60px 24px;
+  text-align: center;
+  background: var(--bg-container);
+  border: 1px solid var(--border-main);
+  animation: extractingFadeSlideIn 0.4s ease-out both;
+}
+
+@keyframes extractingFadeSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.extracting-state-spinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--border-main);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  animation: extractingSpin 0.8s linear infinite;
+}
+
+@keyframes extractingSpin {
+  to { transform: rotate(360deg); }
+}
+
+.extracting-state-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.extracting-state-file {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}

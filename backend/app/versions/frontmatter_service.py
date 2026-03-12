@@ -1,19 +1,36 @@
 import io
 import zipfile
+from posixpath import basename as posix_basename
 
 import yaml
 
-from app.shared.constants import ZIP_FILE_MAGIC_BYTES
+from app.shared.constants import SHORT_DESCRIPTION_MAX_LENGTH, ZIP_FILE_MAGIC_BYTES
+
+SKILL_MARKDOWN_FILENAME = "SKILL.MD"
+
+
+def _is_skill_markdown_entry(entry_name: str) -> bool:
+    entry_basename = posix_basename(entry_name).upper()
+    return entry_basename == SKILL_MARKDOWN_FILENAME
+
+
+def _find_shallowest_skill_markdown(entry_names: list[str]) -> str | None:
+    matching_entries = [name for name in entry_names if _is_skill_markdown_entry(name)]
+    has_no_matches = len(matching_entries) == 0
+    if has_no_matches:
+        return None
+    matching_entries.sort(key=lambda name: name.count("/"))
+    return matching_entries[0]
 
 
 def _extract_markdown_from_zip(file_content: bytes) -> str:
     zip_buffer = io.BytesIO(file_content)
     with zipfile.ZipFile(zip_buffer, "r") as zip_file:
-        for entry_name in zip_file.namelist():
-            is_skill_markdown = entry_name.upper() == "SKILL.MD"
-            if is_skill_markdown:
-                return zip_file.read(entry_name).decode("utf-8")
-    return ""
+        shallowest_entry = _find_shallowest_skill_markdown(zip_file.namelist())
+        has_no_skill_markdown = shallowest_entry is None
+        if has_no_skill_markdown:
+            return ""
+        return zip_file.read(shallowest_entry).decode("utf-8")
 
 
 def _parse_yaml_frontmatter(markdown_text: str) -> dict[str, str]:
@@ -31,6 +48,31 @@ def _parse_yaml_frontmatter(markdown_text: str) -> dict[str, str]:
     return {}
 
 
+def _convert_kebab_case_to_title(kebab_name: str) -> str:
+    return " ".join(word.capitalize() for word in kebab_name.split("-"))
+
+
+def _build_display_name(raw_name: str) -> str:
+    is_empty = len(raw_name.strip()) == 0
+    if is_empty:
+        return ""
+    is_kebab_case = "-" in raw_name and raw_name == raw_name.lower()
+    if is_kebab_case:
+        return _convert_kebab_case_to_title(raw_name)
+    return raw_name
+
+
+TRUNCATION_SUFFIX = "..."
+TRUNCATION_BODY_LENGTH = SHORT_DESCRIPTION_MAX_LENGTH - len(TRUNCATION_SUFFIX)
+
+
+def _truncate_short_description(raw_description: str) -> str:
+    is_within_limit = len(raw_description) <= SHORT_DESCRIPTION_MAX_LENGTH
+    if is_within_limit:
+        return raw_description
+    return raw_description[:TRUNCATION_BODY_LENGTH] + TRUNCATION_SUFFIX
+
+
 def extract_frontmatter_from_skill_file(
     file_content: bytes,
 ) -> dict[str, str]:
@@ -41,7 +83,9 @@ def extract_frontmatter_from_skill_file(
         markdown_text = file_content.decode("utf-8")
 
     frontmatter = _parse_yaml_frontmatter(markdown_text)
+    raw_name = str(frontmatter.get("name", ""))
+    raw_description = str(frontmatter.get("description", ""))
     return {
-        "name": str(frontmatter.get("name", "")),
-        "description": str(frontmatter.get("description", "")),
+        "name": _build_display_name(raw_name),
+        "description": _truncate_short_description(raw_description),
     }

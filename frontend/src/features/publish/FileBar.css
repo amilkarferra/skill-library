@@ -1,0 +1,48 @@
+.file-bar {
+  border: 1px solid var(--border-accent);
+  background: var(--accent-bg);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.file-bar-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.file-bar-icon {
+  color: var(--accent);
+}
+
+.file-bar-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.file-bar-size {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.file-bar-hidden-input {
+  display: none;
+}
+
+.file-bar-change {
+  font-size: 11px;
+  color: var(--text-muted);
+  cursor: pointer;
+  border: none;
+  background: none;
+  text-decoration: underline;
+  font-family: inherit;
+  padding: 0;
+}
+
+.file-bar-change:hover {
+  color: var(--accent);
+}

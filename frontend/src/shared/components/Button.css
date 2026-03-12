@@ -1,0 +1,110 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button--small {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.button--medium {
+  padding: 8px 16px;
+  font-size: 13px;
+}
+
+.button--large {
+  padding: 10px 24px;
+  font-size: 14px;
+}
+
+.button--full-width {
+  width: 100%;
+}
+
+.button--primary {
+  color: var(--button-text);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.button--primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.button--secondary {
+  color: var(--text-secondary);
+  background: var(--bg-container);
+  border-color: var(--border-main);
+}
+
+.button--secondary:hover:not(:disabled) {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.button--danger {
+  color: var(--button-text);
+  background: var(--danger);
+  border-color: var(--danger);
+}
+
+.button--danger:hover:not(:disabled) {
+  background: var(--danger-hover);
+  border-color: var(--danger-hover);
+}
+
+.button--success {
+  color: var(--accent-secondary);
+  background: var(--bg-container);
+  border-color: var(--accent-secondary);
+}
+
+.button--success:hover:not(:disabled) {
+  background: var(--success-bg);
+}
+
+.button--ghost {
+  color: var(--text-muted);
+  background: none;
+  border-color: transparent;
+}
+
+.button--ghost:hover:not(:disabled) {
+  color: var(--accent);
+  border-color: var(--border-main);
+}
+
+.button--danger-outline {
+  color: var(--danger);
+  background: var(--bg-container);
+  border-color: var(--danger-border);
+}
+
+.button--danger-outline:hover:not(:disabled) {
+  background: var(--danger-hover-bg);
+  border-color: var(--danger);
+}
+
+.button--download {
+  color: var(--button-text);
+  background: var(--accent-secondary);
+  border-color: var(--accent-secondary);
+}
+
+.button--download:hover:not(:disabled) {
+  background: var(--accent-secondary-hover);
+  border-color: var(--accent-secondary-hover);
+}

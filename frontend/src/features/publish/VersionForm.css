@@ -4,80 +4,8 @@
   gap: 20px;
 }
 
-.version-form-error {
-  padding: 10px 14px;
-  font-size: 13px;
-  color: var(--danger);
-  background: var(--danger-hover-bg);
-  border: 1px solid var(--danger-border);
-}
-
-.version-form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.version-form-label {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-.version-form-input {
-  padding: 8px 12px;
-  font-size: 13px;
-  color: var(--text-primary);
-  background: var(--bg-container);
-  border: 1px solid var(--border-main);
-  outline: none;
-  transition: border-color 0.15s;
-}
-
-.version-form-input:focus {
-  border-color: var(--accent);
-}
-
-.version-form-textarea {
-  padding: 8px 12px;
-  font-size: 13px;
-  color: var(--text-primary);
-  background: var(--bg-container);
-  border: 1px solid var(--border-main);
-  outline: none;
-  resize: vertical;
-  font-family: 'Segoe UI', sans-serif;
-  line-height: 1.5;
-  transition: border-color 0.15s;
-}
-
-.version-form-textarea:focus {
-  border-color: var(--accent);
-}
-
 .version-form-actions {
   display: flex;
   justify-content: flex-end;
   padding-top: 8px;
-}
-
-.version-form-submit {
-  padding: 10px 24px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--button-text);
-  background: var(--accent);
-  border: none;
-  transition: background 0.15s;
-}
-
-.version-form-submit:hover {
-  background: var(--accent-hover);
-}
-
-.version-form-submit:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }

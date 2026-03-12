@@ -51,17 +51,38 @@ Feature-based organization. Each feature has its own `*.service.ts` for API call
 - **`features/settings/`** — Profile editing, account deactivation
 - **`shared/`** — API client with token interceptor, reusable components, hooks, formatters, TypeScript models
 
-**Stack**: React 19, React Router v7, @azure/msal-react, lucide-react, Vite 7, TypeScript 5.9 (strict)
+**Stack**: React 19, React Router v7, @azure/msal-react, Zustand, lucide-react, Vite 7, TypeScript 5.9 (strict)
+
+**State management**: Zustand stores — `useAuthStore`, `useCatalogStore`, `useNotificationsStore`, `useLikeStore`
 
 **API client**: `shared/services/api.client.ts` — centralized `API_BASE_URL`, injects JWT from auth state.
 
 **Design system**: Indigo palette, no rounded corners, thin borders, Segoe UI font, CSS custom properties.
+
+**Shared UI components** (AD-07): `Button` (7 variants, 3 sizes), `AlertMessage` (3 variants), `FormField`, `FormLabel`, `TextInput`, `TextArea` — used across all features to eliminate CSS duplication.
 
 ### Key Configuration
 
 - **Backend env**: `DATABASE_URL` (SQL Server), `JWT_SECRET`, `AZURE_AD_TENANT_ID`, `AZURE_AD_CLIENT_ID`, `AZURE_STORAGE_CONNECTION_STRING`, `AZURE_STORAGE_CONTAINER` — see `.env.example`
 - **Frontend MSAL**: `features/auth/msal-config.ts`
 - **TypeScript**: Strict mode, `noUnusedLocals`, `noUnusedParameters`, `erasableSyntaxOnly`
+
+## Mandatory Skills (OBLIGATORIO para todos los agentes y subagentes)
+
+Before writing, reviewing, refactoring, planning, or modifying ANY code, you MUST invoke the corresponding skill using the Skill tool:
+
+| Language / Files | Skill to invoke | When |
+|---|---|---|
+| React, TypeScript, .tsx, .ts (frontend) | `/react-senior-developer` | Before ANY frontend code change, review, or plan |
+| C#, .NET, .cs | `/csharp-clean-code-mentor` | Before ANY C# code change, review, or plan |
+| Python, .py | `/python-clean-code-mentor` | Before ANY Python code change, review, or plan |
+
+**Rules:**
+- This applies to ALL agents: main agent, subagents, parallel agents, code reviewers
+- Invoke the skill BEFORE writing or modifying code, not after
+- If multiple languages are involved, invoke ALL corresponding skills
+- Planning and reviewing code also requires skill invocation
+- NO EXCEPTIONS. Skipping a mandatory skill is a blocking error
 
 ## Conventions
 

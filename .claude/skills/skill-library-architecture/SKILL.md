@@ -50,6 +50,8 @@ Read `references/project-structure.md` for the full directory tree of both backe
 ### Frontend
 - **Feature-First Organization**: Each feature in `src/features/` is self-contained
 - **Service Layer**: API calls separated from components (`*.service.ts`)
+- **State Management**: Zustand stores (`useAuthStore`, `useCatalogStore`, `useNotificationsStore`, `useLikeStore`)
+- **Shared UI Components** (AD-07): `Button`, `AlertMessage`, `FormField`, `FormLabel`, `TextInput`, `TextArea`
 - **Custom Hooks**: `useApi`, `usePagination`, `useDebounce` for reusable logic
 - **Typed Models**: Each interface in its own file under `shared/models/`
 - **API Client**: Centralized HTTP client with auth token interceptor
@@ -74,7 +76,7 @@ Feature Pages (CatalogPage, PublishSkillPage, etc.)
       -> Auth Layer (MSAL token acquisition)
   -> Shared Hooks (useApi, usePagination)
   -> Shared Models (TypeScript interfaces)
-  -> Shared Components (Navbar, Pagination, EmptyState)
+  -> Shared Components (Button, AlertMessage, FormField, TextInput, TextArea, Navbar, Pagination, EmptyState)
 ```
 
 ### Cross-Module Dependencies

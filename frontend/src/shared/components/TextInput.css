@@ -1,0 +1,22 @@
+.text-input {
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text-primary);
+  background: var(--bg-container);
+  border: 1px solid var(--border-main);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.text-input:focus {
+  border-color: var(--accent);
+}
+
+.text-input::placeholder {
+  color: var(--text-muted);
+}
+
+.text-input--narrow {
+  max-width: 360px;
+}

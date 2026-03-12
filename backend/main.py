@@ -1,6 +1,12 @@
+import traceback
+
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from pydantic import ValidationError
+
+from app.shared.config import settings
 
 from app.auth.router import router as auth_router
 from app.skills.router import router as skills_router
@@ -51,7 +57,51 @@ def create_application() -> FastAPI:
         application.include_router(router)
 
     application.add_api_route("/health", check_health_status, methods=["GET"])
+    _register_development_exception_handler(application)
     return application
+
+
+def _build_development_error_detail(exception: Exception) -> str:
+    exception_type = type(exception).__name__
+    exception_message = str(exception)
+    stack_trace = traceback.format_exc()
+    return f"{exception_type}: {exception_message}\n\n{stack_trace}"
+
+
+def _handle_unhandled_exception(request: Request, exception: Exception) -> JSONResponse:
+    error_detail = _build_development_error_detail(exception)
+    origin = request.headers.get("origin", "*")
+    cors_headers = {
+        "Access-Control-Allow-Origin": origin,
+        "Access-Control-Allow-Credentials": "true",
+    }
+    return JSONResponse(status_code=500, content={"detail": error_detail}, headers=cors_headers)
+
+
+def _build_validation_error_detail(exception: ValidationError) -> str:
+    field_errors = exception.errors()
+    error_messages = [
+        f"{error['loc'][-1]}: {error['msg']}" for error in field_errors
+    ]
+    return "; ".join(error_messages)
+
+
+def _handle_validation_error(request: Request, exception: ValidationError) -> JSONResponse:
+    error_detail = _build_validation_error_detail(exception)
+    origin = request.headers.get("origin", "*")
+    cors_headers = {
+        "Access-Control-Allow-Origin": origin,
+        "Access-Control-Allow-Credentials": "true",
+    }
+    return JSONResponse(status_code=422, content={"detail": error_detail}, headers=cors_headers)
+
+
+def _register_development_exception_handler(application: FastAPI) -> None:
+    application.add_exception_handler(ValidationError, _handle_validation_error)
+    is_development = settings.environment == "development"
+    if not is_development:
+        return
+    application.add_exception_handler(Exception, _handle_unhandled_exception)
 
 
 def run_backend_server() -> None:

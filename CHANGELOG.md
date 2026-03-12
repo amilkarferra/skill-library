@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Backend exception handlers for ValidationError (422) and unhandled exceptions (500) now include CORS headers, fixing "Failed to fetch" errors in the browser
+- MSAL token refresh wrapped in try/catch in `api.client.ts` to prevent crashes when token is expired
+- `SkillDetailsForm` error handling improved with console.error and better error message extraction
+
+### Changed
+
+- `short_description` max length increased from 200 to 600 characters (DB migration, Pydantic schemas, SQLAlchemy model, frontend)
+- Centralized constants in `backend/app/shared/constants.py`: DISPLAY_NAME_MAX_LENGTH (150), SHORT_DESCRIPTION_MAX_LENGTH (600), MAX_TAGS_PER_SKILL (10)
+- `frontmatter_service` truncates extracted descriptions exceeding 600 chars with "..." suffix
+- New `environment` setting in backend config (default: "development") controls error detail level
+
 ### Added
 
 **Backend (FastAPI + SQLAlchemy)**

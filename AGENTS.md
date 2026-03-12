@@ -63,6 +63,22 @@ Feature-based organization. Each feature has its own `*.service.ts` for API call
 - **Frontend MSAL**: `features/auth/msal-config.ts`
 - **TypeScript**: Strict mode, `noUnusedLocals`, `noUnusedParameters`, `erasableSyntaxOnly`
 
+## Mandatory Skills (NON-NEGOTIABLE)
+
+Before writing, reviewing, refactoring, planning, or modifying ANY code, you MUST invoke the corresponding skill:
+
+| Language / Files | Skill to invoke | When |
+|---|---|---|
+| React, TypeScript, .tsx, .ts (frontend) | `/react-senior-developer` | Before ANY frontend code change, review, or plan |
+| C#, .NET, .cs | `/csharp-clean-code-mentor` | Before ANY C# code change, review, or plan |
+| Python, .py | `/python-clean-code-mentor` | Before ANY Python code change, review, or plan |
+
+**Rules:**
+- Invoke the skill BEFORE writing or modifying code, not after
+- If multiple languages are involved, invoke ALL corresponding skills
+- Planning and reviewing code also requires skill invocation
+- NO EXCEPTIONS. Skipping a mandatory skill is a blocking error
+
 ## Conventions
 
 - Each TypeScript model/interface lives in its own file under `shared/models/`

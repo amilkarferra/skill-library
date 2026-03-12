@@ -96,36 +96,3 @@
   gap: 8px;
   margin-top: 8px;
 }
-
-.comment-item-edit-save {
-  padding: 6px 12px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--button-text);
-  background: var(--accent);
-  border: 1px solid var(--accent);
-  transition: all 0.15s;
-}
-
-.comment-item-edit-save:hover {
-  background: var(--accent-hover);
-}
-
-.comment-item-edit-save:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.comment-item-edit-cancel {
-  padding: 6px 12px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  background: var(--bg-container);
-  border: 1px solid var(--border-main);
-  transition: all 0.15s;
-}
-
-.comment-item-edit-cancel:hover {
-  border-color: var(--text-muted);
-}
