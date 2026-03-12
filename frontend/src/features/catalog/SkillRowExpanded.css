@@ -1,0 +1,124 @@
+.skill-row-expanded {
+  padding: 18px 20px 18px 66px;
+  background: var(--bg-container);
+  border-bottom: 2px solid var(--accent);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.skill-row-expanded-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.skill-row-expanded-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.skill-row-expanded-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.skill-row-expanded-role {
+  display: inline-block;
+  padding: 2px 7px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--button-text);
+  background: var(--accent);
+}
+
+.skill-row-expanded-description-panel {
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-row);
+}
+
+.skill-row-expanded-description {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.skill-row-expanded-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+  margin-top: 12px;
+}
+
+.skill-row-expanded-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.skill-row-expanded-error {
+  font-size: 12px;
+  color: var(--danger);
+  margin-bottom: 8px;
+}
+
+.skill-row-expanded-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.skill-row-expanded-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  border: 1px solid var(--border-main);
+  background: var(--bg-container);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+
+.skill-row-expanded-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.skill-row-expanded-btn--primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--button-text);
+}
+
+.skill-row-expanded-btn--primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: var(--button-text);
+}
+
+.skill-row-expanded-btn--secondary {
+  background: var(--accent-secondary);
+  border-color: var(--accent-secondary);
+  color: var(--button-text);
+}
+
+.skill-row-expanded-btn--secondary:hover {
+  background: var(--accent-secondary-hover);
+  border-color: var(--accent-secondary-hover);
+  color: var(--button-text);
+}

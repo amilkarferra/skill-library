@@ -1,0 +1,70 @@
+.notification-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 24px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  border-bottom: 1px solid var(--border-main);
+}
+
+.notification-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.notification-banner-icon {
+  flex-shrink: 0;
+  color: var(--accent);
+}
+
+.notification-banner-copy {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.notification-banner-kicker {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.notification-banner-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.notification-banner-link {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  padding: 4px 8px;
+  border: 1px solid var(--border-accent);
+  background: var(--bg-container);
+  margin-left: 2px;
+}
+
+.notification-banner-link:hover {
+  background: var(--bg-surface);
+}
+
+.notification-banner-dismiss {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  color: var(--accent);
+  opacity: 0.7;
+  border: 1px solid transparent;
+  transition: opacity 0.12s;
+}
+
+.notification-banner-dismiss:hover {
+  opacity: 1;
+  border-color: var(--border-accent);
+}

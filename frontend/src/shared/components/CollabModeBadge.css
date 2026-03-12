@@ -1,0 +1,21 @@
+.collab-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+.collab-badge--open {
+  background: var(--accent-bg);
+  color: var(--accent);
+  border-color: var(--border-accent);
+}
+
+.collab-badge--closed {
+  background: var(--bg-sidebar);
+  color: var(--text-muted);
+  border-color: var(--border-row);
+}

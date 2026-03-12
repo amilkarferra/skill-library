@@ -1,0 +1,21 @@
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+.status-badge--active {
+  background: var(--success-bg);
+  color: var(--success-color);
+  border-color: var(--success-border);
+}
+
+.status-badge--inactive {
+  background: var(--inactive-bg);
+  color: var(--inactive-color);
+  border-color: var(--danger-border);
+}

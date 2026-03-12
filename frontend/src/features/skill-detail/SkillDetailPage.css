@@ -1,0 +1,117 @@
+.skill-detail {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.skill-detail-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.skill-detail-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  font-size: 14px;
+  color: var(--danger);
+}
+
+.skill-detail-action-error {
+  padding: 8px 16px;
+  margin: 0 24px;
+  font-size: 13px;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  background: var(--bg-container);
+}
+
+.skill-detail-header {
+  padding: 24px 32px;
+  border-bottom: 1px solid var(--border-main);
+  background: var(--bg-container);
+}
+
+.skill-detail-breadcrumb {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.skill-detail-breadcrumb-link {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.skill-detail-breadcrumb-link:hover {
+  color: var(--accent-hover);
+}
+
+.skill-detail-breadcrumb-separator {
+  color: var(--text-chevron);
+}
+
+.skill-detail-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.skill-detail-subtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.skill-detail-body {
+  display: flex;
+  flex: 1;
+}
+
+.skill-detail-main {
+  flex: 1;
+  min-width: 0;
+  background: var(--bg-container);
+}
+
+.skill-detail-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-main);
+  padding: 0 24px;
+  background: var(--bg-container);
+}
+
+.skill-detail-tab {
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+.skill-detail-tab:hover {
+  color: var(--text-primary);
+}
+
+.skill-detail-tab--active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.skill-detail-tab-content {
+  flex: 1;
+}

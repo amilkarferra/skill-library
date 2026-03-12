@@ -1,0 +1,90 @@
+.versions-tab {
+  padding: 24px;
+}
+
+.versions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.version-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-row);
+}
+
+.version-item:last-child {
+  border-bottom: none;
+}
+
+.version-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.version-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.version-number {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.version-changelog {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.version-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.version-meta-value {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.version-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.version-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+
+.version-download-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  background: var(--bg-container);
+  transition: all 0.15s;
+}
+
+.version-download-button:hover {
+  background: var(--accent-bg);
+}

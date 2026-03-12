@@ -1,0 +1,114 @@
+.my-likes-section {
+  background: var(--bg-container);
+  border: 1px solid var(--border-main);
+}
+
+.my-likes-header {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-row);
+}
+
+.my-likes-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.my-likes-loading {
+  padding: 32px 20px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.my-likes-error {
+  padding: 16px 20px;
+  font-size: 13px;
+  color: var(--danger);
+  background: var(--danger-hover-bg);
+  border-bottom: 1px solid var(--danger-border);
+}
+
+.my-likes-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.like-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border-row);
+  transition: background 0.12s;
+}
+
+.like-item:last-child {
+  border-bottom: none;
+}
+
+.like-item:hover {
+  background: var(--bg-row-hover);
+}
+
+.like-item-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.like-item-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.like-item-owner {
+  font-size: 12px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.like-item-description {
+  font-size: 13px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.like-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+
+.like-item-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.like-item-unlike {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--danger);
+  border: 1px solid var(--danger-border);
+  background: var(--bg-container);
+  transition: all 0.12s;
+}
+
+.like-item-unlike:hover {
+  background: var(--danger-hover-bg);
+}

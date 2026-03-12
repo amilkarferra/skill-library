@@ -1,0 +1,108 @@
+.overview-tab {
+  padding: 24px;
+}
+
+.overview-content {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-primary);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.overview-content h1,
+.overview-content h2,
+.overview-content h3,
+.overview-content h4,
+.overview-content h5,
+.overview-content h6 {
+  margin-top: 24px;
+  margin-bottom: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.overview-content h1 { font-size: 24px; }
+.overview-content h2 { font-size: 20px; }
+.overview-content h3 { font-size: 16px; }
+
+.overview-content p {
+  margin-bottom: 12px;
+}
+
+.overview-content ul,
+.overview-content ol {
+  margin-bottom: 12px;
+  padding-left: 24px;
+}
+
+.overview-content li {
+  margin-bottom: 4px;
+}
+
+.overview-content code {
+  font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  font-size: 13px;
+  background-color: var(--bg-code);
+  padding: 2px 6px;
+  border: 1px solid var(--border-main);
+}
+
+.overview-content pre {
+  margin-bottom: 16px;
+  padding: 16px;
+  background-color: var(--bg-code);
+  border: 1px solid var(--border-main);
+  overflow-x: auto;
+}
+
+.overview-content pre code {
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+.overview-content blockquote {
+  margin-bottom: 12px;
+  padding: 8px 16px;
+  border-left: 3px solid var(--accent);
+  color: var(--text-secondary);
+}
+
+.overview-content table {
+  width: 100%;
+  margin-bottom: 16px;
+  border-collapse: collapse;
+}
+
+.overview-content th,
+.overview-content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border-main);
+  text-align: left;
+}
+
+.overview-content th {
+  font-weight: 600;
+  background-color: var(--bg-row-alt);
+}
+
+.overview-content a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.overview-content a:hover {
+  text-decoration: underline;
+}
+
+.overview-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+.overview-content hr {
+  margin: 24px 0;
+  border: none;
+  border-top: 1px solid var(--border-main);
+}

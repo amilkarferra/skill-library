@@ -1,0 +1,42 @@
+.danger-zone-section {
+  background: var(--bg-container);
+  border: 1px solid var(--danger-border);
+  padding: 24px;
+}
+
+.danger-zone-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--danger);
+  margin-bottom: 8px;
+}
+
+.danger-zone-warning {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.danger-zone-error {
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--danger);
+  background: var(--danger-hover-bg);
+  border: 1px solid var(--danger-border);
+  margin-bottom: 16px;
+}
+
+.danger-zone-button {
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--button-text);
+  background: var(--danger);
+  border: none;
+  transition: background 0.15s;
+}
+
+.danger-zone-button:hover {
+  background: var(--danger-hover);
+}

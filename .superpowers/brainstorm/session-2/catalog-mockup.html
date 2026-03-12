@@ -1,0 +1,174 @@
+<h2>Skill Library - Catalogo</h2>
+<p class="subtitle">Patron tipo VS Code Marketplace adaptado a skills de Claude Code</p>
+
+<div class="mockup">
+  <div class="mockup-header">Vista: Catalogo / Home</div>
+  <div class="mockup-body" style="padding: 0;">
+    <!-- Top bar -->
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 20px; border-bottom:1px solid rgba(255,255,255,0.1); background:rgba(0,0,0,0.2);">
+      <div style="font-size:18px; font-weight:700; letter-spacing:1px;">SKILL LIBRARY</div>
+      <div style="display:flex; gap:16px; align-items:center;">
+        <span style="opacity:0.7; cursor:pointer;">Explorar</span>
+        <span style="opacity:0.7; cursor:pointer;">Mis Skills</span>
+        <span style="padding:6px 16px; border:1px solid rgba(255,255,255,0.3); border-radius:6px; cursor:pointer;">Login</span>
+      </div>
+    </div>
+
+    <!-- Search bar -->
+    <div style="padding:24px 20px 16px;">
+      <div style="display:flex; gap:12px;">
+        <input class="mock-input" placeholder="Buscar skills..." style="flex:1; padding:10px 16px; font-size:15px;">
+        <button class="mock-button" style="padding:10px 20px;">Buscar</button>
+      </div>
+    </div>
+
+    <!-- Filters + Grid -->
+    <div style="display:flex; padding:0 20px 20px; gap:20px;">
+      <!-- Sidebar filters -->
+      <div style="width:180px; flex-shrink:0;">
+        <div style="margin-bottom:16px;">
+          <div class="label" style="margin-bottom:8px;">Categoria</div>
+          <div style="display:flex; flex-direction:column; gap:6px; font-size:13px;">
+            <span style="opacity:0.9; cursor:pointer;">Todas</span>
+            <span style="opacity:0.6; cursor:pointer;">Frontend</span>
+            <span style="opacity:0.6; cursor:pointer;">Backend</span>
+            <span style="opacity:0.6; cursor:pointer;">DevOps</span>
+            <span style="opacity:0.6; cursor:pointer;">Testing</span>
+            <span style="opacity:0.6; cursor:pointer;">Architecture</span>
+            <span style="opacity:0.6; cursor:pointer;">Tooling</span>
+          </div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <div class="label" style="margin-bottom:8px;">Ordenar por</div>
+          <div style="display:flex; flex-direction:column; gap:6px; font-size:13px;">
+            <span style="opacity:0.9; cursor:pointer;">Mas recientes</span>
+            <span style="opacity:0.6; cursor:pointer;">Mas likes</span>
+            <span style="opacity:0.6; cursor:pointer;">Mas descargas</span>
+            <span style="opacity:0.6; cursor:pointer;">Nombre A-Z</span>
+          </div>
+        </div>
+        <div>
+          <div class="label" style="margin-bottom:8px;">Tags populares</div>
+          <div style="display:flex; flex-wrap:wrap; gap:6px;">
+            <span style="padding:3px 10px; background:rgba(255,255,255,0.1); border-radius:12px; font-size:11px;">angular</span>
+            <span style="padding:3px 10px; background:rgba(255,255,255,0.1); border-radius:12px; font-size:11px;">react</span>
+            <span style="padding:3px 10px; background:rgba(255,255,255,0.1); border-radius:12px; font-size:11px;">testing</span>
+            <span style="padding:3px 10px; background:rgba(255,255,255,0.1); border-radius:12px; font-size:11px;">clean-code</span>
+            <span style="padding:3px 10px; background:rgba(255,255,255,0.1); border-radius:12px; font-size:11px;">debugging</span>
+            <span style="padding:3px 10px; background:rgba(255,255,255,0.1); border-radius:12px; font-size:11px;">tdd</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skills Grid -->
+      <div style="flex:1; display:grid; grid-template-columns:repeat(2, 1fr); gap:14px;">
+        <!-- Skill Card 1 -->
+        <div style="border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:16px; background:rgba(255,255,255,0.03);">
+          <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:8px;">
+            <div style="font-weight:600; font-size:15px;">Angular Senior Developer</div>
+            <span style="padding:2px 8px; background:rgba(99,179,237,0.15); color:rgb(99,179,237); border-radius:4px; font-size:11px;">Frontend</span>
+          </div>
+          <div style="font-size:13px; opacity:0.6; margin-bottom:12px;">Senior Angular 20+ developer skill for writing, reviewing, refactoring, and debugging Angular code following modern best practices.</div>
+          <div style="display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap;">
+            <span style="padding:2px 8px; background:rgba(255,255,255,0.08); border-radius:10px; font-size:11px;">angular</span>
+            <span style="padding:2px 8px; background:rgba(255,255,255,0.08); border-radius:10px; font-size:11px;">signals</span>
+            <span style="padding:2px 8px; background:rgba(255,255,255,0.08); border-radius:10px; font-size:11px;">standalone</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; opacity:0.5;">
+            <span>by @amilkar</span>
+            <div style="display:flex; gap:12px;">
+              <span>v2.1.0</span>
+              <span>342 likes</span>
+              <span>1.2k downloads</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skill Card 2 -->
+        <div style="border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:16px; background:rgba(255,255,255,0.03);">
+          <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:8px;">
+            <div style="font-weight:600; font-size:15px;">TDD Workflow</div>
+            <span style="padding:2px 8px; background:rgba(72,187,120,0.15); color:rgb(72,187,120); border-radius:4px; font-size:11px;">Testing</span>
+          </div>
+          <div style="font-size:13px; opacity:0.6; margin-bottom:12px;">Test-driven development skill that enforces red-green-refactor cycle before writing any implementation code.</div>
+          <div style="display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap;">
+            <span style="padding:2px 8px; background:rgba(255,255,255,0.08); border-radius:10px; font-size:11px;">tdd</span>
+            <span style="padding:2px 8px; background:rgba(255,255,255,0.08); border-radius:10px; font-size:11px;">testing</span>
+            <span style="padding:2px 8px; background:rgba(255,255,255,0.08); border-radius:10px; font-size:11px;">quality</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; opacity:0.5;">
+            <span>by @carlos</span>
+            <div style="display:flex; gap:12px;">
+              <span>v1.3.0</span>
+              <span>189 likes</span>
+              <span>876 downloads</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skill Card 3 -->
+        <div style="border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:16px; background:rgba(255,255,255,0.03);">
+          <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:8px;">
+            <div style="font-weight:600; font-size:15px;">Python Clean Code Mentor</div>
+            <span style="padding:2px 8px; background:rgba(237,190,71,0.15); color:rgb(237,190,71); border-radius:4px; font-size:11px;">Backend</span>
+          </div>
+          <div style="font-size:13px; opacity:0.6; margin-bottom:12px;">Mentor y revisor de codigo Python enfocado en clean code, naming preciso y mantenibilidad.</div>
+          <div style="display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap;">
+            <span style="padding:2px 8px; background:rgba(255,255,255,0.08); border-radius:10px; font-size:11px;">python</span>
+            <span style="padding:2px 8px; background:rgba(255,255,255,0.08); border-radius:10px; font-size:11px;">clean-code</span>
+            <span style="padding:2px 8px; background:rgba(255,255,255,0.08); border-radius:10px; font-size:11px;">naming</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; opacity:0.5;">
+            <span>by @maria</span>
+            <div style="display:flex; gap:12px;">
+              <span>v3.0.1</span>
+              <span>521 likes</span>
+              <span>2.3k downloads</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skill Card 4 -->
+        <div style="border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:16px; background:rgba(255,255,255,0.03);">
+          <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:8px;">
+            <div style="font-weight:600; font-size:15px;">Systematic Debugging</div>
+            <span style="padding:2px 8px; background:rgba(229,115,115,0.15); color:rgb(229,115,115); border-radius:4px; font-size:11px;">Tooling</span>
+          </div>
+          <div style="font-size:13px; opacity:0.6; margin-bottom:12px;">Systematic approach to debugging that traces root causes before proposing fixes. Prevents shotgun debugging.</div>
+          <div style="display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap;">
+            <span style="padding:2px 8px; background:rgba(255,255,255,0.08); border-radius:10px; font-size:11px;">debugging</span>
+            <span style="padding:2px 8px; background:rgba(255,255,255,0.08); border-radius:10px; font-size:11px;">workflow</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; opacity:0.5;">
+            <span>by @jorge</span>
+            <div style="display:flex; gap:12px;">
+              <span>v1.0.0</span>
+              <span>95 likes</span>
+              <span>430 downloads</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div style="display:flex; justify-content:center; padding:16px; border-top:1px solid rgba(255,255,255,0.1); gap:8px;">
+      <span style="padding:6px 12px; background:rgba(255,255,255,0.15); border-radius:4px; font-size:13px;">1</span>
+      <span style="padding:6px 12px; opacity:0.5; cursor:pointer; font-size:13px;">2</span>
+      <span style="padding:6px 12px; opacity:0.5; cursor:pointer; font-size:13px;">3</span>
+      <span style="padding:6px 12px; opacity:0.5; cursor:pointer; font-size:13px;">...</span>
+      <span style="padding:6px 12px; opacity:0.5; cursor:pointer; font-size:13px;">12</span>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:20px;">
+  <h3>Elementos del catalogo:</h3>
+  <ul style="font-size:14px; opacity:0.8; line-height:1.8;">
+    <li>Navbar con logo, navegacion y login</li>
+    <li>Buscador de texto libre prominente</li>
+    <li>Sidebar izquierda: categorias, ordenacion, tags populares</li>
+    <li>Grid de cards 2 columnas con: nombre, categoria (badge color), descripcion corta, tags, autor, version, likes, descargas</li>
+    <li>Paginacion server-side abajo</li>
+  </ul>
+</div>

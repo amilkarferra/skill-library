@@ -1,0 +1,449 @@
+<style>
+  :root {
+    --bg-page: #f4f5f9;
+    --bg-container: #fff;
+    --bg-sidebar: #f8f8fc;
+    --bg-row-alt: #f8f9fc;
+    --bg-row-hover: #f5f6fa;
+    --border-main: #d8dbe6;
+    --border-row: #e8eaf0;
+    --text-primary: #1a1d2e;
+    --text-secondary: #4a4f6a;
+    --text-muted: #7c82a0;
+    --accent: #4f46e5;
+    --accent-hover: #4338ca;
+    --accent-bg: #eef0ff;
+    --accent-secondary: #059669;
+    --accent-secondary-hover: #047857;
+    --tag-bg: #eef0ff;
+    --tag-color: #4f46e5;
+    --danger: #dc2626;
+    --danger-border: #f0c4c4;
+    --danger-hover-bg: #fef2f2;
+    --warn-bg: #fef3c7;
+    --warn-color: #92400e;
+    --success-bg: #dcfce7;
+    --success-color: #166534;
+    --inactive-bg: #fee2e2;
+    --inactive-color: #991b1b;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif; background:var(--bg-page); }
+
+  .container { background:var(--bg-container); border:1px solid var(--border-main); max-width:1180px; margin:16px auto; }
+
+  /* Nav */
+  .nav { display:flex; justify-content:space-between; align-items:center; padding:10px 20px; border-bottom:1px solid var(--border-main); }
+  .nav-left { display:flex; align-items:center; gap:16px; }
+  .logo { font-size:15px; font-weight:700; color:var(--text-primary); letter-spacing:-0.3px; }
+  .logo span { color:var(--accent); font-weight:700; }
+  .nav-links { display:flex; gap:16px; }
+  .nav-link { font-size:12px; color:var(--text-muted); cursor:pointer; }
+  .nav-link:hover { color:var(--text-primary); }
+  .nav-link.active { color:var(--accent); font-weight:600; }
+  .nav-right { display:flex; gap:12px; align-items:center; font-size:12px; color:var(--text-secondary); }
+  .btn-publish { padding:6px 14px; background:var(--accent); color:#fff; border:none; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:5px; }
+
+  /* Notification dot on profile */
+  .nav-profile { position:relative; display:flex; align-items:center; gap:5px; cursor:pointer; }
+  .nav-profile-dot { position:absolute; top:-2px; left:10px; width:8px; height:8px; background:#e63946; border:2px solid #fff; border-radius:50%; }
+
+  /* Notification banner */
+  .notif-banner { display:flex; align-items:center; justify-content:space-between; padding:8px 20px; background:#eef0ff; border-bottom:1px solid #d8dbe6; box-shadow:0 2px 6px rgba(79,70,229,0.1); position:relative; z-index:1; }
+  .notif-close { background:none; border:none; color:var(--text-muted); cursor:pointer; padding:4px; display:flex; align-items:center; margin-left:12px; }
+  .notif-close:hover { color:var(--text-primary); }
+  .notif-right { display:flex; align-items:center; }
+  .notif-left { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-secondary); }
+  .notif-dot { width:6px; height:6px; background:#e63946; flex-shrink:0; border-radius:50%; }
+  .notif-count { font-weight:700; color:var(--text-primary); }
+  .notif-link { font-size:11px; color:var(--accent); font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px; text-decoration:none; }
+  .notif-link:hover { color:var(--accent-hover); }
+
+  /* Panel layout */
+  .panel { display:flex; min-height:580px; }
+
+  /* Panel sidebar */
+  .panel-sidebar { width:200px; padding:16px; border-right:1px solid var(--border-main); background:var(--bg-sidebar); }
+  .panel-user { margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border-row); }
+  .panel-username { font-size:14px; font-weight:700; color:var(--text-primary); margin-bottom:2px; }
+  .panel-handle { font-size:11px; color:var(--text-muted); }
+  .panel-nav { display:flex; flex-direction:column; gap:1px; }
+  .panel-nav-item { padding:7px 10px; font-size:12px; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; justify-content:space-between; }
+  .panel-nav-item:hover { color:var(--text-primary); background:var(--bg-row-hover); }
+  .panel-nav-item.active { color:var(--accent); font-weight:600; border-left:2px solid var(--accent); padding-left:8px; }
+  .panel-nav-label { display:flex; align-items:center; gap:6px; }
+  .panel-nav-label svg { flex-shrink:0; }
+  .count { font-size:10px; background:var(--accent-bg); color:var(--accent); padding:1px 6px; font-weight:600; }
+  .count-warn { font-size:10px; background:var(--warn-bg); color:var(--warn-color); padding:1px 6px; font-weight:600; }
+
+  /* Panel content */
+  .panel-content { flex:1; }
+  .panel-header { padding:12px 16px; border-bottom:1px solid var(--border-row); display:flex; justify-content:space-between; align-items:center; }
+  .panel-title { font-size:14px; font-weight:700; color:var(--text-primary); }
+  .panel-subtitle { font-size:11px; color:var(--text-muted); margin-top:2px; }
+
+  /* Table */
+  .table-header { display:flex; padding:8px 16px; background:var(--bg-sidebar); border-bottom:1px solid var(--border-row); font-size:10px; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-muted); font-weight:600; }
+  .col-name { flex:1; min-width:0; }
+  .col-status { width:75px; text-align:center; }
+  .col-version { width:65px; text-align:center; }
+  .col-stats { width:110px; text-align:center; }
+  .col-collab { width:75px; text-align:center; }
+  .col-pending { width:65px; text-align:center; }
+  .col-actions { width:130px; text-align:right; }
+
+  .skill-row { display:flex; align-items:center; padding:10px 16px; border-bottom:1px solid var(--border-row); font-size:12px; }
+  .skill-row:hover { background:var(--bg-row-hover); }
+  .skill-name { font-weight:600; color:var(--text-primary); }
+  .skill-desc { font-size:11px; color:var(--text-muted); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+  .status { font-size:10px; padding:2px 8px; font-weight:600; text-transform:uppercase; letter-spacing:0.3px; }
+  .status-active { background:var(--success-bg); color:var(--success-color); }
+  .status-inactive { background:var(--inactive-bg); color:var(--inactive-color); }
+
+  .ver-text { font-size:11px; color:var(--text-muted); }
+  .stats-inline { font-size:11px; color:var(--text-muted); display:flex; gap:10px; justify-content:center; }
+  .stats-inline span { display:flex; align-items:center; gap:3px; }
+
+  .collab-badge { font-size:10px; padding:2px 8px; font-weight:500; }
+  .collab-open { background:var(--accent-bg); color:var(--accent); }
+  .collab-closed { background:#f1f5f9; color:var(--text-muted); }
+
+  .pending-count { font-size:11px; font-weight:600; color:var(--warn-color); }
+
+  .row-actions { display:flex; gap:4px; justify-content:flex-end; }
+  .act { padding:4px 8px; font-size:11px; color:var(--text-muted); border:1px solid var(--border-row); background:var(--bg-container); cursor:pointer; display:flex; align-items:center; gap:4px; }
+  .act:hover { color:var(--text-primary); border-color:var(--border-main); }
+  .act-restore { color:var(--accent-secondary); border-color:#b2dfdb; }
+  .act-restore:hover { background:#e8f5e9; }
+  .act-danger { color:var(--danger); border-color:var(--danger-border); }
+  .act-danger:hover { background:var(--danger-hover-bg); }
+
+  /* Section headers */
+  .section-header { padding:10px 16px; background:var(--bg-sidebar); border-bottom:1px solid var(--border-row); border-top:1px solid var(--border-row); display:flex; align-items:center; justify-content:space-between; }
+  .section-title { font-size:11px; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-muted); font-weight:600; display:flex; align-items:center; gap:6px; }
+  .section-badge { font-size:10px; padding:1px 6px; font-weight:700; }
+  .section-badge-warn { background:var(--warn-bg); color:var(--warn-color); }
+  .section-badge-accent { background:var(--accent-bg); color:var(--accent); }
+
+  /* Request rows - INCOMING */
+  .request-incoming { padding:10px 16px; border-bottom:1px solid var(--border-row); display:flex; align-items:center; gap:12px; border-left:3px solid var(--accent); }
+  .request-incoming:hover { background:var(--bg-row-hover); }
+
+  /* Request rows - OUTGOING */
+  .request-outgoing { padding:10px 16px; border-bottom:1px solid var(--border-row); display:flex; align-items:center; gap:12px; border-left:3px solid var(--border-row); background:var(--bg-row-alt); }
+  .request-outgoing:hover { background:var(--bg-row-hover); }
+
+  .request-icon { width:32px; height:32px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .request-icon-in { background:var(--accent-bg); color:var(--accent); }
+  .request-icon-out { background:#f1f5f9; color:var(--text-muted); }
+  .request-info { flex:1; }
+  .request-label { font-size:10px; text-transform:uppercase; letter-spacing:0.5px; font-weight:600; margin-bottom:2px; }
+  .request-label-in { color:var(--accent); }
+  .request-label-out { color:var(--text-muted); }
+  .request-text { font-size:12px; color:var(--text-secondary); }
+  .request-text strong { color:var(--text-primary); }
+  .request-date { font-size:10px; color:var(--text-muted); margin-top:2px; }
+  .request-actions { display:flex; gap:4px; }
+  .req-btn { padding:5px 10px; font-size:11px; border:none; cursor:pointer; }
+  .req-btn-accept { background:var(--accent-secondary); color:#fff; }
+  .req-btn-accept:hover { background:#268b6e; }
+  .req-btn-reject { background:var(--bg-container); color:var(--text-muted); border:1px solid var(--border-main); }
+  .req-btn-cancel { background:var(--bg-container); color:var(--danger); border:1px solid var(--danger-border); }
+  .req-btn-pending { background:var(--warn-bg); color:var(--warn-color); font-size:10px; cursor:default; font-weight:600; text-transform:uppercase; letter-spacing:0.3px; }
+  .req-btn-approve { background:var(--accent); color:#fff; }
+  .req-btn-approve:hover { background:var(--accent-hover); }
+
+  /* Proposed version row */
+  .proposed-row { padding:10px 16px; border-bottom:1px solid var(--border-row); display:flex; align-items:center; gap:12px; border-left:3px solid #f59e0b; }
+  .proposed-row:hover { background:var(--bg-row-hover); }
+  .proposed-icon { width:32px; height:32px; display:flex; align-items:center; justify-content:center; flex-shrink:0; background:#fef3c7; color:#b45309; }
+  .proposed-info { flex:1; }
+  .proposed-label { font-size:10px; text-transform:uppercase; letter-spacing:0.5px; font-weight:600; color:#b45309; margin-bottom:2px; }
+  .proposed-text { font-size:12px; color:var(--text-secondary); }
+  .proposed-text strong { color:var(--text-primary); }
+  .proposed-meta { font-size:10px; color:var(--text-muted); margin-top:2px; }
+</style>
+
+<div class="container">
+  <!-- Nav with notification badge -->
+  <div class="nav">
+    <div class="nav-left">
+      <div class="logo">skill<span>library</span></div>
+      <div class="nav-links">
+        <span class="nav-link">Explore</span>
+        <span class="nav-link active">My Panel</span>
+      </div>
+    </div>
+    <div class="nav-right">
+      <button class="btn-publish">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+        Publish
+      </button>
+      <div class="nav-profile">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        @amilkar
+        <span class="nav-profile-dot"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification banner -->
+  <div class="notif-banner">
+    <div class="notif-left">
+      <span class="notif-dot"></span>
+      You have <span class="notif-count">2 version proposals</span> and <span class="notif-count">2 collaboration requests</span> waiting for your review
+    </div>
+    <div class="notif-right">
+      <a class="notif-link">
+        Review now
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+      <button class="notif-close" title="Dismiss">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <!-- Sidebar -->
+    <div class="panel-sidebar">
+      <div class="panel-user">
+        <div class="panel-username">Amilkar Mercado</div>
+        <div class="panel-handle">@amilkar</div>
+      </div>
+      <div class="panel-nav">
+        <div class="panel-nav-item active">
+          <span class="panel-nav-label">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+            My Skills
+          </span>
+          <span class="count">7</span>
+        </div>
+        <div class="panel-nav-item">
+          <span class="panel-nav-label">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Collaborations
+          </span>
+          <span class="count">3</span>
+        </div>
+        <div class="panel-nav-item">
+          <span class="panel-nav-label">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            My Likes
+          </span>
+          <span class="count">12</span>
+        </div>
+        <div class="panel-nav-item">
+          <span class="panel-nav-label">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            Requests
+          </span>
+          <span class="count-warn">2</span>
+        </div>
+        <div class="panel-nav-item">
+          <span class="panel-nav-label">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+            Proposed Versions
+          </span>
+          <span class="count-warn">2</span>
+        </div>
+        <div class="panel-nav-item" style="margin-top:16px; padding-top:12px; border-top:1px solid var(--border-row);">
+          <span class="panel-nav-label">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+            Settings
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="panel-content">
+      <!-- Header -->
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">My Skills</div>
+          <div class="panel-subtitle">7 skills published, 1 inactive</div>
+        </div>
+        <button class="btn-publish" style="font-size:11px; padding:5px 12px;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+          New Skill
+        </button>
+      </div>
+
+      <!-- Table header -->
+      <div class="table-header">
+        <div class="col-name">Skill</div>
+        <div class="col-status">Status</div>
+        <div class="col-version">Version</div>
+        <div class="col-stats">Likes / Downloads</div>
+        <div class="col-collab">Mode</div>
+        <div class="col-pending">Pending</div>
+        <div class="col-actions">Actions</div>
+      </div>
+
+      <!-- Skill 1: Active, Open, has pending proposals -->
+      <div class="skill-row">
+        <div class="col-name">
+          <div class="skill-name">Angular Senior Developer</div>
+          <div class="skill-desc">Senior Angular 20+ skill for writing, reviewing, and debugging</div>
+        </div>
+        <div class="col-status"><span class="status status-active">Active</span></div>
+        <div class="col-version"><span class="ver-text">v2.1.0</span></div>
+        <div class="col-stats">
+          <div class="stats-inline">
+            <span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> 342</span>
+            <span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg> 1.2k</span>
+          </div>
+        </div>
+        <div class="col-collab"><span class="collab-badge collab-open">Open</span></div>
+        <div class="col-pending"><span class="pending-count">2</span></div>
+        <div class="col-actions">
+          <div class="row-actions">
+            <button class="act" title="Edit"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+            <button class="act" title="Versions"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></button>
+            <button class="act" title="Collaborators"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg></button>
+            <button class="act act-danger" title="Deactivate"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" x2="19.07" y1="4.93" y2="19.07"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skill 2: Active, Closed -->
+      <div class="skill-row">
+        <div class="col-name">
+          <div class="skill-name">React Native Expert</div>
+          <div class="skill-desc">Senior React Native developer with Expo, hooks, navigation</div>
+        </div>
+        <div class="col-status"><span class="status status-active">Active</span></div>
+        <div class="col-version"><span class="ver-text">v1.5.0</span></div>
+        <div class="col-stats">
+          <div class="stats-inline">
+            <span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> 267</span>
+            <span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg> 1.5k</span>
+          </div>
+        </div>
+        <div class="col-collab"><span class="collab-badge collab-closed">Closed</span></div>
+        <div class="col-pending"><span style="color:var(--text-muted);">-</span></div>
+        <div class="col-actions">
+          <div class="row-actions">
+            <button class="act" title="Edit"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+            <button class="act" title="Versions"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></button>
+            <button class="act" title="Collaborators"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg></button>
+            <button class="act act-danger" title="Deactivate"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" x2="19.07" y1="4.93" y2="19.07"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skill 3: Inactive -->
+      <div class="skill-row" style="opacity:0.6;">
+        <div class="col-name">
+          <div class="skill-name">TypeScript Strict Mentor</div>
+          <div class="skill-desc">Strict TypeScript mentor for clean code and naming</div>
+        </div>
+        <div class="col-status"><span class="status status-inactive">Inactive</span></div>
+        <div class="col-version"><span class="ver-text">v1.0.0</span></div>
+        <div class="col-stats">
+          <div class="stats-inline">
+            <span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> 45</span>
+            <span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg> 210</span>
+          </div>
+        </div>
+        <div class="col-collab"><span class="collab-badge collab-closed">Closed</span></div>
+        <div class="col-pending"><span style="color:var(--text-muted);">-</span></div>
+        <div class="col-actions">
+          <div class="row-actions">
+            <button class="act act-restore" title="Restore"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg> Restore</button>
+            <button class="act act-danger" title="Delete permanently"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROPOSED VERSIONS section -->
+      <div class="section-header">
+        <div class="section-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+          Proposed Versions
+          <span class="section-badge section-badge-warn">2</span>
+        </div>
+      </div>
+
+      <div class="proposed-row">
+        <div class="proposed-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+        </div>
+        <div class="proposed-info">
+          <div class="proposed-label">Version proposal</div>
+          <div class="proposed-text"><strong>@carlos</strong> proposed <strong>v2.2.0</strong> for <strong>Angular Senior Developer</strong></div>
+          <div class="proposed-meta">Changelog: "Added interceptor patterns and error handling strategies" - 3 hours ago</div>
+        </div>
+        <div class="request-actions">
+          <button class="req-btn req-btn-approve">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><polyline points="20 6 9 17 4 12"/></svg>
+            Approve
+          </button>
+          <button class="req-btn req-btn-reject">Reject</button>
+        </div>
+      </div>
+
+      <div class="proposed-row">
+        <div class="proposed-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+        </div>
+        <div class="proposed-info">
+          <div class="proposed-label">Version proposal</div>
+          <div class="proposed-text"><strong>@jorge</strong> proposed <strong>v2.2.0</strong> for <strong>Angular Senior Developer</strong></div>
+          <div class="proposed-meta">Changelog: "Updated signal patterns for Angular 21" - 1 day ago</div>
+        </div>
+        <div class="request-actions">
+          <button class="req-btn req-btn-approve">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><polyline points="20 6 9 17 4 12"/></svg>
+            Approve
+          </button>
+          <button class="req-btn req-btn-reject">Reject</button>
+        </div>
+      </div>
+
+      <!-- COLLABORATION REQUESTS section -->
+      <div class="section-header">
+        <div class="section-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+          Collaboration Requests
+          <span class="section-badge section-badge-accent">2</span>
+        </div>
+      </div>
+
+      <!-- Incoming request - blue left border -->
+      <div class="request-incoming">
+        <div class="request-icon request-icon-in">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/></svg>
+        </div>
+        <div class="request-info">
+          <div class="request-label request-label-in">Incoming</div>
+          <div class="request-text"><strong>@carlos</strong> wants to collaborate on <strong>Angular Senior Developer</strong></div>
+          <div class="request-date">2 days ago</div>
+        </div>
+        <div class="request-actions">
+          <button class="req-btn req-btn-accept">Accept</button>
+          <button class="req-btn req-btn-reject">Reject</button>
+        </div>
+      </div>
+
+      <!-- Outgoing request - gray left border, muted bg -->
+      <div class="request-outgoing">
+        <div class="request-icon request-icon-out">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/></svg>
+        </div>
+        <div class="request-info">
+          <div class="request-label request-label-out">Sent</div>
+          <div class="request-text">You requested to collaborate on <strong>Python Clean Code Mentor</strong> by <strong>@maria</strong></div>
+          <div class="request-date">5 days ago</div>
+        </div>
+        <div class="request-actions">
+          <button class="req-btn req-btn-pending">Pending</button>
+          <button class="req-btn req-btn-cancel">Cancel</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

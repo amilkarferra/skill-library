@@ -1,0 +1,147 @@
+.request-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border-row);
+  border-left: 3px solid transparent;
+  transition: background 0.12s;
+}
+
+.request-row:last-child {
+  border-bottom: none;
+}
+
+.request-row:hover {
+  background: var(--bg-row-hover);
+}
+
+.request-row--incoming {
+  border-left-color: var(--accent);
+}
+
+.request-row--sent {
+  border-left-color: var(--border-main);
+  background: var(--bg-row-alt);
+}
+
+.request-row-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.request-row-icon--incoming {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.request-row-icon--sent {
+  background: var(--bg-search);
+  color: var(--text-muted);
+}
+
+.request-row-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+.request-row-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.request-row-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.request-row-user,
+.request-row-date {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.request-row-type {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.request-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+
+.request-row-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid var(--border-main);
+  background: var(--bg-container);
+  transition: all 0.12s;
+}
+
+.request-row-btn--accept {
+  color: var(--accent-secondary);
+  border-color: var(--accent-secondary);
+}
+
+.request-row-btn--accept:hover {
+  background: var(--success-bg);
+}
+
+.request-row-btn--reject {
+  color: var(--danger);
+  border-color: var(--danger-border);
+}
+
+.request-row-btn--reject:hover {
+  background: var(--danger-hover-bg);
+}
+
+.request-row-btn--cancel {
+  color: var(--text-muted);
+}
+
+.request-row-btn--cancel:hover {
+  color: var(--danger);
+  border-color: var(--danger-border);
+}
+
+.request-row-pending-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--warn-color);
+  background: var(--warn-bg);
+  padding: 4px 8px;
+}
+
+.request-row-status {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+}

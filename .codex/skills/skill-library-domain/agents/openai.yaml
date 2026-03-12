@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Library Domain"
+  short_description: "Domain knowledge for the Skill Library"
+  default_prompt: "Explain the domain entities and business flows"

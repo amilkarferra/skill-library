@@ -1,0 +1,20 @@
+__pycache__/
+*.py[cod]
+.env
+node_modules/
+dist/
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/
+
+# IDE / Editor
+.vscode/
+
+# AI tools local config
+.claude/settings.local.json
+
+# Superpowers temp files
+.superpowers/brainstorm/*/
+*.pid
+*.server.log

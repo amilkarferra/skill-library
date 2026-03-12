@@ -1,0 +1,84 @@
+.comment-form {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-row);
+}
+
+.comment-form-textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text-primary);
+  background: var(--bg-container);
+  border: 1px solid var(--border-main);
+  resize: vertical;
+  line-height: 1.5;
+  transition: border-color 0.15s;
+}
+
+.comment-form-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.comment-form-textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.comment-form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.comment-form-char-count {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.comment-form-char-count--over {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.comment-form-submit {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--button-text);
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  transition: all 0.15s;
+}
+
+.comment-form-submit:hover:not(:disabled) {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.comment-form-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.comment-form-signin {
+  font-size: 13px;
+  color: var(--text-muted);
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-row);
+}
+
+.comment-form-signin-link {
+  color: var(--accent);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.comment-form-signin-link:hover {
+  color: var(--accent-hover);
+}

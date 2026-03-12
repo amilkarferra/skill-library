@@ -1,0 +1,30 @@
+from datetime import datetime
+
+from app.shared.base_schema import CamelCaseSchema
+
+
+class SkillDetailResponse(CamelCaseSchema):
+    id: int
+    name: str
+    display_name: str
+    short_description: str
+    long_description: str
+    category_id: int
+    category_slug: str
+    category_name: str
+    owner_id: int
+    owner_username: str
+    owner_display_name: str
+    collaboration_mode: str
+    current_version: str | None
+    total_likes: int
+    total_downloads: int
+    total_comments: int
+    tags: list[str]
+    is_active: bool
+    is_liked_by_me: bool
+    my_role: str | None
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}

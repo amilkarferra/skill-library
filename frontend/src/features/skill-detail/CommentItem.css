@@ -1,0 +1,131 @@
+.comment-item {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-row);
+}
+
+.comment-item:last-child {
+  border-bottom: none;
+}
+
+.comment-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.comment-item-author {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.comment-item-displayname {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.comment-item-username {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.comment-item-date {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.comment-item-content {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.comment-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.comment-item-action-button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  background: none;
+  transition: all 0.15s;
+}
+
+.comment-item-action-button:hover {
+  color: var(--accent);
+  border-color: var(--border-main);
+}
+
+.comment-item-action-button--danger:hover {
+  color: var(--danger);
+  border-color: var(--danger-border);
+}
+
+.comment-item-edit-textarea {
+  width: 100%;
+  min-height: 60px;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text-primary);
+  background: var(--bg-container);
+  border: 1px solid var(--accent);
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.comment-item-edit-textarea:focus {
+  outline: none;
+}
+
+.comment-item-edit-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.comment-item-edit-save {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--button-text);
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  transition: all 0.15s;
+}
+
+.comment-item-edit-save:hover {
+  background: var(--accent-hover);
+}
+
+.comment-item-edit-save:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.comment-item-edit-cancel {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg-container);
+  border: 1px solid var(--border-main);
+  transition: all 0.15s;
+}
+
+.comment-item-edit-cancel:hover {
+  border-color: var(--text-muted);
+}

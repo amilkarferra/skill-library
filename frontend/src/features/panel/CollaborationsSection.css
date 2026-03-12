@@ -1,0 +1,86 @@
+.collaborations-section {
+  background: var(--bg-container);
+  border: 1px solid var(--border-main);
+}
+
+.collaborations-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-row);
+}
+
+.collaborations-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.collaborations-icon {
+  color: var(--text-muted);
+}
+
+.collaborations-loading {
+  padding: 32px 20px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.collaborations-error {
+  padding: 16px 20px;
+  font-size: 13px;
+  color: var(--danger);
+  background: var(--danger-hover-bg);
+  border-bottom: 1px solid var(--danger-border);
+}
+
+.collaborations-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.collaboration-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border-row);
+  transition: background 0.12s;
+}
+
+.collaboration-item:last-child {
+  border-bottom: none;
+}
+
+.collaboration-item:hover {
+  background: var(--bg-row-hover);
+}
+
+.collaboration-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.collaboration-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.collaboration-owner {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.collaboration-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.collaboration-version {
+  font-size: 12px;
+  color: var(--text-muted);
+}

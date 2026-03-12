@@ -1,0 +1,55 @@
+.publish-skill-page {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.publish-skill-card {
+  background: var(--bg-container);
+  border: 1px solid var(--border-main);
+  padding: 32px;
+  box-shadow: var(--shadow-soft);
+}
+
+.publish-skill-header {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.publish-skill-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border: 1px solid var(--border-accent);
+  flex-shrink: 0;
+}
+
+.publish-skill-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.publish-skill-kicker {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.publish-skill-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.publish-skill-subtitle {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}

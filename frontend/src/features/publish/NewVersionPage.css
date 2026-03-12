@@ -1,0 +1,23 @@
+.new-version-page {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.new-version-card {
+  background: var(--bg-container);
+  border: 1px solid var(--border-main);
+  padding: 32px;
+}
+
+.new-version-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.new-version-skill-name {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}

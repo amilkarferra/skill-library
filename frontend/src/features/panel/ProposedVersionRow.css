@@ -1,0 +1,110 @@
+.proposed-version-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border-row);
+  border-left: 3px solid #f59e0b;
+  transition: background 0.12s;
+}
+
+.proposed-version-row:last-child {
+  border-bottom: none;
+}
+
+.proposed-version-row:hover {
+  background: var(--bg-row-hover);
+}
+
+.proposed-version-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  background: var(--warn-bg);
+  color: var(--warn-color);
+}
+
+.proposed-version-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.proposed-version-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--warn-color);
+}
+
+.proposed-version-number {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.proposed-version-changelog {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.proposed-version-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.proposed-version-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.proposed-version-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+
+.proposed-version-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid var(--border-main);
+  background: var(--bg-container);
+  transition: all 0.12s;
+}
+
+.proposed-version-btn--approve {
+  color: var(--accent-secondary);
+  border-color: var(--accent-secondary);
+}
+
+.proposed-version-btn--approve:hover {
+  background: var(--success-bg);
+}
+
+.proposed-version-btn--reject {
+  color: var(--danger);
+  border-color: var(--danger-border);
+}
+
+.proposed-version-btn--reject:hover {
+  background: var(--danger-hover-bg);
+}

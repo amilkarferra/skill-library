@@ -1,0 +1,55 @@
+<?xml version="1.0" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%" class="rounded-3xl">
+                        <defs>
+                            <linearGradient id="bg-3" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#2E1065"/> <!-- Violet 950 -->
+                                <stop offset="100%" stop-color="#09090B"/> <!-- Zinc 950 -->
+                            </linearGradient>
+                            <linearGradient id="layer-top" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#C084FC"/> <!-- Purple 400 -->
+                                <stop offset="100%" stop-color="#7E22CE"/> <!-- Purple 700 -->
+                            </linearGradient>
+                            <linearGradient id="layer-mid" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#F472B6"/> <!-- Pink 400 -->
+                                <stop offset="100%" stop-color="#BE185D"/> <!-- Pink 700 -->
+                            </linearGradient>
+                            <linearGradient id="layer-bot" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#6366F1"/> <!-- Indigo 500 -->
+                                <stop offset="100%" stop-color="#312E81"/> <!-- Indigo 900 -->
+                            </linearGradient>
+                            <filter id="glow-3">
+                                <feGaussianBlur stdDeviation="6" result="blur"/>
+                                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                            </filter>
+                        </defs>
+                        <!-- Background -->
+                        <rect width="500" height="500" rx="110" fill="url(#bg-3)"/>
+                        <rect width="496" height="496" x="2" y="2" rx="108" fill="none" stroke="#ffffff" stroke-opacity="0.05" stroke-width="2"/>
+                        
+                        <!-- Stacked Isometric Layers (Skills adding up) -->
+                        <g transform="translate(0, 30)">
+                            <!-- Bottom Layer -->
+                            <path d="M 250,290 L 380,220 L 250,150 L 120,220 Z" fill="url(#layer-bot)" opacity="0.6" filter="url(#glow-3)"/>
+                            
+                            <!-- Middle Layer -->
+                            <path d="M 250,250 L 380,180 L 250,110 L 120,180 Z" fill="url(#layer-mid)" opacity="0.8" filter="url(#glow-3)"/>
+                            
+                            <!-- Top Layer (Active Skill) -->
+                            <path d="M 250,210 L 380,140 L 250,70 L 120,140 Z" fill="url(#layer-top)" filter="url(#glow-3)"/>
+                            <path d="M 250,210 L 380,140 L 250,70 L 120,140 Z" fill="none" stroke="#FFFFFF" stroke-width="2" opacity="0.5"/>
+                            
+                            <!-- AI Spark inside Top Layer -->
+                            <path d="M 250,110 Q 250,140 220,140 Q 250,140 250,170 Q 250,140 280,140 Q 250,140 250,110 Z" fill="#FFFFFF"/>
+                        </g>
+
+                        <!-- Vertical connection lines (Flow of logic) -->
+                        <g stroke="#FFFFFF" stroke-width="2" stroke-dasharray="4 4" opacity="0.3">
+                            <line x1="250" y1="240" x2="250" y2="340"/>
+                            <line x1="120" y1="170" x2="120" y2="240"/>
+                            <line x1="380" y1="170" x2="380" y2="240"/>
+                        </g>
+
+                        <!-- Typography -->
+                        <text x="250" y="420" font-family="system-ui, sans-serif" font-weight="800" font-size="34" fill="#FFFFFF" text-anchor="middle" letter-spacing="0">Skill Library</text>
+                        <text x="250" y="445" font-family="system-ui, sans-serif" font-weight="500" font-size="14" fill="#F472B6" text-anchor="middle" letter-spacing="4">STACK THE VIBE</text>
+                    </svg>

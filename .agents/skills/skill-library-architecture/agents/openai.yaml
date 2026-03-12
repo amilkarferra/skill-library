@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Library Architecture"
+  short_description: "Technical architecture of Skill Library"
+  default_prompt: "Explain the technical architecture of this project"
