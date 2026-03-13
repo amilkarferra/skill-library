@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 
 from fastapi import HTTPException, status
-from sqlalchemy import case, func
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.auth.models.user import User
@@ -239,13 +239,9 @@ def resolve_is_liked_by_user(
 def list_categories_with_skill_count(
     database_session: Session,
 ) -> list[CategoryResponse]:
-    active_skill_count = func.count(
-        case((Skill.is_active == True, Skill.id))
-    ).label("skill_count")
-
     rows = (
-        database_session.query(Category, active_skill_count)
-        .outerjoin(Skill, Skill.category_id == Category.id)
+        database_session.query(Category, func.count(Skill.id).label("skill_count"))
+        .outerjoin(Skill, (Skill.category_id == Category.id) & (Skill.is_active == True))
         .group_by(Category.id, Category.name, Category.slug)
         .order_by(Category.name.asc())
         .all()
