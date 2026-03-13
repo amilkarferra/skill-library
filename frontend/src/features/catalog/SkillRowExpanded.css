@@ -1,5 +1,5 @@
 .skill-row-expanded {
-  padding: 18px 20px 18px 66px;
+  padding: 14px 16px 16px 64px;
   background: var(--bg-container);
   border-bottom: 2px solid var(--accent);
   font-family: 'Segoe UI', sans-serif;
@@ -53,17 +53,22 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 16px;
-  margin-bottom: 16px;
+  gap: 20px;
+  margin-bottom: 14px;
   margin-top: 12px;
 }
 
 .skill-row-expanded-meta-item {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   font-size: 11px;
   color: var(--text-muted);
+}
+
+.skill-row-expanded-meta-value {
+  color: var(--text-primary);
+  font-weight: 600;
 }
 
 .skill-row-expanded-error {
@@ -75,7 +80,7 @@
 .skill-row-expanded-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .skill-row-expanded-spacer {

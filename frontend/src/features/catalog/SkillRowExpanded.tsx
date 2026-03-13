@@ -1,12 +1,13 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Eye, Download, Upload, User, Box, Calendar, UserPlus, Trash2 } from 'lucide-react';
+import { Eye, Download, Upload, User, Box, Calendar, UserPlus, Users, Trash2 } from 'lucide-react';
 import { Button } from '../../shared/components/Button';
 import { ConfirmDialog } from '../../shared/components/ConfirmDialog';
 import { TagList } from '../../shared/components/TagList';
 import { useConfirmDialog } from '../../shared/hooks/useConfirmDialog';
 import { useSkillActions } from '../../shared/hooks/useSkillActions';
 import { formatDate } from '../../shared/formatters/format-date';
+import { formatCollaboratorsLabel } from '../../shared/formatters/format-collaborators-label';
 import { del } from '../../shared/services/api.client';
 import type { Skill } from '../../shared/models/Skill';
 import './SkillRowExpanded.css';
@@ -32,6 +33,8 @@ export function SkillRowExpanded({
   const canCreateVersion = isOwner || isCollaborator;
   const shouldShowReviewLink =
     isOwner && skill.collaborationMode === 'open';
+  const hasCollaborators = skill.collaboratorsCount > 0;
+  const collaboratorsLabel = formatCollaboratorsLabel(skill.collaboratorsCount);
   const roleBadgeLabel = buildRoleBadgeLabel(skill.myRole);
   const hasRoleBadge = roleBadgeLabel.length > 0;
 
@@ -46,6 +49,10 @@ export function SkillRowExpanded({
   const handleOpenReviewPanel = useCallback(() => {
     navigate('/panel/versions');
   }, [navigate]);
+
+  const handleOpenCollaborators = useCallback(() => {
+    navigate(`/skills/${skill.name}?tab=collaborators`);
+  }, [navigate, skill.name]);
 
   const handleDeleteSkill = useCallback(async () => {
     setActionError(null);
@@ -101,21 +108,37 @@ export function SkillRowExpanded({
       <TagList tags={skill.tags} />
       <div className="skill-row-expanded-meta">
         <span className="skill-row-expanded-meta-item">
-          <User size={13} />
-          @{skill.ownerUsername}
+          <User size={12} />
+          <strong className="skill-row-expanded-meta-value">
+            @{skill.ownerUsername}
+          </strong>
         </span>
         <span className="skill-row-expanded-meta-item">
-          <Box size={13} />
-          {skill.categoryName}
+          <Box size={12} />
+          <strong className="skill-row-expanded-meta-value">
+            {skill.categoryName}
+          </strong>
         </span>
         <span className="skill-row-expanded-meta-item">
-          <Calendar size={13} />
-          {formatDate(skill.createdAt)}
+          <Calendar size={12} />
+          <strong className="skill-row-expanded-meta-value">
+            {formatDate(skill.createdAt)}
+          </strong>
         </span>
         <span className="skill-row-expanded-meta-item">
-          <UserPlus size={13} />
-          {buildCollaborationModeLabel(skill.collaborationMode)}
+          <UserPlus size={12} />
+          <strong className="skill-row-expanded-meta-value">
+            {buildCollaborationModeLabel(skill.collaborationMode)}
+          </strong>
         </span>
+        {hasCollaborators && (
+          <span className="skill-row-expanded-meta-item">
+            <Users size={12} />
+            <strong className="skill-row-expanded-meta-value">
+              {collaboratorsLabel}
+            </strong>
+          </span>
+        )}
       </div>
       {hasDownloadError && (
         <p className="skill-row-expanded-error">{downloadError}</p>
@@ -152,6 +175,16 @@ export function SkillRowExpanded({
           <Eye size={14} />
           View detail
         </Button>
+        {isOwner && (
+          <Button
+            variant="secondary"
+            size="small"
+            onClick={handleOpenCollaborators}
+          >
+            <Users size={14} />
+            Collaborators
+          </Button>
+        )}
         {shouldShowReviewLink && (
           <Button
             variant="secondary"
@@ -210,3 +243,4 @@ function buildCollaborationModeLabel(collaborationMode: Skill['collaborationMode
   const isOpenMode = collaborationMode === 'open';
   return isOpenMode ? 'Open collaboration' : 'Closed collaboration';
 }
+
