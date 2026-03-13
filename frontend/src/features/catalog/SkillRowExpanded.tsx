@@ -1,14 +1,15 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Eye, Download, Upload, User, Box, Calendar, UserPlus, Users, Trash2 } from 'lucide-react';
+import { Eye, Download, Upload, User, Box, Calendar, UserPlus, Users, Trash2, Check } from 'lucide-react';
 import { Button } from '../../shared/components/Button';
 import { ConfirmDialog } from '../../shared/components/ConfirmDialog';
 import { TagList } from '../../shared/components/TagList';
 import { useConfirmDialog } from '../../shared/hooks/useConfirmDialog';
 import { useSkillActions } from '../../shared/hooks/useSkillActions';
+import { useAuthStore } from '../../shared/stores/useAuthStore';
 import { formatDate } from '../../shared/formatters/format-date';
 import { formatCollaboratorsLabel } from '../../shared/formatters/format-collaborators-label';
-import { del } from '../../shared/services/api.client';
+import { del, post } from '../../shared/services/api.client';
 import type { Skill } from '../../shared/models/Skill';
 import './SkillRowExpanded.css';
 
@@ -18,6 +19,7 @@ interface SkillRowExpandedProps {
 }
 
 const MAX_DESCRIPTION_LENGTH = 200;
+const ACTION_ICON_SIZE = 12;
 
 export function SkillRowExpanded({
   skill,
@@ -27,12 +29,16 @@ export function SkillRowExpanded({
   const { handleDownload, downloadError } = useSkillActions(skill);
   const [actionError, setActionError] = useState<string | null>(null);
   const { dialogState, openDialog, closeDialog } = useConfirmDialog();
+  const { isAuthenticated } = useAuthStore();
+  const [isCollabRequesting, setIsCollabRequesting] = useState(false);
+  const [isCollabRequestSent, setIsCollabRequestSent] = useState(false);
   const hasCurrentVersion = skill.currentVersion !== null;
   const isOwner = skill.myRole === 'owner';
   const isCollaborator = skill.myRole === 'collaborator';
   const canCreateVersion = isOwner || isCollaborator;
-  const shouldShowReviewLink =
-    isOwner && skill.collaborationMode === 'open';
+  const isOpenCollab = skill.collaborationMode === 'open';
+  const canRequestCollab = isAuthenticated && !isOwner && !isCollaborator && isOpenCollab;
+  const shouldShowReviewLink = isOwner && isOpenCollab;
   const hasCollaborators = skill.collaboratorsCount > 0;
   const collaboratorsLabel = formatCollaboratorsLabel(skill.collaboratorsCount);
   const roleBadgeLabel = buildRoleBadgeLabel(skill.myRole);
@@ -67,6 +73,21 @@ export function SkillRowExpanded({
       setActionError(errorMessage);
     }
   }, [skill.name, skill.id, closeDialog, onSkillDeleted]);
+
+  const handleRequestCollaboration = useCallback(async () => {
+    setIsCollabRequesting(true);
+    setActionError(null);
+    try {
+      await post<void>(`/skills/${skill.name}/collaboration-requests`);
+      setIsCollabRequestSent(true);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to send collaboration request';
+      setActionError(errorMessage);
+    } finally {
+      setIsCollabRequesting(false);
+    }
+  }, [skill.name]);
 
   const handleRequestDelete = useCallback(() => {
     openDialog({
@@ -153,7 +174,7 @@ export function SkillRowExpanded({
             size="small"
             onClick={handleDownload!}
           >
-            <Download size={14} />
+            <Download size={ACTION_ICON_SIZE} />
             Download
           </Button>
         )}
@@ -163,7 +184,7 @@ export function SkillRowExpanded({
             size="small"
             onClick={handleCreateVersion}
           >
-            <Upload size={14} />
+            <Upload size={ACTION_ICON_SIZE} />
             New version
           </Button>
         )}
@@ -172,16 +193,33 @@ export function SkillRowExpanded({
           size="small"
           onClick={handleViewDetails}
         >
-          <Eye size={14} />
+          <Eye size={ACTION_ICON_SIZE} />
           View detail
         </Button>
+        {canRequestCollab && !isCollabRequestSent && (
+          <Button
+            variant="secondary"
+            size="small"
+            onClick={handleRequestCollaboration}
+            disabled={isCollabRequesting}
+          >
+            <Users size={ACTION_ICON_SIZE} />
+            {isCollabRequesting ? 'Sending...' : 'Collaborate'}
+          </Button>
+        )}
+        {canRequestCollab && isCollabRequestSent && (
+          <Button variant="success" size="small" disabled>
+            <Check size={ACTION_ICON_SIZE} />
+            Request Sent
+          </Button>
+        )}
         {isOwner && (
           <Button
             variant="secondary"
             size="small"
             onClick={handleOpenCollaborators}
           >
-            <Users size={14} />
+            <Users size={ACTION_ICON_SIZE} />
             Collaborators
           </Button>
         )}
@@ -191,7 +229,7 @@ export function SkillRowExpanded({
             size="small"
             onClick={handleOpenReviewPanel}
           >
-            <Upload size={14} />
+            <Upload size={ACTION_ICON_SIZE} />
             Review proposals
           </Button>
         )}
@@ -203,7 +241,7 @@ export function SkillRowExpanded({
               size="small"
               onClick={handleRequestDelete}
             >
-              <Trash2 size={14} />
+              <Trash2 size={ACTION_ICON_SIZE} />
               Delete
             </Button>
           </>
