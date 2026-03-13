@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import type { ChangeEvent } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, Upload, User, Box, LogOut } from 'lucide-react';
+import { Search, Upload, User } from 'lucide-react';
 import { useAuth } from '../../features/auth/useAuth';
 import { useCatalogStore } from '../stores/useCatalogStore';
 import { useNotificationsStore } from '../stores/useNotificationsStore';
@@ -13,7 +13,7 @@ const ICON_SIZE_MEDIUM = 16;
 const LOGO_SIZE = 28;
 
 export function Navbar() {
-  const { user, isAuthenticated, signOut } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const searchQuery = useCatalogStore((state) => state.searchQuery);
@@ -52,12 +52,10 @@ export function Navbar() {
         </Link>
         <div className="nav-links">
           <Link to="/" className={exploreLinkClassName}>
-            <Search size={ICON_SIZE_SMALL} />
             Explore
           </Link>
           {isAuthenticated && (
             <Link to="/panel" className={panelLinkClassName}>
-              <Box size={ICON_SIZE_SMALL} />
               My Panel
             </Link>
           )}
@@ -86,24 +84,11 @@ export function Navbar() {
               Publish
             </Link>
             <div className="nav-profile">
-              <div className="nav-profile-icon">
-                <User size={ICON_SIZE_MEDIUM} />
-                {hasPendingNotifications && (
-                  <span className="nav-notification-dot" />
-                )}
-              </div>
-              <div className="nav-profile-text">
-                <span className="nav-profile-label">Signed in as</span>
-                <span className="nav-username">@{user?.username}</span>
-              </div>
-              <button
-                type="button"
-                className="nav-logout"
-                onClick={signOut}
-                aria-label="Logout"
-              >
-                <LogOut size={ICON_SIZE_SMALL} />
-              </button>
+              <User size={ICON_SIZE_MEDIUM} />
+              <span className="nav-username">@{user?.username}</span>
+              {hasPendingNotifications && (
+                <span className="nav-notification-dot" />
+              )}
             </div>
           </>
         ) : (
