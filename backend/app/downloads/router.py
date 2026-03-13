@@ -43,7 +43,7 @@ def download_latest_version(
     )
     user_id = current_user.id if current_user else None
     download_service.record_download(
-        database_session, skill, latest_version, user_id
+        database_session, skill.id, latest_version.id, user_id
     )
 
     file_name = _extract_filename_from_blob_url(
@@ -83,7 +83,7 @@ def download_specific_version(
     )
     user_id = current_user.id if current_user else None
     download_service.record_download(
-        database_session, skill, skill_version, user_id
+        database_session, skill.id, skill_version.id, user_id
     )
 
     file_name = _extract_filename_from_blob_url(
