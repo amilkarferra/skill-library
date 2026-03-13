@@ -6,12 +6,10 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.auth.models.user import User
-from app.collaboration.models.skill_collaborator import SkillCollaborator
 from app.shared.config import settings
 from app.shared.database import provide_database_session
 from app.shared.dependencies import extract_authenticated_user, extract_optional_user
 from app.shared.exceptions import FileTooLargeError, ForbiddenActionError
-from app.social.models.skill_like import SkillLike
 from app.shared.pagination import PaginatedResponse
 from app.shared.constants import INITIAL_SKILL_CHANGELOG, INITIAL_SKILL_VERSION, POPULAR_TAGS_LIMIT
 from app.skills.models.category import Category
@@ -46,6 +44,7 @@ def list_skills(
     sort: str = Query(default="newest"),
     page: int = Query(default=1, ge=1),
     page_size: int = Query(default=20, ge=1, le=100, alias="pageSize"),
+    current_user: User | None = Depends(extract_optional_user),
     database_session: Session = Depends(provide_database_session),
 ) -> PaginatedResponse[SkillResponse]:
     params = SkillSearchParams(
@@ -57,7 +56,7 @@ def list_skills(
         page=page,
         page_size=page_size,
     )
-    return search_service.search_skills(database_session, params)
+    return search_service.search_skills(database_session, params, current_user)
 
 
 @router.get("/skills/{slug}", response_model=SkillDetailResponse)
@@ -271,8 +270,8 @@ def _build_detail_response(
         raise HTTPException(status_code=500, detail="Skill owner not found")
 
     tag_names = service.load_tag_names_for_skill(database_session, skill.id)
-    is_liked_by_me = _resolve_is_liked_by_user(database_session, skill.id, current_user)
-    my_role = _resolve_user_role_on_skill(database_session, skill, current_user)
+    is_liked_by_me = service.resolve_is_liked_by_user(database_session, skill.id, current_user)
+    my_role = service.resolve_user_role_on_skill(database_session, skill, current_user)
 
     return SkillDetailResponse(
         id=skill.id,
@@ -300,37 +299,3 @@ def _build_detail_response(
     )
 
 
-def _resolve_is_liked_by_user(
-    database_session: Session,
-    skill_id: int,
-    current_user: User | None,
-) -> bool:
-    has_no_user = current_user is None
-    if has_no_user:
-        return False
-    existing_like = database_session.query(SkillLike).filter(
-        SkillLike.skill_id == skill_id,
-        SkillLike.user_id == current_user.id,
-    ).first()
-    return existing_like is not None
-
-
-def _resolve_user_role_on_skill(
-    database_session: Session,
-    skill: Skill,
-    current_user: User | None,
-) -> str | None:
-    has_no_user = current_user is None
-    if has_no_user:
-        return None
-    is_owner = skill.owner_id == current_user.id
-    if is_owner:
-        return "owner"
-    collaborator = database_session.query(SkillCollaborator).filter(
-        SkillCollaborator.skill_id == skill.id,
-        SkillCollaborator.user_id == current_user.id,
-    ).first()
-    is_collaborator = collaborator is not None
-    if is_collaborator:
-        return "collaborator"
-    return None

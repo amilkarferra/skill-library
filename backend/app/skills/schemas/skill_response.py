@@ -21,6 +21,8 @@ class SkillResponse(CamelCaseSchema):
     total_comments: int
     tags: list[str]
     is_active: bool
+    is_liked_by_me: bool
+    my_role: str | None
     created_at: datetime
     updated_at: datetime
 

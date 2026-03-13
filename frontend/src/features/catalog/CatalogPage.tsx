@@ -184,6 +184,16 @@ export function CatalogPage() {
     [goToPage]
   );
 
+  const handleSkillDeleted = useCallback(
+    (skillId: number) => {
+      setSkills((previous) =>
+        previous.filter((skill) => skill.id !== skillId)
+      );
+      setExpandedSkillId(null);
+    },
+    []
+  );
+
   const hasSkills = skills.length > 0;
   const hasError = loadError !== null;
 
@@ -232,7 +242,12 @@ export function CatalogPage() {
                   isAlternate={isAlternate}
                   onToggleExpand={handleToggleExpand}
                 />
-                {isExpanded && <SkillRowExpanded skill={skill} />}
+                {isExpanded && (
+                  <SkillRowExpanded
+                    skill={skill}
+                    onSkillDeleted={handleSkillDeleted}
+                  />
+                )}
               </div>
             );
           })}

@@ -4,11 +4,13 @@ from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.auth.models.user import User
+from app.collaboration.models.skill_collaborator import SkillCollaborator
 from app.skills.models.category import Category
 from app.skills.models.collaboration_mode import CollaborationMode
 from app.skills.models.skill import Skill
 from app.skills.models.skill_tag import SkillTag
 from app.skills.models.tag import Tag
+from app.social.models.skill_like import SkillLike
 from app.skills.schemas.skill_create_request import SkillCreateRequest
 from app.skills.schemas.skill_update_request import SkillUpdateRequest
 from app.skills.slug import generate_slug
@@ -181,6 +183,46 @@ def _raise_if_slug_taken(database_session: Session, slug: str) -> None:
             status_code=status.HTTP_409_CONFLICT,
             detail="A skill with this name already exists",
         )
+
+
+def resolve_user_role_on_skill(
+    database_session: Session,
+    skill: Skill,
+    current_user: User | None,
+) -> str | None:
+    has_no_user = current_user is None
+    if has_no_user:
+        return None
+
+    is_owner = skill.owner_id == current_user.id
+    if is_owner:
+        return "owner"
+
+    collaborator = database_session.query(SkillCollaborator).filter(
+        SkillCollaborator.skill_id == skill.id,
+        SkillCollaborator.user_id == current_user.id,
+    ).first()
+    is_collaborator = collaborator is not None
+    if is_collaborator:
+        return "collaborator"
+
+    return None
+
+
+def resolve_is_liked_by_user(
+    database_session: Session,
+    skill_id: int,
+    current_user: User | None,
+) -> bool:
+    has_no_user = current_user is None
+    if has_no_user:
+        return False
+
+    existing_like = database_session.query(SkillLike).filter(
+        SkillLike.skill_id == skill_id,
+        SkillLike.user_id == current_user.id,
+    ).first()
+    return existing_like is not None
 
 
 def _raise_if_category_missing(

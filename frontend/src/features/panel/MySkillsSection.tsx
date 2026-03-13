@@ -2,7 +2,9 @@ import { useEffect, useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { AlertMessage } from '../../shared/components/AlertMessage';
+import { ConfirmDialog } from '../../shared/components/ConfirmDialog';
 import { EmptyState } from '../../shared/components/EmptyState';
+import { useConfirmDialog } from '../../shared/hooks/useConfirmDialog';
 import { MySkillRow } from './MySkillRow';
 import { fetchMySkills } from './panel.service';
 import { del, patch } from '../../shared/services/api.client';
@@ -16,6 +18,7 @@ export function MySkillsSection() {
   const [skills, setSkills] = useState<SkillSummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const { dialogState, openDialog, closeDialog } = useConfirmDialog();
 
   const loadSkills = useCallback(async () => {
     setIsLoading(true);
@@ -37,27 +40,48 @@ export function MySkillsSection() {
     loadSkills();
   }, [loadSkills]);
 
-  const handleToggleActive = useCallback(async (skill: SkillSummary) => {
-    const isCurrentlyActive = skill.isActive;
-    try {
-      if (isCurrentlyActive) {
-        await del<void>(`/skills/${skill.name}`);
-      } else {
-        await patch<void>(`/skills/${skill.name}/restore`);
-      }
+  const updateSkillActiveStatus = useCallback(
+    (skillId: number, isActive: boolean) => {
       setSkills((previous) =>
         previous.map((existingSkill) => {
-          const isTargetSkill = existingSkill.id === skill.id;
-          if (isTargetSkill) {
-            return { ...existingSkill, isActive: !isCurrentlyActive };
-          }
+          const isTargetSkill = existingSkill.id === skillId;
+          if (isTargetSkill) return { ...existingSkill, isActive };
           return existingSkill;
         })
       );
+    },
+    []
+  );
+
+  const executeDelete = useCallback(async (skill: SkillSummary) => {
+    try {
+      await del<void>(`/skills/${skill.name}`);
+      closeDialog();
+      updateSkillActiveStatus(skill.id, false);
+    } catch {
+      closeDialog();
+      await loadSkills();
+    }
+  }, [closeDialog, loadSkills, updateSkillActiveStatus]);
+
+  const handleDelete = useCallback((skill: SkillSummary) => {
+    openDialog({
+      title: 'Delete skill',
+      message: `Are you sure you want to delete "${skill.displayName}"? The skill will be deactivated but can be restored later.`,
+      confirmLabel: 'Delete',
+      isDangerous: true,
+      onConfirm: () => { void executeDelete(skill); },
+    });
+  }, [openDialog, executeDelete]);
+
+  const handleRestore = useCallback(async (skill: SkillSummary) => {
+    try {
+      await patch<void>(`/skills/${skill.name}/restore`);
+      updateSkillActiveStatus(skill.id, true);
     } catch {
       await loadSkills();
     }
-  }, [loadSkills]);
+  }, [loadSkills, updateSkillActiveStatus]);
 
   const hasSkills = skills.length > 0;
 
@@ -100,9 +124,8 @@ export function MySkillsSection() {
                 <th className="my-skills-th">NAME</th>
                 <th className="my-skills-th">STATUS</th>
                 <th className="my-skills-th">VERSION</th>
-                <th className="my-skills-th">LIKES</th>
-                <th className="my-skills-th">DOWNLOADS</th>
-                <th className="my-skills-th">COLLAB MODE</th>
+                <th className="my-skills-th my-skills-th--center">LIKES / DOWNLOADS</th>
+                <th className="my-skills-th my-skills-th--center">COLLAB MODE</th>
                 <th className="my-skills-th">ACTIONS</th>
               </tr>
             </thead>
@@ -111,12 +134,23 @@ export function MySkillsSection() {
                 <MySkillRow
                   key={skill.id}
                   skill={skill}
-                  onToggleActive={handleToggleActive}
+                  onDelete={handleDelete}
+                  onRestore={handleRestore}
                 />
               ))}
             </tbody>
           </table>
         </div>
+      )}
+      {dialogState.isOpen && (
+        <ConfirmDialog
+          title={dialogState.title}
+          message={dialogState.message}
+          confirmLabel={dialogState.confirmLabel}
+          isDangerous={dialogState.isDangerous}
+          onConfirm={dialogState.onConfirm}
+          onCancel={closeDialog}
+        />
       )}
     </div>
   );

@@ -12,12 +12,13 @@ from app.skills.models.skill_tag import SkillTag
 from app.skills.models.tag import Tag
 from app.skills.schemas.skill_response import SkillResponse
 from app.skills.schemas.skill_search_params import SkillSearchParams
-from app.skills.service import load_tag_names_for_skill
+from app.skills.service import load_tag_names_for_skill, resolve_is_liked_by_user, resolve_user_role_on_skill
 
 
 def search_skills(
     database_session: Session,
     params: SkillSearchParams,
+    current_user: User | None = None,
 ) -> PaginatedResponse[SkillResponse]:
     base_query = database_session.query(Skill).join(
         Category, Skill.category_id == Category.id
@@ -41,7 +42,7 @@ def search_skills(
     skills = sorted_query.offset(offset).limit(params.page_size).all()
 
     items = [
-        _build_skill_response(database_session, skill)
+        _build_skill_response(database_session, skill, current_user)
         for skill in skills
     ]
 
@@ -126,6 +127,7 @@ def _apply_sorting(query: Query, sort: str) -> Query:
 def _build_skill_response(
     database_session: Session,
     skill: Skill,
+    current_user: User | None,
 ) -> SkillResponse:
     category = database_session.query(Category).filter(
         Category.id == skill.category_id
@@ -142,6 +144,8 @@ def _build_skill_response(
         raise HTTPException(status_code=500, detail="Skill owner not found")
 
     tag_names = load_tag_names_for_skill(database_session, skill.id)
+    is_liked_by_me = resolve_is_liked_by_user(database_session, skill.id, current_user)
+    my_role = resolve_user_role_on_skill(database_session, skill, current_user)
 
     return SkillResponse(
         id=skill.id,
@@ -161,6 +165,8 @@ def _build_skill_response(
         total_comments=skill.total_comments,
         tags=tag_names,
         is_active=skill.is_active,
+        is_liked_by_me=is_liked_by_me,
+        my_role=my_role,
         created_at=skill.created_at,
         updated_at=skill.updated_at,
     )

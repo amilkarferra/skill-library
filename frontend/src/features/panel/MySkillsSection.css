@@ -1,7 +1,6 @@
 .my-skills-section {
   background: var(--bg-container);
-  border: 1px solid var(--border-main);
-  box-shadow: var(--shadow-soft);
+  flex: 1;
 }
 
 .my-skills-header {
@@ -32,6 +31,7 @@
 .my-skills-table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
 }
 
 .my-skills-table-head {
@@ -48,4 +48,32 @@
   text-align: left;
   white-space: nowrap;
   background: var(--bg-sidebar);
+}
+
+.my-skills-th--center {
+  text-align: center;
+}
+
+.my-skills-th:first-child {
+  width: auto;
+}
+
+.my-skills-th:nth-child(2) {
+  width: 75px;
+}
+
+.my-skills-th:nth-child(3) {
+  width: 70px;
+}
+
+.my-skills-th:nth-child(4) {
+  width: 110px;
+}
+
+.my-skills-th:nth-child(5) {
+  width: 80px;
+}
+
+.my-skills-th:last-child {
+  width: 120px;
 }

@@ -78,3 +78,7 @@
   gap: 8px;
 }
 
+.skill-row-expanded-spacer {
+  flex: 1;
+}
+

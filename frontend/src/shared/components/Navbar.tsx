@@ -50,7 +50,19 @@ export function Navbar() {
           <AppLogo size={LOGO_SIZE} />
           skill<span className="nav-logo-accent">library</span>
         </Link>
-        {isCatalogPage ? (
+        <div className="nav-links">
+          <Link to="/" className={exploreLinkClassName}>
+            <Search size={ICON_SIZE_SMALL} />
+            Explore
+          </Link>
+          {isAuthenticated && (
+            <Link to="/panel" className={panelLinkClassName}>
+              <Box size={ICON_SIZE_SMALL} />
+              My Panel
+            </Link>
+          )}
+        </div>
+        {isCatalogPage && (
           <div className="nav-search">
             <Search size={ICON_SIZE_MEDIUM} className="nav-search-icon" />
             <input
@@ -60,19 +72,6 @@ export function Navbar() {
               value={searchQuery}
               onChange={handleSearchQueryChange}
             />
-          </div>
-        ) : (
-          <div className="nav-links">
-            <Link to="/" className={exploreLinkClassName}>
-              <Search size={ICON_SIZE_SMALL} />
-              Explore
-            </Link>
-            {isAuthenticated && (
-              <Link to="/panel" className={panelLinkClassName}>
-                <Box size={ICON_SIZE_SMALL} />
-                My Panel
-              </Link>
-            )}
           </div>
         )}
       </div>

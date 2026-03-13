@@ -4,6 +4,7 @@ import {
   Heart,
   ArrowDownToLine,
   MessageSquare,
+  Trash2,
   Users,
 } from 'lucide-react';
 import { fetchSkillVersionDownloadUrl } from './skill-detail.service';
@@ -19,6 +20,7 @@ interface SkillSidebarProps {
   readonly isAuthenticated: boolean;
   readonly onToggleLike: () => void;
   readonly onRequestCollaboration: () => void;
+  readonly onDelete: () => void;
   readonly isCollabRequesting: boolean;
 }
 
@@ -28,6 +30,7 @@ export function SkillSidebar({
   isAuthenticated,
   onToggleLike,
   onRequestCollaboration,
+  onDelete,
   isCollabRequesting,
 }: SkillSidebarProps) {
   const isLiked = skill.isLikedByMe === true;
@@ -140,6 +143,15 @@ export function SkillSidebar({
           <Users size={14} />
           Request Collaboration
         </Button>
+      )}
+
+      {isOwner && (
+        <div className="skill-sidebar-danger-zone">
+          <Button variant="danger-outline" isFullWidth onClick={onDelete}>
+            <Trash2 size={14} />
+            Delete skill
+          </Button>
+        </div>
       )}
     </aside>
   );

@@ -9,14 +9,11 @@ from app.shared.config import settings
 from app.shared.constants import JWT_ALGORITHM, AZURE_AD_SIGNING_ALGORITHM
 from app.auth.models.user import User
 
-AZURE_AD_OPENID_CONFIG_URL = (
-    f"https://login.microsoftonline.com/{settings.azure_ad_tenant_id}"
-    "/v2.0/.well-known/openid-configuration"
-)
+AZURE_AD_MULTI_TENANT_OPENID_CONFIG_URL = "https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration"
 
 
 def validate_azure_ad_token(ad_token: str) -> dict[str, str]:
-    openid_config = httpx.get(AZURE_AD_OPENID_CONFIG_URL).json()
+    openid_config = httpx.get(AZURE_AD_MULTI_TENANT_OPENID_CONFIG_URL).json()
     jwks_uri = openid_config["jwks_uri"]
     jwks_client = pyjwt.PyJWKClient(jwks_uri)
     signing_key = jwks_client.get_signing_key_from_jwt(ad_token)

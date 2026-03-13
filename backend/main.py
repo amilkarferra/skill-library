@@ -1,3 +1,4 @@
+import logging
 import traceback
 
 import uvicorn
@@ -6,21 +7,34 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 
-from app.shared.config import settings
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+_logger = logging.getLogger(__name__)
 
+_logger.info("Loading settings...")
+from app.shared.config import settings
+_logger.info("Settings loaded")
+
+_logger.info("Importing auth router...")
 from app.auth.router import router as auth_router
+_logger.info("Importing skills router...")
 from app.skills.router import router as skills_router
+_logger.info("Importing versions router...")
 from app.versions.router import router as versions_router
+_logger.info("Importing downloads router...")
 from app.downloads.router import router as downloads_router
+_logger.info("Importing social routers...")
 from app.social.likes_router import router as likes_router
 from app.social.comments_router import router as comments_router
+_logger.info("Importing collaboration routers...")
 from app.collaboration.collaborators_router import router as collaborators_router
 from app.collaboration.requests_router import (
     skill_requests_router,
     me_requests_router,
 )
+_logger.info("Importing user routers...")
 from app.users.me_router import router as me_router
 from app.users.users_router import router as users_router
+_logger.info("All imports complete")
 
 BACKEND_SERVER_HOST = "127.0.0.1"
 BACKEND_SERVER_PORT = 8000

@@ -1,13 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import { useAuthStore } from '../../shared/stores/useAuthStore';
 import { useLikeStore } from '../../shared/stores/useLikeStore';
+import { useConfirmDialog } from '../../shared/hooks/useConfirmDialog';
 import { usePagination } from '../../shared/hooks/usePagination';
+import { ConfirmDialog } from '../../shared/components/ConfirmDialog';
 import { OverviewTab } from './OverviewTab';
 import { VersionsTab } from './VersionsTab';
 import { CommentsTab } from './CommentsTab';
 import { SkillSidebar } from './SkillSidebar';
+import { del } from '../../shared/services/api.client';
 import {
   fetchSkillBySlug,
   fetchSkillVersions,
@@ -29,9 +32,11 @@ const COMMENTS_PAGE_SIZE = 15;
 
 export function SkillDetailPage() {
   const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
   const { user, isAuthenticated } = useAuthStore();
 
   const { publishLikeUpdate } = useLikeStore();
+  const { dialogState, openDialog, closeDialog } = useConfirmDialog();
   const [skill, setSkill] = useState<Skill | null>(null);
   const [versions, setVersions] = useState<SkillVersion[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
@@ -228,6 +233,35 @@ export function SkillDetailPage() {
     }
   }, [slug]);
 
+  const executeDeleteSkill = useCallback(async () => {
+    if (slug === undefined) return;
+
+    try {
+      await del<void>(`/skills/${slug}`);
+      closeDialog();
+      navigate('/');
+    } catch (error) {
+      closeDialog();
+      const errorMessage = error instanceof Error
+        ? error.message
+        : 'Failed to delete skill';
+      setActionError(errorMessage);
+    }
+  }, [slug, closeDialog, navigate]);
+
+  const handleRequestDeleteSkill = useCallback(() => {
+    const hasNoSkill = skill === null;
+    if (hasNoSkill) return;
+
+    openDialog({
+      title: 'Delete skill',
+      message: `Are you sure you want to delete "${skill.displayName}"? The skill will be deactivated but can be restored later.`,
+      confirmLabel: 'Delete',
+      isDangerous: true,
+      onConfirm: () => { void executeDeleteSkill(); },
+    });
+  }, [skill, openDialog, executeDeleteSkill]);
+
   if (isLoading) {
     return <div className="skill-detail-loading">Loading skill...</div>;
   }
@@ -339,9 +373,21 @@ export function SkillDetailPage() {
           isAuthenticated={isAuthenticated}
           onToggleLike={handleToggleLike}
           onRequestCollaboration={handleRequestCollaboration}
+          onDelete={handleRequestDeleteSkill}
           isCollabRequesting={isCollabRequesting}
         />
       </div>
+
+      {dialogState.isOpen && (
+        <ConfirmDialog
+          title={dialogState.title}
+          message={dialogState.message}
+          confirmLabel={dialogState.confirmLabel}
+          isDangerous={dialogState.isDangerous}
+          onConfirm={dialogState.onConfirm}
+          onCancel={closeDialog}
+        />
+      )}
     </div>
   );
 }

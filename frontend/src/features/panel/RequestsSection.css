@@ -1,6 +1,6 @@
 .requests-section {
   background: var(--bg-container);
-  border: 1px solid var(--border-main);
+  flex: 1;
 }
 
 .requests-header {
