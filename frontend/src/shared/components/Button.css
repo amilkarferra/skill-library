@@ -109,3 +109,25 @@
   background: var(--accent-secondary-hover);
   border-color: var(--accent-secondary-hover);
 }
+
+.button--like {
+  color: var(--text-secondary);
+  background: var(--bg-container);
+  border-color: var(--border-main);
+}
+
+.button--like:hover:not(:disabled) {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.button--like-active {
+  color: var(--danger);
+  background: var(--bg-container);
+  border-color: var(--danger-border);
+}
+
+.button--like-active:hover:not(:disabled) {
+  color: var(--danger);
+  border-color: var(--danger);
+}

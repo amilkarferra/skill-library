@@ -35,37 +35,9 @@
   display: flex;
   gap: 8px;
   flex-shrink: 0;
-  align-items: flex-start;
-}
-
-.detail-header-like {
-  display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 10px 16px;
-  background: var(--bg-container);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-main);
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.15s;
 }
 
-.detail-header-like:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.detail-header-like--active {
-  color: var(--danger);
-  border-color: var(--danger-border);
-}
-
-.detail-header-like--active:hover {
-  color: var(--danger);
-  border-color: var(--danger);
-}
 
 .detail-header-meta {
   display: flex;

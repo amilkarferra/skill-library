@@ -35,9 +35,9 @@ export function SkillDetailHeader({
   const isOpenCollab = skill.collaborationMode === 'open';
   const shouldShowCollabButton = canRequestCollab && isOpenCollab;
 
-  const likeButtonClass = isLiked
-    ? 'detail-header-like detail-header-like--active'
-    : 'detail-header-like';
+  const likeVariant = isLiked ? 'like-active' : 'like';
+  const likeLabel = isLiked ? 'Liked' : 'Like';
+  const likeIconFill = isLiked ? 'currentColor' : 'none';
 
   return (
     <header className="detail-header">
@@ -56,13 +56,10 @@ export function SkillDetailHeader({
             </Button>
           )}
           {isAuthenticated && (
-            <button className={likeButtonClass} onClick={onToggleLike}>
-              <Heart
-                size={16}
-                fill={isLiked ? 'currentColor' : 'none'}
-              />
-              {isLiked ? 'Liked' : 'Like'}
-            </button>
+            <Button variant={likeVariant} onClick={onToggleLike}>
+              <Heart size={16} fill={likeIconFill} />
+              {likeLabel}
+            </Button>
           )}
           {shouldShowCollabButton && !isCollabRequestSent && (
             <Button

@@ -8,7 +8,9 @@ type ButtonVariant =
   | 'success'
   | 'ghost'
   | 'danger-outline'
-  | 'download';
+  | 'download'
+  | 'like'
+  | 'like-active';
 
 type ButtonSize = 'small' | 'medium' | 'large';
 
