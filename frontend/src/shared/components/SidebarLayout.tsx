@@ -10,7 +10,9 @@ export function SidebarLayout({ sidebar, children }: SidebarLayoutProps) {
   return (
     <div className="sidebar-layout">
       <aside className="sidebar-layout-sidebar">
-        {sidebar}
+        <div className="sidebar-layout-sidebar-inner">
+          {sidebar}
+        </div>
       </aside>
       <div className="sidebar-layout-content">
         {children}
