@@ -9,6 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **`CountBadge` shared component** — renders a count badge with `default` (accent) and `warning` variants; returns null when count is zero; replaces inline badge CSS in PanelSidebar
+- **`SectionHeader` shared component** — reusable section header with icon, title, and optional CountBadge; used by MySkillsSection for Proposed Versions and Collaboration Requests sub-sections
+- **Category skill counts** — `GET /categories` now returns `skillCount` per category via LEFT JOIN + COUNT; FilterSidebar displays count next to each category name and computed total next to "All"
+- **Panel sidebar section counts** — `GET /me/notifications/count` returns `mySkillsCount`, `collaborationsCount`, `likesCount`; PanelSidebar shows CountBadge for all 5 sections (skills, collaborations, likes = default variant; requests, versions = warning variant)
+- **MySkillsSection header subtitle** — shows "{N} skills" or "{N} skills, {M} inactive" based on loaded skills
+- **SkillRowExpanded metadata** — added creation date (Calendar icon, formatted via `formatDate`) and collaboration mode text (UserPlus icon, "Open/Closed collaboration"); removed redundant `SkillQuickActions` (already shown in collapsed row)
+
+### Fixed
+
+- **`collaboration_mode` missing from `SkillResponse`** (BUG) — field was absent from Pydantic schema and `_build_skill_response`, causing all skills to show "Closed collaboration" regardless of actual mode
+- **`list_user_skills` filtering only active skills** — removed `is_active == True` filter so MySkillsSection shows both active and inactive skills (frontend already handles both states with delete/restore buttons)
+
+### Changed
+
+- **PanelSidebar** — migrated from inline badge CSS (`.panel-sidebar-count`) to shared `CountBadge` component; refactored to use count map instead of per-item switch logic
+- **`useNotificationsStore`** — extended with `mySkillsCount`, `collaborationsCount`, `likesCount` fields
+- **`list_categories` endpoint** — delegated to `list_categories_with_skill_count` service function (was inline query in router)
+- **MySkillsSection** — integrated `ProposedVersionsSection` and `RequestsSection` as sub-sections with `SectionHeader`
+
+### Added
+
 - **`SkillQuickActions` shared component** — dual-mode (interactive buttons / display-only spans) for like, download, and comments actions; two sizes (small/medium); used across catalog rows, panel lists, and detail views
 - **`SkillInitialTile` shared component** — letter-initial square tile with 5-color palette mapped cyclically by first character; replaces inline tile implementations in `SkillRow` and `CatalogPreviewCard`
 - **`useSkillActions` shared hook** — centralizes like toggle (auth check + API + store publish), download via SAS URL (window.open), and navigate-to-comments logic; returns null handlers when action is unavailable (not authenticated / no version)
