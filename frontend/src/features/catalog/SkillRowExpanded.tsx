@@ -10,6 +10,7 @@ import { useAuthStore } from '../../shared/stores/useAuthStore';
 import { formatDate } from '../../shared/formatters/format-date';
 import { formatCollaboratorsLabel } from '../../shared/formatters/format-collaborators-label';
 import { del, post } from '../../shared/services/api.client';
+import { RoleBadge } from '../../shared/components/RoleBadge';
 import type { Skill } from '../../shared/models/Skill';
 import './SkillRowExpanded.css';
 
@@ -41,9 +42,6 @@ export function SkillRowExpanded({
   const shouldShowReviewLink = isOwner && isOpenCollab;
   const hasCollaborators = skill.collaboratorsCount > 0;
   const collaboratorsLabel = formatCollaboratorsLabel(skill.collaboratorsCount);
-  const roleBadgeLabel = buildRoleBadgeLabel(skill.myRole);
-  const hasRoleBadge = roleBadgeLabel.length > 0;
-
   const handleViewDetails = useCallback(() => {
     navigate(`/skills/${skill.name}`);
   }, [navigate, skill.name]);
@@ -114,11 +112,7 @@ export function SkillRowExpanded({
           <span className="skill-row-expanded-name">
             {skill.displayName}
           </span>
-          {hasRoleBadge && (
-            <span className="skill-row-expanded-role">
-              {roleBadgeLabel}
-            </span>
-          )}
+          <RoleBadge role={skill.myRole} />
         </div>
       </div>
       <div className="skill-row-expanded-description-panel">
@@ -265,16 +259,6 @@ function buildTruncatedDescription(description: string): string {
   const isShortEnough = description.length <= MAX_DESCRIPTION_LENGTH;
   if (isShortEnough) return description;
   return description.slice(0, MAX_DESCRIPTION_LENGTH) + '...';
-}
-
-function buildRoleBadgeLabel(myRole: Skill['myRole']): string {
-  if (myRole === 'owner') {
-    return 'Owner';
-  }
-  if (myRole === 'collaborator') {
-    return 'Collaborator';
-  }
-  return '';
 }
 
 function buildCollaborationModeLabel(collaborationMode: Skill['collaborationMode']): string {

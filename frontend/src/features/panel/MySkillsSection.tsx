@@ -1,6 +1,5 @@
 import { useEffect, useCallback, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Plus, Upload, UserPlus } from 'lucide-react';
+import { Upload, UserPlus } from 'lucide-react';
 import { AlertMessage } from '../../shared/components/AlertMessage';
 import { ConfirmDialog } from '../../shared/components/ConfirmDialog';
 import { EmptyState } from '../../shared/components/EmptyState';
@@ -17,7 +16,6 @@ import type { SkillSummary } from '../../shared/models/SkillSummary';
 
 import './MySkillsSection.css';
 
-const ICON_SIZE_SMALL = 14;
 const SECTION_ICON_SIZE = 13;
 
 export function MySkillsSection() {
@@ -105,10 +103,6 @@ export function MySkillsSection() {
             <span className="my-skills-subtitle">{headerSubtitle}</span>
           )}
         </div>
-        <Link to="/publish" className="button button--primary button--small">
-          <Plus size={ICON_SIZE_SMALL} />
-          New Skill
-        </Link>
       </div>
       {isLoading && <PanelTableSkeleton />}
       {hasLoadError && (

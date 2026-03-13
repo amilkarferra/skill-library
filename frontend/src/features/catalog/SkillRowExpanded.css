@@ -25,16 +25,6 @@
   color: var(--text-primary);
 }
 
-.skill-row-expanded-role {
-  display: inline-block;
-  padding: 2px 7px;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.6px;
-  text-transform: uppercase;
-  color: var(--button-text);
-  background: var(--accent);
-}
 
 .skill-row-expanded-description-panel {
   padding: 12px 14px;

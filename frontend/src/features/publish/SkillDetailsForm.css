@@ -1,4 +1,5 @@
 .skill-details-form {
+  max-width: 900px;
   background: var(--bg-container);
   border: 1px solid var(--border-main);
   padding: 24px;

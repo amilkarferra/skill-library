@@ -1,0 +1,21 @@
+.role-badge {
+  display: inline-block;
+  padding: 2px 7px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+.role-badge--owner {
+  background: var(--accent-bg);
+  color: var(--accent);
+  border-color: var(--border-accent);
+}
+
+.role-badge--collaborator {
+  background: var(--success-bg);
+  color: var(--success-color);
+  border-color: var(--success-border);
+}

@@ -3,13 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { FileUpload } from './FileUpload';
 import { uploadNewVersion } from './publish.service';
 import { AlertMessage } from '../../shared/components/AlertMessage';
-import { FormField } from '../../shared/components/FormField';
-import { TextInput } from '../../shared/components/TextInput';
-import { TextArea } from '../../shared/components/TextArea';
 import { Button } from '../../shared/components/Button';
 import './VersionForm.css';
 
-const FALLBACK_UPLOAD_ERROR = 'Failed to upload version';
 const MISSING_FILE_ERROR = 'Please select a skill file to upload';
 
 interface VersionFormProps {
@@ -64,7 +60,7 @@ export function VersionForm({ slug }: VersionFormProps) {
       const isStandardError = error instanceof Error;
       const errorMessage = isStandardError
         ? error.message
-        : FALLBACK_UPLOAD_ERROR;
+        : 'Failed to upload version';
       setSubmitError(errorMessage);
     } finally {
       setIsSubmitting(false);
@@ -72,6 +68,7 @@ export function VersionForm({ slug }: VersionFormProps) {
   }, [version, changelog, selectedFile, slug, navigate]);
 
   const hasSubmitError = submitError !== null;
+  const buttonText = isSubmitting ? 'Uploading...' : 'Upload Version';
 
   return (
     <form className="version-form" onSubmit={handleSubmit}>
@@ -79,31 +76,43 @@ export function VersionForm({ slug }: VersionFormProps) {
         <AlertMessage variant="error">{submitError}</AlertMessage>
       )}
 
-      <FormField label="VERSION NUMBER" htmlFor="version">
-        <TextInput
+      <div className="version-form-field">
+        <label htmlFor="version" className="version-form-label">
+          Version number
+          <span className="version-form-required">*</span>
+        </label>
+        <input
           id="version"
+          type="text"
+          className="version-form-input"
           value={version}
           onChange={handleVersionChange}
           placeholder="e.g. 1.2.0"
           required
         />
-      </FormField>
+      </div>
 
-      <FormField label="CHANGELOG" htmlFor="changelog">
-        <TextArea
+      <div className="version-form-field">
+        <label htmlFor="changelog" className="version-form-label">
+          Changelog
+          <span className="version-form-required">*</span>
+        </label>
+        <textarea
           id="changelog"
+          className="version-form-input"
           rows={5}
           value={changelog}
           onChange={handleChangelogChange}
+          placeholder="Describe the changes in this version"
           required
         />
-      </FormField>
+      </div>
 
       <FileUpload onFileSelect={handleFileSelect} selectedFile={selectedFile} />
 
       <div className="version-form-actions">
         <Button variant="primary" size="large" type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Uploading...' : 'Upload Version'}
+          {buttonText}
         </Button>
       </div>
     </form>

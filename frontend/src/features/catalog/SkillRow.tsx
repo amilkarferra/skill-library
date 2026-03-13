@@ -3,6 +3,7 @@ import { ChevronRight, ChevronDown, User, Box } from 'lucide-react';
 import type { Skill } from '../../shared/models/Skill';
 import { SkillInitialTile } from '../../shared/components/SkillInitialTile';
 import { SkillQuickActions } from '../../shared/components/SkillQuickActions';
+import { RoleBadge } from '../../shared/components/RoleBadge';
 import { useSkillActions } from '../../shared/hooks/useSkillActions';
 import './SkillRow.css';
 
@@ -42,6 +43,7 @@ export function SkillRow({
         <div className="skill-row-header">
           <div className="skill-row-title-group">
             <span className="skill-row-name">{skill.displayName}</span>
+            <RoleBadge role={skill.myRole} />
             {hasVersion && (
               <span className="skill-row-version">
                 v{skill.currentVersion}

@@ -1,23 +1,42 @@
 .new-version-page {
   max-width: 640px;
   margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.new-version-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  background: var(--accent-bg);
+  color: var(--accent);
+  border: 1px solid var(--border-accent);
+  margin-bottom: 8px;
+}
+
+.new-version-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.new-version-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.new-version-subtitle strong {
+  color: var(--text-secondary);
+  font-weight: 600;
 }
 
 .new-version-card {
   background: var(--bg-container);
   border: 1px solid var(--border-main);
-  padding: 32px;
-}
-
-.new-version-title {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 4px;
-}
-
-.new-version-skill-name {
-  font-size: 14px;
-  color: var(--text-muted);
-  margin-bottom: 24px;
+  padding: 24px;
 }

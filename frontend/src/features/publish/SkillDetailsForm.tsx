@@ -46,7 +46,7 @@ export function SkillDetailsForm({
   const [longDescription, setLongDescription] = useState(extraction.description);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [collaborationMode, setCollaborationMode] = useState<'closed' | 'open'>('closed');
+  const [collaborationMode, setCollaborationMode] = useState<'closed' | 'open'>('open');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [slugError, setSlugError] = useState<string | null>(null);

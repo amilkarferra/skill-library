@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '../../shared/components/Button';
 import { TagList } from '../../shared/components/TagList';
 import { CollabModeBadge } from '../../shared/components/CollabModeBadge';
+import { RoleBadge } from '../../shared/components/RoleBadge';
 import { StatCard } from '../../shared/components/StatCard';
 import { useSkillActions } from '../../shared/hooks/useSkillActions';
 import type { Skill } from '../../shared/models/Skill';
@@ -106,6 +107,7 @@ export function SkillDetailHeader({
         )}
         <span className="detail-header-meta-dot" />
         <CollabModeBadge collaborationMode={skill.collaborationMode} />
+        <RoleBadge role={skill.myRole} />
       </div>
 
       <div className="detail-header-stats">

@@ -11,9 +11,12 @@ export function NewVersionPage() {
   return (
     <SidebarLayout sidebar={<NavigationSidebar />}>
       <div className="new-version-page">
+        <div className="new-version-badge">New Version</div>
+        <h1 className="new-version-title">Upload New Version</h1>
+        <p className="new-version-subtitle">
+          Provide the version details for <strong>{skillSlug}</strong>
+        </p>
         <div className="new-version-card">
-          <h1 className="new-version-title">Upload New Version</h1>
-          <p className="new-version-skill-name">{skillSlug}</p>
           <VersionForm slug={skillSlug} />
         </div>
       </div>
