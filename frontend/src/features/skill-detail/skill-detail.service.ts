@@ -2,7 +2,6 @@ import { get, post, put, del } from '../../shared/services/api.client';
 import type { Skill } from '../../shared/models/Skill';
 import type { SkillVersion } from '../../shared/models/SkillVersion';
 import type { Comment } from '../../shared/models/Comment';
-import type { DownloadUrlResponse } from '../../shared/models/DownloadUrlResponse';
 import type { PaginatedResponse } from '../../shared/models/PaginatedResponse';
 import type { SkillContentResponse } from '../../shared/models/SkillContentResponse';
 
@@ -22,17 +21,6 @@ export function fetchSkillComments(
   return get<PaginatedResponse<Comment>>(
     `/skills/${slug}/comments?page=${page}&pageSize=${pageSize}`
   );
-}
-
-export function toggleSkillLike(
-  slug: string,
-  isCurrentlyLiked: boolean
-): Promise<void> {
-  const shouldUnlike = isCurrentlyLiked;
-  if (shouldUnlike) {
-    return del<void>(`/skills/${slug}/like`);
-  }
-  return post<void>(`/skills/${slug}/like`);
 }
 
 export function postComment(
@@ -68,9 +56,3 @@ export function fetchSkillContent(slug: string): Promise<SkillContentResponse> {
   return get<SkillContentResponse>(`/skills/${slug}/content`);
 }
 
-export function fetchSkillVersionDownloadUrl(
-  slug: string,
-  version: string
-): Promise<DownloadUrlResponse> {
-  return get<DownloadUrlResponse>(`/skills/${slug}/versions/${version}/download`);
-}

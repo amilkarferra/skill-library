@@ -1,15 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Trash2 } from 'lucide-react';
 import { useAuthStore } from '../../shared/stores/useAuthStore';
 import { useLikeStore } from '../../shared/stores/useLikeStore';
 import { useConfirmDialog } from '../../shared/hooks/useConfirmDialog';
 import { usePagination } from '../../shared/hooks/usePagination';
+import { Button } from '../../shared/components/Button';
 import { ConfirmDialog } from '../../shared/components/ConfirmDialog';
+import { SkillDetailHeader } from './SkillDetailHeader';
 import { OverviewTab } from './OverviewTab';
 import { VersionsTab } from './VersionsTab';
 import { CommentsTab } from './CommentsTab';
-import { SkillSidebar } from './SkillSidebar';
 import { del } from '../../shared/services/api.client';
 import {
   fetchSkillBySlug,
@@ -290,6 +291,7 @@ export function SkillDetailPage() {
   const isCommentsActive = activeTab === 'comments';
 
   const currentUserId = user?.id ?? null;
+  const isOwner = skill.myRole === 'owner';
   const hasActionError = actionError !== null;
 
   const overviewTabClass = isOverviewActive
@@ -306,80 +308,81 @@ export function SkillDetailPage() {
 
   return (
     <div className="skill-detail">
-      <div className="skill-detail-header">
-        <div className="skill-detail-breadcrumb">
-          <Link to="/" className="skill-detail-breadcrumb-link">
-            Skills
-          </Link>
-          <ChevronRight size={12} className="skill-detail-breadcrumb-separator" />
-          <span>{skill.displayName}</span>
-        </div>
-        <h1 className="skill-detail-title">{skill.displayName}</h1>
-        <p className="skill-detail-subtitle">{skill.shortDescription}</p>
+      <div className="skill-detail-breadcrumb">
+        <Link to="/" className="skill-detail-breadcrumb-link">
+          Skills
+        </Link>
+        <ChevronRight size={12} className="skill-detail-breadcrumb-separator" />
+        <span>{skill.displayName}</span>
+        {isOwner && (
+          <Button
+            variant="danger-outline"
+            size="small"
+            onClick={handleRequestDeleteSkill}
+          >
+            <Trash2 size={12} />
+            Delete
+          </Button>
+        )}
       </div>
+
+      <SkillDetailHeader
+        skill={skill}
+        slug={slug}
+        isAuthenticated={isAuthenticated}
+        onToggleLike={handleToggleLike}
+        onRequestCollaboration={handleRequestCollaboration}
+        isCollabRequesting={isCollabRequesting}
+      />
 
       {hasActionError && (
         <div className="skill-detail-action-error">{actionError}</div>
       )}
 
-      <div className="skill-detail-body">
-        <div className="skill-detail-main">
-          <div className="skill-detail-tabs">
-            <button
-              className={overviewTabClass}
-              onClick={handleSelectOverview}
-            >
-              Overview
-            </button>
-            <button
-              className={versionsTabClass}
-              onClick={handleSelectVersions}
-            >
-              Versions ({versions.length})
-            </button>
-            <button
-              className={commentsTabClass}
-              onClick={handleSelectComments}
-            >
-              Comments ({skill.totalComments})
-            </button>
-          </div>
+      <div className="skill-detail-tabs">
+        <button
+          className={overviewTabClass}
+          onClick={handleSelectOverview}
+        >
+          Overview
+        </button>
+        <button
+          className={versionsTabClass}
+          onClick={handleSelectVersions}
+        >
+          Versions ({versions.length})
+        </button>
+        <button
+          className={commentsTabClass}
+          onClick={handleSelectComments}
+        >
+          Comments ({skill.totalComments})
+        </button>
+      </div>
 
-          <div className="skill-detail-tab-content">
-            {isOverviewActive && (
-              <OverviewTab markdownContent={skillMarkdownContent} />
-            )}
-            {isVersionsActive && (
-              <VersionsTab versions={versions} slug={slug} />
-            )}
-            {isCommentsActive && (
-              <CommentsTab
-                comments={comments}
-                currentPage={commentsPagination.currentPage}
-                totalPages={commentsPagination.totalPages}
-                isAuthenticated={isAuthenticated}
-                isSubmitting={isSubmittingComment}
-                isUpdating={isUpdatingComment}
-                currentUserId={currentUserId}
-                skillOwnerId={skill.ownerId}
-                onPageChange={commentsPagination.goToPage}
-                onSubmitComment={handleSubmitComment}
-                onEditComment={handleEditComment}
-                onDeleteComment={handleDeleteComment}
-              />
-            )}
-          </div>
-        </div>
-
-        <SkillSidebar
-          skill={skill}
-          slug={slug}
-          isAuthenticated={isAuthenticated}
-          onToggleLike={handleToggleLike}
-          onRequestCollaboration={handleRequestCollaboration}
-          onDelete={handleRequestDeleteSkill}
-          isCollabRequesting={isCollabRequesting}
-        />
+      <div className="skill-detail-content">
+        {isOverviewActive && (
+          <OverviewTab markdownContent={skillMarkdownContent} />
+        )}
+        {isVersionsActive && (
+          <VersionsTab versions={versions} slug={slug} />
+        )}
+        {isCommentsActive && (
+          <CommentsTab
+            comments={comments}
+            currentPage={commentsPagination.currentPage}
+            totalPages={commentsPagination.totalPages}
+            isAuthenticated={isAuthenticated}
+            isSubmitting={isSubmittingComment}
+            isUpdating={isUpdatingComment}
+            currentUserId={currentUserId}
+            skillOwnerId={skill.ownerId}
+            onPageChange={commentsPagination.goToPage}
+            onSubmitComment={handleSubmitComment}
+            onEditComment={handleEditComment}
+            onDeleteComment={handleDeleteComment}
+          />
+        )}
       </div>
 
       {dialogState.isOpen && (
