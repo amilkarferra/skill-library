@@ -35,3 +35,30 @@
   margin-bottom: 32px;
   line-height: 1.5;
 }
+
+.login-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.login-spinner {
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--border-main);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: loginSpin 0.8s linear infinite;
+}
+
+@keyframes loginSpin {
+  to { transform: rotate(360deg); }
+}
+
+.login-loading-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}

@@ -1,5 +1,6 @@
+import { useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Upload, User } from 'lucide-react';
+import { Upload, User, LogOut } from 'lucide-react';
 import { useAuth } from '../../features/auth/useAuth';
 import { useNotificationsStore } from '../stores/useNotificationsStore';
 import { AppLogo } from './AppLogo';
@@ -10,7 +11,7 @@ const ICON_SIZE_MEDIUM = 16;
 const LOGO_SIZE = 28;
 
 export function Navbar() {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, signOut } = useAuth();
   const location = useLocation();
   const pendingNotificationCount = useNotificationsStore(
     (state) => state.pendingNotificationCount
@@ -22,6 +23,10 @@ export function Navbar() {
 
   const exploreLinkClassName = buildNavbarLinkClass(!isPanelPage);
   const panelLinkClassName = buildNavbarLinkClass(isPanelPage);
+
+  const handleSignOut = useCallback(() => {
+    signOut();
+  }, [signOut]);
 
   return (
     <div className="nav-wrapper">
@@ -59,6 +64,14 @@ export function Navbar() {
                   <span className="nav-notification-dot" />
                 )}
               </div>
+              <button
+                className="nav-logout"
+                onClick={handleSignOut}
+                aria-label="Sign out"
+                title="Sign out"
+              >
+                <LogOut size={ICON_SIZE_SMALL} />
+              </button>
             </>
           ) : (
             <Link

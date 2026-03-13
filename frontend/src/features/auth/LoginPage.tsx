@@ -17,7 +17,6 @@ export function LoginPage() {
   }, [isAuthenticated, navigate]);
 
   const hasAuthError = authError !== null && authError !== undefined;
-  const buttonLabel = isLoading ? 'Loading...' : 'Sign in with Microsoft';
 
   return (
     <div className="login-page">
@@ -34,15 +33,21 @@ export function LoginPage() {
           <AlertMessage variant="error">{authError}</AlertMessage>
         )}
 
-        <Button
-          variant="primary"
-          size="large"
-          isFullWidth
-          onClick={signIn}
-          disabled={isLoading}
-        >
-          {buttonLabel}
-        </Button>
+        {isLoading ? (
+          <div className="login-loading">
+            <div className="login-spinner" />
+            <span className="login-loading-text">Signing in...</span>
+          </div>
+        ) : (
+          <Button
+            variant="primary"
+            size="large"
+            isFullWidth
+            onClick={signIn}
+          >
+            Sign in with Microsoft
+          </Button>
+        )}
       </div>
     </div>
   );

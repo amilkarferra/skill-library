@@ -88,3 +88,19 @@
   color: var(--text-secondary);
 }
 
+.nav-logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.nav-logout:hover {
+  color: var(--text-primary);
+}
+

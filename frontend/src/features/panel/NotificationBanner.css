@@ -7,8 +7,9 @@
   border-bottom: 1px solid var(--border-main);
   border-left: 3px solid var(--accent);
   box-shadow: var(--shadow-accent);
-  position: relative;
-  z-index: 1;
+  position: sticky;
+  top: var(--navbar-height);
+  z-index: 99;
 }
 
 .notification-banner-left {

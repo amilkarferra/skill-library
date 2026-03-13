@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { NavigateFunction } from 'react-router-dom';
 import { useMsal } from '@azure/msal-react';
-import { InteractionStatus } from '@azure/msal-browser';
+import { InteractionRequiredAuthError, InteractionStatus } from '@azure/msal-browser';
 import { loginRequest } from './msal-config';
 import {
   exchangeAzureTokenForAppJwt,
@@ -11,7 +11,7 @@ import {
 } from './auth.service';
 import { ApiError } from '../../shared/services/api.client';
 import { API_BASE_URL } from '../../shared/services/api.config';
-import { setMsalTokenRefresher } from '../../shared/services/api.client';
+import { registerTokenProvider } from '../../shared/services/token.refresh';
 import { useAuthStore } from '../../shared/stores/useAuthStore';
 import type { AuthState } from '../../shared/models/AuthState';
 
@@ -43,6 +43,7 @@ function buildAuthenticationErrorMessage(error: unknown): string {
 export function useAuth(): AuthState & {
   signIn: () => Promise<void>;
   signOut: () => Promise<void>;
+  reconnect: () => Promise<void>;
 } {
   const { instance, accounts, inProgress } = useMsal();
   const navigate = useNavigate();
@@ -52,10 +53,12 @@ export function useAuth(): AuthState & {
     isLoading,
     authError,
     isAuthenticated,
+    isSessionExpired,
     setUser,
     setIsLoading,
     setAuthError,
     setIsSessionInitialized,
+    setSessionExpired,
     clearAuthState,
   } = useAuthStore();
 
@@ -69,13 +72,17 @@ export function useAuth(): AuthState & {
         account: accounts[0],
       });
       return silentResult.idToken;
-    } catch {
+    } catch (silentError) {
+      const isInteractionRequired = silentError instanceof InteractionRequiredAuthError;
+      if (isInteractionRequired) {
+        setSessionExpired(true);
+      }
       return null;
     }
-  }, [instance, accounts]);
+  }, [instance, accounts, setSessionExpired]);
 
   useEffect(() => {
-    setMsalTokenRefresher(acquireFreshAzureIdToken);
+    registerTokenProvider(acquireFreshAzureIdToken);
   }, [acquireFreshAzureIdToken]);
 
   useEffect(() => {
@@ -122,6 +129,8 @@ export function useAuth(): AuthState & {
       const hasNoIdToken = !loginResult.idToken;
       if (hasNoIdToken) return;
 
+      setIsLoading(true);
+
       const callbackResponse = await exchangeAzureTokenForAppJwt(loginResult.idToken);
       const authenticatedUser = await fetchCurrentUserProfile();
       setUser(authenticatedUser);
@@ -134,9 +143,10 @@ export function useAuth(): AuthState & {
 
       navigateAfterSignIn(navigate, callbackResponse.isFirstLogin);
     } catch (error) {
+      setIsLoading(false);
       setAuthError(buildAuthenticationErrorMessage(error));
     }
-  }, [instance, navigate, setAuthError, setUser]);
+  }, [instance, navigate, setAuthError, setIsLoading, setUser]);
 
   const signOut = useCallback(async (): Promise<void> => {
     clearAuthSession();
@@ -144,5 +154,24 @@ export function useAuth(): AuthState & {
     await instance.logoutPopup();
   }, [instance, clearAuthState]);
 
-  return { user, isAuthenticated, isLoading, authError, signIn, signOut };
+  const reconnect = useCallback(async (): Promise<void> => {
+    const hasNoAccounts = accounts.length === 0;
+    if (hasNoAccounts) return;
+
+    try {
+      const popupResult = await instance.acquireTokenPopup({
+        ...loginRequest,
+        account: accounts[0],
+      });
+      const hasNoIdToken = !popupResult.idToken;
+      if (hasNoIdToken) return;
+
+      await exchangeAzureTokenForAppJwt(popupResult.idToken);
+      setSessionExpired(false);
+    } catch {
+      setAuthError('Failed to reconnect. Please sign in again.');
+    }
+  }, [instance, accounts, setSessionExpired, setAuthError]);
+
+  return { user, isAuthenticated, isLoading, authError, isSessionExpired, signIn, signOut, reconnect };
 }
