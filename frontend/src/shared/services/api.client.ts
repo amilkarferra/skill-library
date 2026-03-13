@@ -1,47 +1,8 @@
-import { getAppJwt, setAppJwt, clearAppJwt } from './token.storage';
+import { getAppJwt } from './token.storage';
 import { API_BASE_URL } from './api.config';
+import { refreshApplicationToken } from './token.refresh';
 
 const BASE_URL = API_BASE_URL;
-
-let msalTokenRefresher: (() => Promise<string | null>) | null = null;
-
-export function setMsalTokenRefresher(
-  refresher: () => Promise<string | null>
-): void {
-  msalTokenRefresher = refresher;
-}
-
-async function refreshAppJwtViaMsal(): Promise<boolean> {
-  const refresher = msalTokenRefresher;
-  const hasNoRefresher = refresher === null;
-  if (hasNoRefresher) return false;
-
-  let freshAzureAdToken: string | null = null;
-  try {
-    freshAzureAdToken = await refresher();
-  } catch {
-    clearAppJwt();
-    return false;
-  }
-  const hasNoFreshToken = !freshAzureAdToken;
-  if (hasNoFreshToken) return false;
-
-  const response = await fetch(`${BASE_URL}/auth/callback`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ adToken: freshAzureAdToken }),
-  });
-
-  const isRefreshFailed = !response.ok;
-  if (isRefreshFailed) {
-    clearAppJwt();
-    return false;
-  }
-
-  const tokenData = await response.json();
-  setAppJwt(tokenData.accessToken);
-  return true;
-}
 
 function buildHeaders(customHeaders?: Record<string, string>): HeadersInit {
   const headers: Record<string, string> = {
@@ -64,7 +25,7 @@ async function retryOnUnauthorized(
   const isAuthorized = originalResponse.status !== 401;
   if (isAuthorized) return originalResponse;
 
-  const isRefreshFailed = !(await refreshAppJwtViaMsal());
+  const isRefreshFailed = !(await refreshApplicationToken());
   if (isRefreshFailed) return originalResponse;
 
   return retryFetch();

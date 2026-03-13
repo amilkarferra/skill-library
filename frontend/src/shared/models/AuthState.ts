@@ -5,4 +5,5 @@ export interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   authError: string | null;
+  isSessionExpired: boolean;
 }

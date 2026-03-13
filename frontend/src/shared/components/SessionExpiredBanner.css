@@ -1,0 +1,31 @@
+.session-expired-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 20px;
+  background: var(--warn-bg);
+  border-bottom: 1px solid var(--warn-border);
+  border-left: 3px solid var(--warn-color);
+  position: relative;
+  z-index: 1;
+}
+
+.session-expired-banner-text {
+  font-size: 12px;
+  color: var(--warn-color);
+  font-weight: 500;
+}
+
+.session-expired-banner-action {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--warn-color);
+  background: none;
+  border: 1px solid var(--warn-border);
+  padding: 3px 10px;
+  cursor: pointer;
+}
+
+.session-expired-banner-action:hover {
+  background: var(--warn-border);
+}
