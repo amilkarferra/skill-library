@@ -128,34 +128,24 @@ export function MySkillsSection() {
         />
       )}
       {hasSkills && (
-        <div className="my-skills-table-wrapper">
-          <table className="my-skills-table">
-            <thead>
-              <tr className="my-skills-table-head">
-                <th className="my-skills-th">NAME</th>
-                <th className="my-skills-th">STATUS</th>
-                <th className="my-skills-th">VERSION</th>
-                <th className="my-skills-th my-skills-th--center">
-                  LIKES / DOWNLOADS
-                </th>
-                <th className="my-skills-th my-skills-th--center">
-                  COLLAB MODE
-                </th>
-                <th className="my-skills-th">ACTIONS</th>
-              </tr>
-            </thead>
-            <tbody>
-              {skills.map((skill) => (
-                <MySkillRow
-                  key={skill.id}
-                  skill={skill}
-                  onDelete={handleDelete}
-                  onRestore={handleRestore}
-                />
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <>
+          <div className="my-skills-table-header">
+            <div className="my-skills-col-name">Skill</div>
+            <div className="my-skills-col-status">Status</div>
+            <div className="my-skills-col-version">Version</div>
+            <div className="my-skills-col-stats">Likes / Downloads</div>
+            <div className="my-skills-col-collab">Mode</div>
+            <div className="my-skills-col-actions">Actions</div>
+          </div>
+          {skills.map((skill) => (
+            <MySkillRow
+              key={skill.id}
+              skill={skill}
+              onDelete={handleDelete}
+              onRestore={handleRestore}
+            />
+          ))}
+        </>
       )}
       <SectionHeader
         icon={<Upload size={SECTION_ICON_SIZE} />}

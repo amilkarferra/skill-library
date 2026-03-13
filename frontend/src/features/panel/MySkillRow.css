@@ -1,5 +1,9 @@
 .my-skill-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
   border-bottom: 1px solid var(--border-row);
+  font-size: 12px;
   transition: background 0.12s;
 }
 
@@ -7,15 +11,8 @@
   background: var(--bg-row-hover);
 }
 
-.my-skill-row-cell {
-  padding: 10px 12px;
-  font-size: 12px;
-  color: var(--text-secondary);
-  vertical-align: middle;
-}
-
-.my-skill-row-cell--center {
-  text-align: center;
+.my-skill-row--inactive {
+  opacity: 0.6;
 }
 
 .my-skill-row-name-block {

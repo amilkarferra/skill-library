@@ -64,7 +64,7 @@ export function ProfileSection() {
             value={displayName}
             onChange={handleDisplayNameChange}
             required
-            maxWidth="360px"
+            isNarrow
           />
         </FormField>
         <div className="profile-form-actions">

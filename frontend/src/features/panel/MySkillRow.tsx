@@ -13,11 +13,16 @@ interface MySkillRowProps {
   readonly onRestore: (skill: SkillSummary) => void;
 }
 
+const ACTION_ICON_SIZE = 12;
+
 export function MySkillRow({ skill, onDelete, onRestore }: MySkillRowProps) {
   const navigate = useNavigate();
 
   const hasVersion = skill.currentVersion !== null;
   const versionLabel = hasVersion ? `v${skill.currentVersion}` : 'No version';
+  const rowClassName = skill.isActive
+    ? 'my-skill-row'
+    : 'my-skill-row my-skill-row--inactive';
 
   const handleEdit = useCallback(() => {
     navigate(`/skills/${skill.name}?edit=true`);
@@ -40,58 +45,74 @@ export function MySkillRow({ skill, onDelete, onRestore }: MySkillRowProps) {
   }, [onRestore, skill]);
 
   return (
-    <tr className="my-skill-row">
-      <td className="my-skill-row-cell">
+    <div className={rowClassName}>
+      <div className="my-skills-col-name">
         <div className="my-skill-row-name-block">
           <span className="my-skill-row-name">{skill.displayName}</span>
-          <span className="my-skill-row-description">{skill.shortDescription}</span>
+          <span className="my-skill-row-description">
+            {skill.shortDescription}
+          </span>
         </div>
-      </td>
-      <td className="my-skill-row-cell">
+      </div>
+      <div className="my-skills-col-status">
         <StatusBadge isActive={skill.isActive} />
-      </td>
-      <td className="my-skill-row-cell">
+      </div>
+      <div className="my-skills-col-version">
         <span className="my-skill-row-version">{versionLabel}</span>
-      </td>
-      <td className="my-skill-row-cell my-skill-row-cell--center">
+      </div>
+      <div className="my-skills-col-stats">
         <SkillQuickActions
           totalLikes={skill.totalLikes}
           totalDownloads={skill.totalDownloads}
           size="small"
         />
-      </td>
-      <td className="my-skill-row-cell my-skill-row-cell--center">
+      </div>
+      <div className="my-skills-col-collab">
         <CollabModeBadge collaborationMode={skill.collaborationMode} />
-      </td>
-      <td className="my-skill-row-cell my-skill-row-actions">
-        <button className="my-skill-row-action" title="Edit" onClick={handleEdit}>
-          <Pencil size={12} />
-        </button>
-        <button className="my-skill-row-action" title="Versions" onClick={handleVersions}>
-          <History size={12} />
-        </button>
-        <button className="my-skill-row-action" title="Collaborators" onClick={handleCollaborators}>
-          <Users size={12} />
-        </button>
-        {skill.isActive && (
+      </div>
+      <div className="my-skills-col-actions">
+        <div className="my-skill-row-actions">
           <button
-            className="my-skill-row-action my-skill-row-action--danger"
-            title="Deactivate"
-            onClick={handleDelete}
+            className="my-skill-row-action"
+            title="Edit"
+            onClick={handleEdit}
           >
-            <Trash2 size={12} />
+            <Pencil size={ACTION_ICON_SIZE} />
           </button>
-        )}
-        {!skill.isActive && (
           <button
-            className="my-skill-row-action my-skill-row-action--restore"
-            title="Restore"
-            onClick={handleRestore}
+            className="my-skill-row-action"
+            title="Versions"
+            onClick={handleVersions}
           >
-            <RotateCcw size={12} />
+            <History size={ACTION_ICON_SIZE} />
           </button>
-        )}
-      </td>
-    </tr>
+          <button
+            className="my-skill-row-action"
+            title="Collaborators"
+            onClick={handleCollaborators}
+          >
+            <Users size={ACTION_ICON_SIZE} />
+          </button>
+          {skill.isActive && (
+            <button
+              className="my-skill-row-action my-skill-row-action--danger"
+              title="Deactivate"
+              onClick={handleDelete}
+            >
+              <Trash2 size={ACTION_ICON_SIZE} />
+            </button>
+          )}
+          {!skill.isActive && (
+            <button
+              className="my-skill-row-action my-skill-row-action--restore"
+              title="Restore"
+              onClick={handleRestore}
+            >
+              <RotateCcw size={ACTION_ICON_SIZE} />
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

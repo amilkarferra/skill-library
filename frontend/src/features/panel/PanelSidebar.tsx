@@ -21,12 +21,15 @@ interface SidebarItemCountMap {
   readonly [key: string]: number;
 }
 
-const SIDEBAR_ITEMS: SidebarItem[] = [
+const MAIN_SIDEBAR_ITEMS: SidebarItem[] = [
   { key: 'skills', label: 'My Skills', icon: Box, path: '/panel/skills' },
   { key: 'collaborations', label: 'Collaborations', icon: Users, path: '/panel/collaborations' },
   { key: 'likes', label: 'My Likes', icon: Heart, path: '/panel/likes' },
-  { key: 'settings', label: 'Settings', icon: Settings, path: '/panel/settings' },
 ];
+
+const SETTINGS_ITEM: SidebarItem = {
+  key: 'settings', label: 'Settings', icon: Settings, path: '/panel/settings',
+};
 
 export function PanelSidebar({ activeSection }: PanelSidebarProps) {
   const { user } = useAuthStore();
@@ -42,8 +45,8 @@ export function PanelSidebar({ activeSection }: PanelSidebarProps) {
     notificationStore.likesCount,
   ]);
 
-  const renderedItems = useMemo(() => {
-    return SIDEBAR_ITEMS.map((item) => {
+  const renderedMainItems = useMemo(() => {
+    return MAIN_SIDEBAR_ITEMS.map((item) => {
       const isActive = item.key === activeSection;
       const itemClassName = isActive
         ? 'panel-sidebar-item panel-sidebar-item--active'
@@ -62,6 +65,11 @@ export function PanelSidebar({ activeSection }: PanelSidebarProps) {
     });
   }, [activeSection, sidebarCountMap]);
 
+  const isSettingsActive = activeSection === SETTINGS_ITEM.key;
+  const settingsClassName = isSettingsActive
+    ? 'panel-sidebar-item panel-sidebar-item--active panel-sidebar-item--separated'
+    : 'panel-sidebar-item panel-sidebar-item--separated';
+
   return (
     <div className="panel-sidebar">
       <div className="panel-sidebar-user">
@@ -70,7 +78,15 @@ export function PanelSidebar({ activeSection }: PanelSidebarProps) {
       </div>
       <span className="panel-sidebar-title">Workspace</span>
       <nav className="panel-sidebar-nav">
-        {renderedItems}
+        {renderedMainItems}
+        <Link to={SETTINGS_ITEM.path} className={settingsClassName}>
+          <span className="panel-sidebar-item-content">
+            <Settings size={15} className="panel-sidebar-item-icon" />
+            <span className="panel-sidebar-item-label">
+              {SETTINGS_ITEM.label}
+            </span>
+          </span>
+        </Link>
       </nav>
     </div>
   );
