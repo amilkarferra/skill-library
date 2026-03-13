@@ -96,3 +96,56 @@
 .tags-autocomplete-wrapper {
   position: relative;
 }
+
+.tags-autocomplete-similarity {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  border: 1px solid var(--border-accent);
+  border-top: none;
+  background: var(--bg-container);
+  padding: 10px 12px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tags-autocomplete-similarity-text {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.tags-autocomplete-similarity-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.tags-autocomplete-similarity-button {
+  border: 1px solid var(--border-main);
+  background: var(--bg-container);
+  font-size: 11px;
+  font-family: inherit;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s;
+}
+
+.tags-autocomplete-similarity-button--use {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.tags-autocomplete-similarity-button--use:hover {
+  background: var(--accent-bg);
+}
+
+.tags-autocomplete-similarity-button--create {
+  color: var(--text-secondary);
+}
+
+.tags-autocomplete-similarity-button--create:hover {
+  background: var(--bg-hover);
+}

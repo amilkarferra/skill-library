@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Tag } from '../models/Tag';
+import {
+  findSimilarTag,
+  isTagAlreadySelected,
+} from './TagsAutocomplete.logic';
 import './TagsAutocomplete.css';
 
 interface TagsAutocompleteProps {
@@ -18,6 +22,13 @@ interface SuggestionItemProps {
   readonly suggestion: Tag;
   readonly onSelect: (tagName: string) => void;
 }
+
+interface SimilarityConfirmation {
+  readonly inputValue: string;
+  readonly matchedTagName: string;
+}
+
+const COMMA_KEY = ',';
 
 function TagChip({ tagName, onRemove }: TagChipProps) {
   const handleRemoveClick = useCallback(() => {
@@ -56,6 +67,45 @@ function SuggestionItem({ suggestion, onSelect }: SuggestionItemProps) {
   );
 }
 
+interface SimilarityPromptProps {
+  readonly inputValue: string;
+  readonly matchedTagName: string;
+  readonly onUseExisting: () => void;
+  readonly onCreateNew: () => void;
+}
+
+function SimilarityPrompt({
+  inputValue,
+  matchedTagName,
+  onUseExisting,
+  onCreateNew,
+}: SimilarityPromptProps) {
+  return (
+    <div className="tags-autocomplete-similarity">
+      <span className="tags-autocomplete-similarity-text">
+        Did you mean <strong>{matchedTagName}</strong> instead
+        of <strong>{inputValue}</strong>?
+      </span>
+      <div className="tags-autocomplete-similarity-actions">
+        <button
+          type="button"
+          className="tags-autocomplete-similarity-button tags-autocomplete-similarity-button--use"
+          onClick={onUseExisting}
+        >
+          Use "{matchedTagName}"
+        </button>
+        <button
+          type="button"
+          className="tags-autocomplete-similarity-button tags-autocomplete-similarity-button--create"
+          onClick={onCreateNew}
+        >
+          Create "{inputValue}"
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export function TagsAutocomplete({
   selectedTags,
   onTagsChange,
@@ -65,8 +115,14 @@ export function TagsAutocomplete({
   const [searchQuery, setSearchQuery] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [similarityConfirmation, setSimilarityConfirmation] =
+    useState<SimilarityConfirmation | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const allExistingTagNames = useMemo(() => {
+    return availableTags.map((tag) => tag.name);
+  }, [availableTags]);
 
   const filteredSuggestions = useMemo(() => {
     const lowerQuery = searchQuery.toLowerCase();
@@ -81,24 +137,83 @@ export function TagsAutocomplete({
 
   const isMaxTagsReached = selectedTags.length >= maxTags;
 
+  const addTag = useCallback(
+    (tagName: string) => {
+      const isDuplicate = isTagAlreadySelected(tagName, selectedTags);
+      if (isDuplicate) return;
+
+      onTagsChange([...selectedTags, tagName]);
+      setSearchQuery('');
+      setIsDropdownOpen(false);
+      setSimilarityConfirmation(null);
+      inputRef.current?.focus();
+    },
+    [selectedTags, onTagsChange]
+  );
+
+  const attemptCreateFreeTag = useCallback(
+    (rawInput: string) => {
+      const trimmedInput = rawInput.trim();
+      const hasNoInput = trimmedInput.length === 0;
+      if (hasNoInput) return;
+
+      const isDuplicate = isTagAlreadySelected(trimmedInput, selectedTags);
+      if (isDuplicate) {
+        setSearchQuery('');
+        return;
+      }
+
+      const similarityResult = findSimilarTag(
+        trimmedInput,
+        allExistingTagNames
+      );
+
+      const shouldUseExistingSilently =
+        similarityResult.action === 'use-existing';
+      if (shouldUseExistingSilently) {
+        addTag(similarityResult.matchedTagName!);
+        return;
+      }
+
+      const shouldConfirmSimilar =
+        similarityResult.action === 'confirm-similar';
+      if (shouldConfirmSimilar) {
+        setSimilarityConfirmation({
+          inputValue: trimmedInput,
+          matchedTagName: similarityResult.matchedTagName!,
+        });
+        setIsDropdownOpen(false);
+        return;
+      }
+
+      addTag(trimmedInput);
+    },
+    [selectedTags, allExistingTagNames, addTag]
+  );
+
   const handleInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const newQuery = event.currentTarget.value;
-      setSearchQuery(newQuery);
-      const hasQuery = newQuery.length > 0;
-      setIsDropdownOpen(hasQuery);
+      const rawValue = event.currentTarget.value;
+      const containsComma = rawValue.includes(COMMA_KEY);
+
+      if (containsComma) {
+        const valueBeforeComma = rawValue.split(COMMA_KEY)[0];
+        attemptCreateFreeTag(valueBeforeComma);
+        return;
+      }
+
+      setSearchQuery(rawValue);
+      setSimilarityConfirmation(null);
+      setIsDropdownOpen(true);
     },
-    []
+    [attemptCreateFreeTag]
   );
 
   const handleSuggestionSelect = useCallback(
     (tagName: string) => {
-      onTagsChange([...selectedTags, tagName]);
-      setSearchQuery('');
-      setIsDropdownOpen(false);
-      inputRef.current?.focus();
+      addTag(tagName);
     },
-    [selectedTags, onTagsChange]
+    [addTag]
   );
 
   const handleChipRemove = useCallback(
@@ -111,11 +226,8 @@ export function TagsAutocomplete({
 
   const handleContainerFocus = useCallback(() => {
     setIsFocused(true);
-    const hasSearchQuery = searchQuery.length > 0;
-    if (hasSearchQuery) {
-      setIsDropdownOpen(true);
-    }
-  }, [searchQuery]);
+    setIsDropdownOpen(true);
+  }, []);
 
   const handleContainerBlur = useCallback(() => {
     setIsFocused(false);
@@ -123,20 +235,41 @@ export function TagsAutocomplete({
 
   const handleInputKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
-      const isEnterWithSuggestions =
-        event.key === 'Enter' && filteredSuggestions.length > 0;
-      if (isEnterWithSuggestions) {
+      const isEnterKey = event.key === 'Enter';
+      if (isEnterKey) {
         event.preventDefault();
-        handleSuggestionSelect(filteredSuggestions[0].name);
+        const hasSuggestions = filteredSuggestions.length > 0;
+        if (hasSuggestions) {
+          handleSuggestionSelect(filteredSuggestions[0].name);
+          return;
+        }
+        attemptCreateFreeTag(searchQuery);
+        return;
       }
 
       const isEscapeKey = event.key === 'Escape';
       if (isEscapeKey) {
         setIsDropdownOpen(false);
+        setSimilarityConfirmation(null);
       }
     },
-    [filteredSuggestions, handleSuggestionSelect]
+    [filteredSuggestions, handleSuggestionSelect, attemptCreateFreeTag,
+      searchQuery]
   );
+
+  const handleUseExistingTag = useCallback(() => {
+    const hasConfirmation = similarityConfirmation !== null;
+    if (hasConfirmation) {
+      addTag(similarityConfirmation.matchedTagName);
+    }
+  }, [similarityConfirmation, addTag]);
+
+  const handleCreateNewTag = useCallback(() => {
+    const hasConfirmation = similarityConfirmation !== null;
+    if (hasConfirmation) {
+      addTag(similarityConfirmation.inputValue);
+    }
+  }, [similarityConfirmation, addTag]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -145,10 +278,13 @@ export function TagsAutocomplete({
         !containerRef.current.contains(event.target as Node);
       if (isOutsideContainer) {
         setIsDropdownOpen(false);
+        setSimilarityConfirmation(null);
       }
     };
 
-    if (isDropdownOpen) {
+    const shouldListenForClicks = isDropdownOpen
+      || similarityConfirmation !== null;
+    if (shouldListenForClicks) {
       document.addEventListener('mousedown', handleClickOutside);
       return () => {
         document.removeEventListener('mousedown', handleClickOutside);
@@ -156,19 +292,19 @@ export function TagsAutocomplete({
     }
 
     return undefined;
-  }, [isDropdownOpen]);
+  }, [isDropdownOpen, similarityConfirmation]);
 
   const containerClassName = isFocused
     ? 'tags-autocomplete-container tags-autocomplete-container--focused'
     : 'tags-autocomplete-container';
 
-  const placeholderText = isMaxTagsReached ? '' : 'Add tags...';
+  const placeholderText = isMaxTagsReached ? '' : 'Type and press Enter or comma to add tags...';
   const hasSuggestions = isDropdownOpen && filteredSuggestions.length > 0;
+  const hasSimilarityConfirmation = similarityConfirmation !== null;
 
   return (
-    <div className="tags-autocomplete-wrapper">
+    <div className="tags-autocomplete-wrapper" ref={containerRef}>
       <div
-        ref={containerRef}
         className={containerClassName}
         onFocus={handleContainerFocus}
         onBlur={handleContainerBlur}
@@ -206,6 +342,15 @@ export function TagsAutocomplete({
             />
           ))}
         </div>
+      )}
+
+      {hasSimilarityConfirmation && (
+        <SimilarityPrompt
+          inputValue={similarityConfirmation.inputValue}
+          matchedTagName={similarityConfirmation.matchedTagName}
+          onUseExisting={handleUseExistingTag}
+          onCreateNew={handleCreateNewTag}
+        />
       )}
     </div>
   );

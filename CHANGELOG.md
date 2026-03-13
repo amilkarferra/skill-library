@@ -7,14 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **`SkillQuickActions` shared component** — dual-mode (interactive buttons / display-only spans) for like, download, and comments actions; two sizes (small/medium); used across catalog rows, panel lists, and detail views
+- **`SkillInitialTile` shared component** — letter-initial square tile with 5-color palette mapped cyclically by first character; replaces inline tile implementations in `SkillRow` and `CatalogPreviewCard`
+- **`useSkillActions` shared hook** — centralizes like toggle (auth check + API + store publish), download via SAS URL (window.open), and navigate-to-comments logic; returns null handlers when action is unavailable (not authenticated / no version)
+- **`skill-actions.service.ts` shared service** — extracted `toggleSkillLike` and `fetchSkillVersionDownloadUrl` from `skill-detail.service.ts` for cross-feature consumption
+- **`SkillActionTarget` interface** — minimal type satisfied by both `Skill` and `SkillSummary`, enabling shared hook/component reuse
+- **`?tab=comments` query param support** on `SkillDetailPage` — direct deep-link to comments tab from catalog row actions
+- **`TagsAutocomplete` free-text tags** — supports Enter and comma to create tags not in the predefined list; fuzzy matching via Levenshtein distance with dynamic threshold shows confirmation prompt for similar existing tags; popular tags shown on focus as initial suggestions
+- **`TagsAutocomplete.logic.ts`** — pure functions for Levenshtein distance calculation, string normalization, and similarity detection with 3-level pipeline (exact normalized match / confirm similar / create new)
+
 ### Fixed
 
 - Backend exception handlers for ValidationError (422) and unhandled exceptions (500) now include CORS headers, fixing "Failed to fetch" errors in the browser
 - MSAL token refresh wrapped in try/catch in `api.client.ts` to prevent crashes when token is expired
 - `SkillDetailsForm` error handling improved with console.error and better error message extraction
+- CSS border cascade in `FilterSidebar.css` — `border: none` now precedes `border-left` to prevent override
 
 ### Changed
 
+- **Refactored 7 consumers** to use shared `useSkillActions` + `SkillQuickActions`: `SkillRow`, `SkillRowExpanded`, `MySkillRow`, `LikeItem`, `CatalogPreviewCard`, `SkillDetailHeader`, `SkillSidebar`
+- `FilterSidebar.css` and `PanelSidebar.css` — removed shell styles (background, border-right, padding, width) now provided by `SidebarLayout`
+- `CatalogPage.css` and `MyPanelPage.css` — simplified content area to `flex: 1` (layout handled by `SidebarLayout`)
+- `skill-detail.service.ts` — removed `toggleSkillLike` and `fetchSkillVersionDownloadUrl` (moved to shared service)
+- `VersionsTab.tsx` — updated import path to shared `skill-actions.service`
 - `short_description` max length increased from 200 to 600 characters (DB migration, Pydantic schemas, SQLAlchemy model, frontend)
 - Centralized constants in `backend/app/shared/constants.py`: DISPLAY_NAME_MAX_LENGTH (150), SHORT_DESCRIPTION_MAX_LENGTH (600), MAX_TAGS_PER_SKILL (10)
 - `frontmatter_service` truncates extracted descriptions exceeding 600 chars with "..." suffix
