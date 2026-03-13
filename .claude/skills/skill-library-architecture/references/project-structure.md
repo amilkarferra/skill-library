@@ -6,6 +6,8 @@
 backend/
 ├── main.py                              # FastAPI app, CORS, router registration
 ├── requirements.txt
+├── scripts/
+│   └── deploy.js                        # Azure App Service deploy via az webapp up
 ├── app/
 │   ├── shared/
 │   │   ├── config.py                    # Environment config (Azure, DB, JWT)
@@ -74,11 +76,17 @@ backend/
 │   │   ├── collaborators_router.py      # /skills/{slug}/collaborators
 │   │   ├── requests_router.py           # /me/collaboration-requests
 │   │   ├── service.py
-│   │   └── models/
-│   │       ├── skill_collaborator.py    # Composite key: skillId + userId
-│   │       ├── collaboration_request.py
-│   │       ├── request_status.py        # pending/accepted/rejected/cancelled
-│   │       └── request_direction.py     # invitation/request
+│   │   ├── models/
+│   │   │   ├── skill_collaborator.py    # Composite key: skillId + userId
+│   │   │   ├── collaboration_request.py
+│   │   │   ├── collaboration_action.py
+│   │   │   ├── request_status.py        # pending/accepted/rejected/cancelled
+│   │   │   └── request_direction.py     # invitation/request
+│   │   └── schemas/
+│   │       ├── collaboration_action_request.py
+│   │       ├── collaboration_request_response.py
+│   │       ├── collaborator_response.py
+│   │       └── invite_collaborator_request.py
 │   │
 │   └── users/
 │       ├── me_router.py                 # /me endpoints
@@ -93,6 +101,13 @@ frontend/
 ├── tsconfig.app.json
 ├── vite.config.ts
 ├── eslint.config.js
+├── .env.production                      # Production env vars (Azure API URL, redirect URI)
+├── public/
+│   ├── staticwebapp.config.json         # SPA fallback routing for Azure Static Web App
+│   ├── logo.svg
+│   └── logo-icon.svg
+├── scripts/
+│   └── deploy.js                        # Azure Static Web App deploy via swa-cli
 ├── src/
 │   ├── main.tsx                         # React root
 │   ├── App.tsx                          # MsalProvider + RouterProvider
@@ -115,10 +130,13 @@ frontend/
 │   │   │
 │   │   ├── skill-detail/
 │   │   │   ├── SkillDetailPage.tsx
+│   │   │   ├── SkillDetailHeader.tsx
 │   │   │   ├── OverviewTab.tsx          # Markdown rendering
 │   │   │   ├── VersionsTab.tsx
 │   │   │   ├── CommentsTab.tsx
+│   │   │   ├── CollaboratorsTab.tsx
 │   │   │   ├── SkillSidebar.tsx         # Download, like, collaborate
+│   │   │   ├── SkillEditForm.tsx
 │   │   │   ├── CommentItem.tsx
 │   │   │   ├── CommentForm.tsx
 │   │   │   └── skill-detail.service.ts
@@ -126,9 +144,13 @@ frontend/
 │   │   ├── publish/
 │   │   │   ├── PublishSkillPage.tsx
 │   │   │   ├── NewVersionPage.tsx
-│   │   │   ├── SkillForm.tsx
+│   │   │   ├── SkillDetailsForm.tsx
 │   │   │   ├── VersionForm.tsx
 │   │   │   ├── FileUpload.tsx           # Drag & drop
+│   │   │   ├── PublishDropzone.tsx
+│   │   │   ├── FileBar.tsx
+│   │   │   ├── ExtractingState.tsx
+│   │   │   ├── CatalogPreviewCard.tsx
 │   │   │   └── publish.service.ts
 │   │   │
 │   │   ├── panel/
@@ -142,6 +164,7 @@ frontend/
 │   │   │   ├── RequestRow.tsx
 │   │   │   ├── ProposedVersionsSection.tsx
 │   │   │   ├── ProposedVersionRow.tsx
+│   │   │   ├── LikeItem.tsx
 │   │   │   ├── NotificationBanner.tsx
 │   │   │   └── panel.service.ts
 │   │   │
@@ -154,11 +177,32 @@ frontend/
 │   └── shared/
 │       ├── components/
 │       │   ├── Layout.tsx               # Root layout (nav + outlet)
+│       │   ├── ProtectedLayout.tsx
+│       │   ├── SidebarLayout.tsx
 │       │   ├── Navbar.tsx
+│       │   ├── AppLogo.tsx
+│       │   ├── Button.tsx               # 7 variants, 3 sizes
+│       │   ├── AlertMessage.tsx
+│       │   ├── FormField.tsx
+│       │   ├── FormLabel.tsx
+│       │   ├── TextInput.tsx
+│       │   ├── TextArea.tsx
+│       │   ├── MarkdownEditor.tsx
+│       │   ├── TabBar.tsx
 │       │   ├── Pagination.tsx
 │       │   ├── TagList.tsx
+│       │   ├── TagsAutocomplete.tsx
+│       │   ├── CategoryChips.tsx
 │       │   ├── StatusBadge.tsx
+│       │   ├── VersionStatusBadge.tsx
 │       │   ├── CollabModeBadge.tsx
+│       │   ├── CollaborationModeSelector.tsx
+│       │   ├── CountBadge.tsx
+│       │   ├── SectionHeader.tsx
+│       │   ├── StatCard.tsx
+│       │   ├── SkillInitialTile.tsx
+│       │   ├── SkillQuickActions.tsx
+│       │   ├── UserInitials.tsx
 │       │   ├── EmptyState.tsx
 │       │   └── ConfirmDialog.tsx
 │       │
@@ -166,12 +210,21 @@ frontend/
 │       │   ├── User.ts
 │       │   ├── Skill.ts
 │       │   ├── SkillVersion.ts
+│       │   ├── SkillSummary.ts
+│       │   ├── SkillContentResponse.ts
+│       │   ├── SkillActionTarget.ts
+│       │   ├── SkillUpdateRequest.ts
+│       │   ├── SkillFilters.ts
 │       │   ├── Category.ts
 │       │   ├── Tag.ts
 │       │   ├── Comment.ts
+│       │   ├── Collaborator.ts
 │       │   ├── CollaborationRequest.ts
+│       │   ├── VersionWithSlug.ts
+│       │   ├── DownloadUrlResponse.ts
+│       │   ├── FrontmatterResponse.ts
+│       │   ├── LikeUpdate.ts
 │       │   ├── PaginatedResponse.ts
-│       │   ├── SkillFilters.ts
 │       │   ├── ApiRequestState.ts
 │       │   ├── AuthState.ts
 │       │   ├── AuthCallbackResponse.ts
@@ -186,12 +239,15 @@ frontend/
 │       ├── hooks/
 │       │   ├── useApi.ts
 │       │   ├── useDebounce.ts
-│       │   └── usePagination.ts
+│       │   ├── usePagination.ts
+│       │   ├── useConfirmDialog.ts
+│       │   └── useSkillActions.ts
 │       │
 │       ├── formatters/
-│       │   ├── formatFileSize.ts
-│       │   ├── formatDate.ts
-│       │   └── formatDateTime.ts
+│       │   ├── format-file-size.ts
+│       │   ├── format-date.ts
+│       │   ├── format-relative-date.ts
+│       │   └── format-collaborators-label.ts
 │       │
 │       └── styles/
 │           ├── variables.css            # Design tokens

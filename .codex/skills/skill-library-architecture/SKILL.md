@@ -50,7 +50,9 @@ Read `references/project-structure.md` for the full directory tree of both backe
 ### Frontend
 - **Feature-First Organization**: Each feature in `src/features/` is self-contained
 - **Service Layer**: API calls separated from components (`*.service.ts`)
-- **Custom Hooks**: `useApi`, `usePagination`, `useDebounce` for reusable logic
+- **State Management**: Zustand stores (`useAuthStore`, `useCatalogStore`, `useNotificationsStore`, `useLikeStore`)
+- **Shared UI Components** (AD-07): `Button`, `AlertMessage`, `FormField`, `FormLabel`, `TextInput`, `TextArea`
+- **Custom Hooks**: `useApi`, `usePagination`, `useDebounce`, `useConfirmDialog`, `useSkillActions`
 - **Typed Models**: Each interface in its own file under `shared/models/`
 - **API Client**: Centralized HTTP client with auth token interceptor
 
@@ -74,7 +76,7 @@ Feature Pages (CatalogPage, PublishSkillPage, etc.)
       -> Auth Layer (MSAL token acquisition)
   -> Shared Hooks (useApi, usePagination)
   -> Shared Models (TypeScript interfaces)
-  -> Shared Components (Navbar, Pagination, EmptyState)
+  -> Shared Components (Button, AlertMessage, FormField, TextInput, TextArea, Navbar, Pagination, EmptyState)
 ```
 
 ### Cross-Module Dependencies
@@ -137,3 +139,23 @@ npm run dev      # Dev server with HMR
 npm run build    # TypeScript + Vite production build
 npm run lint     # ESLint
 ```
+
+## Deployment
+
+### Infrastructure
+- **Backend**: Azure App Service (Python 3.12, Linux B1) — `api-skill-library.azurewebsites.net`
+- **Frontend**: Azure Static Web App (Free) — `lemon-tree-0a61ff503.2.azurestaticapps.net`
+- **Database**: Azure SQL Server (Basic) — `sql-skill-library.database.windows.net`
+- **Storage**: Azure Blob Storage (Standard LRS) — container `skill-files`
+- **Secrets**: Azure Key Vault — `kv-skill-library.vault.azure.net`
+
+### Deploy Scripts
+```bash
+npm run deploy              # Frontend: build + swa deploy
+node backend/scripts/deploy.js   # Backend: az webapp up
+```
+
+### VS Code Tasks
+- **Deploy Frontend** — builds and deploys to Azure Static Web App
+- **Deploy Backend** — deploys to Azure App Service
+- **Deploy Full Stack** — backend first, then frontend (sequential)
