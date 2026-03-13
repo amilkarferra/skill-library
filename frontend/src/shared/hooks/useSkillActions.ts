@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/useAuthStore';
 import { useLikeStore } from '../stores/useLikeStore';
+import { useDownloadStore } from '../stores/useDownloadStore';
 import {
   toggleSkillLike,
   fetchSkillVersionDownloadUrl,
@@ -21,6 +22,7 @@ export function useSkillActions(skill: SkillActionTarget): SkillActionsResult {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
   const { publishLikeUpdate } = useLikeStore();
+  const { publishDownloadUpdate } = useDownloadStore();
   const [isLikeInProgress, setIsLikeInProgress] = useState(false);
   const [isDownloadInProgress, setIsDownloadInProgress] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
@@ -67,6 +69,12 @@ export function useSkillActions(skill: SkillActionTarget): SkillActionsResult {
         currentVersion
       );
       window.open(downloadInfo.downloadUrl, '_blank');
+
+      const updatedTotalDownloads = skill.totalDownloads + 1;
+      publishDownloadUpdate({
+        skillId: skill.id,
+        totalDownloads: updatedTotalDownloads,
+      });
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'Download failed';
@@ -74,7 +82,7 @@ export function useSkillActions(skill: SkillActionTarget): SkillActionsResult {
     } finally {
       setIsDownloadInProgress(false);
     }
-  }, [skill.name, skill.currentVersion]);
+  }, [skill.id, skill.name, skill.currentVersion, skill.totalDownloads, publishDownloadUpdate]);
 
   const handleNavigateToComments = useCallback(() => {
     navigate(`/skills/${skill.name}?tab=comments`);

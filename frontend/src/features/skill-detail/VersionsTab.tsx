@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { Download, User, HardDrive, Calendar } from 'lucide-react';
 import { EmptyState } from '../../shared/components/EmptyState';
 import { VersionStatusBadge } from '../../shared/components/VersionStatusBadge';
@@ -11,26 +11,43 @@ import './VersionsTab.css';
 interface VersionsTabProps {
   readonly versions: SkillVersion[];
   readonly slug: string;
+  readonly onVersionDownloaded: () => void;
 }
 
 interface VersionItemProps {
   readonly version: SkillVersion;
   readonly slug: string;
   readonly isAlternate: boolean;
+  readonly onDownloaded: () => void;
 }
 
 function VersionItem({
   version,
   slug,
   isAlternate,
+  onDownloaded,
 }: VersionItemProps) {
   const isPublished = version.status === 'published';
   const isNotPublished = !isPublished;
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [downloadError, setDownloadError] = useState<string | null>(null);
 
   const handleDownload = useCallback(async () => {
-    const downloadInfo = await fetchSkillVersionDownloadUrl(slug, version.version);
-    window.open(downloadInfo.downloadUrl, '_blank');
-  }, [slug, version.version]);
+    if (isDownloading) return;
+
+    setDownloadError(null);
+    setIsDownloading(true);
+    try {
+      const downloadResponse = await fetchSkillVersionDownloadUrl(slug, version.version);
+      window.open(downloadResponse.downloadUrl, '_blank');
+      onDownloaded();
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Download failed';
+      setDownloadError(errorMessage);
+    } finally {
+      setIsDownloading(false);
+    }
+  }, [slug, version.version, isDownloading, onDownloaded]);
 
   const itemClassName = isAlternate
     ? 'version-item version-item--alt'
@@ -70,10 +87,14 @@ function VersionItem({
           <button
             className="version-download-button"
             onClick={handleDownload}
+            disabled={isDownloading}
           >
             <Download size={14} />
-            Download
+            {isDownloading ? 'Downloading...' : 'Download'}
           </button>
+        )}
+        {downloadError !== null && (
+          <span className="version-download-error">{downloadError}</span>
         )}
       </div>
     </div>
@@ -83,6 +104,7 @@ function VersionItem({
 export function VersionsTab({
   versions,
   slug,
+  onVersionDownloaded,
 }: VersionsTabProps) {
   const hasVersions = versions.length > 0;
 
@@ -108,6 +130,7 @@ export function VersionsTab({
               version={version}
               slug={slug}
               isAlternate={isAlternate}
+              onDownloaded={onVersionDownloaded}
             />
           );
         })}

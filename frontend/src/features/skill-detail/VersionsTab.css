@@ -102,3 +102,13 @@
 .version-download-button:hover {
   background: var(--accent-bg);
 }
+
+.version-download-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.version-download-error {
+  font-size: 11px;
+  color: var(--danger);
+}
