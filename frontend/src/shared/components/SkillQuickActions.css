@@ -11,11 +11,12 @@
   gap: 4px;
   padding: 4px 8px;
   border: none;
+  border-radius: 4px;
   background: none;
   font-family: 'Segoe UI', sans-serif;
   font-size: 11px;
   color: var(--text-muted);
-  transition: color 0.12s, background 0.12s;
+  transition: color 0.15s, background 0.15s;
 }
 
 .skill-quick-action--interactive {
@@ -24,7 +25,7 @@
 
 .skill-quick-action--interactive:hover {
   color: var(--text-primary);
-  background: var(--bg-row-hover);
+  background: var(--accent-bg);
 }
 
 .skill-quick-action--liked {
