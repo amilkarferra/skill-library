@@ -2,7 +2,7 @@
 
 **Date:** 2026-03-13
 **Status:** Approved
-**Mockups:** `.superpowers/brainstorm/815-1773388965/`
+**Mockups:** `docs/mockups/skill-edit-form.html`, `docs/mockups/skill-edit-collab-selector.html`
 
 ## Problem
 
@@ -52,7 +52,7 @@ All fields pre-populated from current `skill` data:
 | Category | CategoryChips (shared) | Yes | Single selection |
 | Tags | TagsAutocomplete (shared) | No | Max 10, autocomplete from popular |
 | Long Description | MarkdownEditor (shared) | No | Write/Preview toggle |
-| Collaboration Mode | CollaborationModeSelector (new shared) | Yes | Compact chips with icons |
+| Collaboration Mode | CollaborationModeSelector (new shared) | Defaults to current | Compact chips with icons |
 
 ## New Shared Components
 
@@ -74,7 +74,8 @@ Replaces the current radio buttons in the publish form. Compact chip-based toggl
 
 Extract the inline tab buttons from `SkillDetailPage` into a reusable component:
 
-- Props: `tabs` (array of `{ id, label }`) + `activeTabId` + `onSelectTab`
+- Props: `tabs` (array of `{ id, label, count? }`) + `activeTabId` + `onSelectTab`
+- `count` is optional; when provided, renders as "Label (count)" in the tab button
 - Renders horizontal tab buttons with active indicator (indigo underline)
 - Replaces the current inline implementation in SkillDetailPage
 
@@ -114,7 +115,7 @@ Calls `PUT /skills/{slug}` via `api.client.put()`.
 `SkillUpdateRequest` interface in `shared/models/SkillUpdateRequest.ts`:
 
 ```
-interface SkillUpdateRequest {
+export interface SkillUpdateRequest {
   displayName?: string;
   shortDescription?: string;
   longDescription?: string;
@@ -189,7 +190,16 @@ All fields optional (partial update). Returns full `SkillDetailResponse`.
 | Category | Must select one | Must exist in DB |
 | Tags | Max 10 | Normalized lowercase |
 | Long Description | None | None |
-| Collaboration Mode | Must select one | Enum validation |
+| Collaboration Mode | Always has a value (defaults to current) | Enum validation |
+
+## Validation Behavior
+
+Same approach as the publish form: HTML `required` attribute on text fields, Save button disabled when category is not selected. No inline validation on blur; validation triggers on submit attempt.
+
+## Notes
+
+- `SkillSidebar` component exists but is not currently rendered by `SkillDetailPage`. This spec does not affect `SkillSidebar`. If a future layout change introduces the sidebar, it will receive the updated `skill` state automatically via props.
+- Optimistic concurrency (ETags, conflict detection for concurrent edits) is not handled.
 
 ## Out of Scope
 

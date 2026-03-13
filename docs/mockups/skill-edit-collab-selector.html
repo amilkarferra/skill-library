@@ -1,0 +1,100 @@
+<style>
+  :root {
+    --bg-container: #fff;
+    --bg-sidebar: #f8f8fc;
+    --border-main: #d8dbe6;
+    --border-row: #e8eaf0;
+    --border-accent: #c7c4f0;
+    --text-primary: #1a1d2e;
+    --text-secondary: #4a4f6a;
+    --text-muted: #7c82a0;
+    --accent: #4f46e5;
+    --accent-bg: #eef0ff;
+    --success: #059669;
+    --success-bg: #dcfce7;
+    --success-border: #a7f3d0;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; border-radius: 0 !important; }
+
+  .field-label {
+    display: block; font-size: 11px; font-weight: 600; color: var(--text-secondary);
+    margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.4px;
+  }
+
+  .collab-selector {
+    display: flex; gap: 8px;
+  }
+  .collab-option {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 14px; border: 1px solid var(--border-main);
+    background: var(--bg-container); cursor: pointer; transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .collab-option:hover { border-color: var(--accent); }
+  .collab-option--selected { border-color: var(--accent); background: var(--accent-bg); }
+  .collab-option--selected.collab-option--open { border-color: var(--success); background: var(--success-bg); }
+  .collab-option .collab-icon { color: var(--text-muted); display: flex; align-items: center; }
+  .collab-option--selected .collab-icon { color: var(--accent); }
+  .collab-option--selected.collab-option--open .collab-icon { color: var(--success); }
+  .collab-text { font-size: 13px; font-weight: 500; color: var(--text-secondary); }
+  .collab-option--selected .collab-text { color: var(--accent); font-weight: 600; }
+  .collab-option--selected.collab-option--open .collab-text { color: var(--success); }
+  .field-hint { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+
+  .example { padding: 24px; margin-bottom: 32px; }
+  .example-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
+    color: var(--accent); background: var(--accent-bg); padding: 2px 6px;
+    border: 1px solid var(--border-accent); display: inline-block; margin-bottom: 12px;
+  }
+</style>
+
+<h2>CollaborationModeSelector: Compact</h2>
+<p class="subtitle">Chips con icono, ancho limitado al contenido (no se expanden)</p>
+
+<div style="max-width: 900px; margin: 0 auto;">
+
+  <!-- Closed selected -->
+  <div class="example">
+    <span class="example-label">Closed selected</span>
+    <label class="field-label">Collaboration mode</label>
+    <div class="collab-selector">
+      <div class="collab-option collab-option--selected">
+        <span class="collab-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </span>
+        <span class="collab-text">Closed</span>
+      </div>
+      <div class="collab-option">
+        <span class="collab-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </span>
+        <span class="collab-text">Open</span>
+      </div>
+    </div>
+    <div class="field-hint">Only you and invited collaborators can contribute</div>
+  </div>
+
+  <!-- Open selected -->
+  <div class="example">
+    <span class="example-label">Open selected</span>
+    <label class="field-label">Collaboration mode</label>
+    <div class="collab-selector">
+      <div class="collab-option">
+        <span class="collab-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </span>
+        <span class="collab-text">Closed</span>
+      </div>
+      <div class="collab-option collab-option--selected collab-option--open">
+        <span class="collab-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </span>
+        <span class="collab-text">Open</span>
+      </div>
+    </div>
+    <div class="field-hint">Anyone can request to collaborate and propose versions</div>
+  </div>
+
+</div>
