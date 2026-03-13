@@ -11,6 +11,9 @@
 .nav-wrapper {
   background: var(--bg-container);
   border-bottom: 1px solid var(--border-main);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .nav-left {

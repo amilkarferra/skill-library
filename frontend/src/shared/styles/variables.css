@@ -42,4 +42,5 @@
   --warn-accent: #f59e0b;
   --shadow-soft: 0 12px 30px rgba(26, 29, 46, 0.05);
   --shadow-accent: 0 2px 6px rgba(79, 70, 229, 0.1);
+  --navbar-height: 49px;
 }
