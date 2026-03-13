@@ -5,6 +5,8 @@ export interface CollaborationRequest {
   skillDisplayName: string;
   requesterUsername: string;
   requesterDisplayName: string;
+  ownerUsername: string;
+  ownerDisplayName: string;
   direction: 'invitation' | 'request';
   status: 'pending' | 'accepted' | 'rejected' | 'cancelled';
   createdAt: string;

@@ -2,13 +2,16 @@ import { useEffect, useCallback, useState } from 'react';
 import { EmptyState } from '../../shared/components/EmptyState';
 import { ProposedVersionRow } from './ProposedVersionRow';
 import {
+  fetchNotificationCount,
   fetchPendingVersionProposals,
   reviewVersionProposal,
 } from './panel.service';
+import { useNotificationsStore } from '../../shared/stores/useNotificationsStore';
 import type { VersionWithSlug } from '../../shared/models/VersionWithSlug';
 import './ProposedVersionsSection.css';
 
 export function ProposedVersionsSection() {
+  const { setNotificationCounts } = useNotificationsStore();
   const [versions, setVersions] = useState<VersionWithSlug[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -33,6 +36,11 @@ export function ProposedVersionsSection() {
     loadVersions();
   }, [loadVersions]);
 
+  const refreshNotificationCounts = useCallback(async () => {
+    const updatedCounts = await fetchNotificationCount();
+    setNotificationCounts(updatedCounts);
+  }, [setNotificationCounts]);
+
   const handleReview = useCallback(async (
     slug: string,
     version: string,
@@ -42,8 +50,9 @@ export function ProposedVersionsSection() {
       await reviewVersionProposal(slug, version, action);
     } finally {
       await loadVersions();
+      await refreshNotificationCounts();
     }
-  }, [loadVersions]);
+  }, [loadVersions, refreshNotificationCounts]);
 
   const hasVersions = versions.length > 0;
 

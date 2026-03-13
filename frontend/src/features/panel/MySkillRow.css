@@ -81,9 +81,9 @@
   gap: 4px;
   font-size: 11px;
   color: var(--accent-secondary);
-  border-color: #b2dfdb;
+  border-color: var(--restore-border);
 }
 
 .my-skill-row-action--restore:hover {
-  background: #e8f5e9;
+  background: var(--restore-hover-bg);
 }

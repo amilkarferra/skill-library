@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
+import type { ReactNode } from 'react';
 import { Check, X, Clock, Users, GitPullRequest } from 'lucide-react';
 import { Button } from '../../shared/components/Button';
-import { formatDate } from '../../shared/formatters/format-date';
+import { formatRelativeDate } from '../../shared/formatters/format-relative-date';
 import type { CollaborationRequest } from '../../shared/models/CollaborationRequest';
 import './RequestRow.css';
 
@@ -26,6 +27,7 @@ export function RequestRow({
   const requestText = buildRequestText(request, isIncoming);
   const isInvitation = request.direction === 'invitation';
   const iconClassName = buildRequestIconClassName(isIncoming);
+  const labelClassName = buildLabelClassName(isIncoming);
 
   const handleAccept = useCallback(() => {
     onAction(request.id, 'accept');
@@ -45,11 +47,10 @@ export function RequestRow({
         {isInvitation ? <Users size={14} /> : <GitPullRequest size={14} />}
       </div>
       <div className="request-row-info">
-        <span className="request-row-type">{requestLabel}</span>
+        <span className={labelClassName}>{requestLabel}</span>
         <span className="request-row-text">{requestText}</span>
         <div className="request-row-meta">
-          <span className="request-row-user">@{request.requesterUsername}</span>
-          <span className="request-row-date">{formatDate(request.createdAt)}</span>
+          <span className="request-row-date">{formatRelativeDate(request.createdAt)}</span>
         </div>
       </div>
       <div className="request-row-actions">
@@ -97,26 +98,32 @@ function buildRequestLabel(
 function buildRequestText(
   request: CollaborationRequest,
   isIncoming: boolean
-): string {
+): ReactNode {
   const isInvitation = request.direction === 'invitation';
+  const skillName = <strong>{request.skillDisplayName}</strong>;
 
   if (isIncoming && isInvitation) {
-    return `${request.requesterDisplayName} invited you to collaborate on ${request.skillDisplayName}`;
+    return <>{request.ownerDisplayName} invited you to collaborate on {skillName}</>;
   }
 
   if (isIncoming) {
-    return `${request.requesterDisplayName} asked to join ${request.skillDisplayName}`;
+    return <>{request.requesterDisplayName} asked to join {skillName}</>;
   }
 
   if (isInvitation) {
-    return `You invited ${request.requesterDisplayName} to collaborate on ${request.skillDisplayName}`;
+    return <>You invited {request.requesterDisplayName} to collaborate on {skillName}</>;
   }
 
-  return `You requested collaboration on ${request.skillDisplayName}`;
+  return <>You requested collaboration on {skillName}</>;
 }
 
 function buildRequestIconClassName(isIncoming: boolean): string {
   const baseClassName = 'request-row-icon';
   const modifier = isIncoming ? 'incoming' : 'sent';
   return `${baseClassName} ${baseClassName}--${modifier}`;
+}
+
+function buildLabelClassName(isIncoming: boolean): string {
+  const baseClassName = 'request-row-type';
+  return isIncoming ? baseClassName : `${baseClassName} request-row-type--sent`;
 }

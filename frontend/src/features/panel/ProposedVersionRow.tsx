@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
-import { Check, X, User, HardDrive, Upload } from 'lucide-react';
+import { Check, X, HardDrive, Upload } from 'lucide-react';
 import { Button } from '../../shared/components/Button';
 import { formatFileSize } from '../../shared/formatters/format-file-size';
-import { formatDate } from '../../shared/formatters/format-date';
+import { formatRelativeDate } from '../../shared/formatters/format-relative-date';
 import type { SkillVersion } from '../../shared/models/SkillVersion';
 import './ProposedVersionRow.css';
 
@@ -35,20 +35,16 @@ export function ProposedVersionRow({
       <div className="proposed-version-info">
         <span className="proposed-version-label">Version proposal</span>
         <span className="proposed-version-number">
-          @{version.uploadedByUsername} proposed v{version.version} for {skillSlug}
+          @{version.uploadedByUsername} proposed <strong>v{version.version}</strong> for <strong>{skillSlug}</strong>
         </span>
         <span className="proposed-version-changelog">{version.changelog}</span>
         <div className="proposed-version-meta">
-          <span className="proposed-version-meta-item">
-            <User size={12} />
-            {version.uploadedByUsername}
-          </span>
           <span className="proposed-version-meta-item">
             <HardDrive size={12} />
             {formatFileSize(version.fileSize)}
           </span>
           <span className="proposed-version-meta-item">
-            {formatDate(version.createdAt)}
+            {formatRelativeDate(version.createdAt)}
           </span>
         </div>
       </div>

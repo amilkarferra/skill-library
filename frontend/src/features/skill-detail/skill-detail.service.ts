@@ -7,6 +7,8 @@ import type { SkillContentResponse } from '../../shared/models/SkillContentRespo
 import type { SkillUpdateRequest } from '../../shared/models/SkillUpdateRequest';
 import type { Category } from '../../shared/models/Category';
 import type { Tag } from '../../shared/models/Tag';
+import type { Collaborator } from '../../shared/models/Collaborator';
+import type { User } from '../../shared/models/User';
 
 export function fetchSkillBySlug(slug: string): Promise<Skill> {
   return get<Skill>(`/skills/${slug}`);
@@ -72,5 +74,21 @@ export function fetchEditFormCategories(): Promise<Category[]> {
 
 export function fetchEditFormPopularTags(): Promise<Tag[]> {
   return get<Tag[]>('/tags/popular');
+}
+
+export function fetchCollaborators(slug: string): Promise<Collaborator[]> {
+  return get<Collaborator[]>(`/skills/${slug}/collaborators`);
+}
+
+export function inviteCollaborator(slug: string, userId: number): Promise<void> {
+  return post<void>(`/skills/${slug}/collaborators`, { userId });
+}
+
+export function removeCollaborator(slug: string, userId: number): Promise<void> {
+  return del<void>(`/skills/${slug}/collaborators/${userId}`);
+}
+
+export function searchUsers(query: string): Promise<User[]> {
+  return get<User[]>(`/users/search?q=${encodeURIComponent(query)}`);
 }
 

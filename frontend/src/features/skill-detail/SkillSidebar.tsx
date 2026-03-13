@@ -10,6 +10,7 @@ import { Button } from '../../shared/components/Button';
 import { TagList } from '../../shared/components/TagList';
 import { CollabModeBadge } from '../../shared/components/CollabModeBadge';
 import { useSkillActions } from '../../shared/hooks/useSkillActions';
+import { formatCollaboratorsLabel } from '../../shared/formatters/format-collaborators-label';
 import type { Skill } from '../../shared/models/Skill';
 import './SkillSidebar.css';
 
@@ -109,6 +110,9 @@ export function SkillSidebar({
       <div className="skill-sidebar-section">
         <span className="skill-sidebar-section-label">Collaboration</span>
         <CollabModeBadge collaborationMode={skill.collaborationMode} />
+        <span className="skill-sidebar-section-value">
+          <Users size={12} /> {formatCollaboratorsLabel(skill.collaboratorsCount)}
+        </span>
       </div>
 
       <div className="skill-sidebar-section">
@@ -151,3 +155,4 @@ export function SkillSidebar({
     </aside>
   );
 }
+

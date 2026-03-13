@@ -1,6 +1,6 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { Bell, X } from 'lucide-react';
+import { ChevronRight, X } from 'lucide-react';
 import { fetchNotificationCount } from './panel.service';
 import { useNotificationsStore } from '../../shared/stores/useNotificationsStore';
 import './NotificationBanner.css';
@@ -39,26 +39,23 @@ export function NotificationBanner() {
     pendingVersionProposals,
     pendingCollaborationRequests
   );
-  const bannerTarget = buildNotificationTarget(
-    pendingVersionProposals,
-    pendingCollaborationRequests
-  );
+  const bannerTarget = buildNotificationTarget();
 
   return (
     <div className="notification-banner">
-      <div className="notification-banner-content">
-        <Bell size={14} className="notification-banner-icon" />
-        <div className="notification-banner-copy">
-          <span className="notification-banner-kicker">Needs review</span>
-          <span className="notification-banner-text">{bannerMessage}</span>
-        </div>
+      <div className="notification-banner-left">
+        <span className="notification-banner-dot" />
+        <span className="notification-banner-text">{bannerMessage}</span>
+      </div>
+      <div className="notification-banner-right">
         <Link to={bannerTarget} className="notification-banner-link">
           Review now
+          <ChevronRight size={12} />
         </Link>
+        <button className="notification-banner-dismiss" onClick={handleDismiss}>
+          <X size={14} />
+        </button>
       </div>
-      <button className="notification-banner-dismiss" onClick={handleDismiss}>
-        <X size={14} />
-      </button>
     </div>
   );
 }
@@ -66,34 +63,49 @@ export function NotificationBanner() {
 function buildNotificationMessage(
   pendingVersionProposals: number,
   pendingCollaborationRequests: number
-): string {
+): ReactNode {
   const hasVersionProposals = pendingVersionProposals > 0;
   const hasCollaborationRequests = pendingCollaborationRequests > 0;
 
   if (hasVersionProposals && hasCollaborationRequests) {
-    return `${pendingVersionProposals} version proposals and ${pendingCollaborationRequests} collaboration requests are waiting`;
+    return (
+      <>
+        You have{' '}
+        <strong className="notification-banner-count">
+          {pendingVersionProposals} version proposals
+        </strong>
+        {' '}and{' '}
+        <strong className="notification-banner-count">
+          {pendingCollaborationRequests} collaboration requests
+        </strong>
+        {' '}waiting for your review
+      </>
+    );
   }
 
   if (hasVersionProposals) {
-    return `${pendingVersionProposals} version proposals are waiting`;
+    return (
+      <>
+        You have{' '}
+        <strong className="notification-banner-count">
+          {pendingVersionProposals} version proposals
+        </strong>
+        {' '}waiting for your review
+      </>
+    );
   }
 
-  return `${pendingCollaborationRequests} collaboration requests are waiting`;
+  return (
+    <>
+      You have{' '}
+      <strong className="notification-banner-count">
+        {pendingCollaborationRequests} collaboration requests
+      </strong>
+      {' '}waiting for your review
+    </>
+  );
 }
 
-function buildNotificationTarget(
-  pendingVersionProposals: number,
-  pendingCollaborationRequests: number
-): string {
-  const hasVersionProposals = pendingVersionProposals > 0;
-  if (hasVersionProposals) {
-    return '/panel/versions';
-  }
-
-  const hasCollaborationRequests = pendingCollaborationRequests > 0;
-  if (hasCollaborationRequests) {
-    return '/panel/requests';
-  }
-
-  return '/panel';
+function buildNotificationTarget(): string {
+  return '/panel/skills';
 }

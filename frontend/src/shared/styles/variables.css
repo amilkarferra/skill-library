@@ -16,6 +16,7 @@
   --accent: #4f46e5;
   --accent-hover: #4338ca;
   --accent-bg: #eef0ff;
+  --accent-bg-strong: #dde1ff;
   --accent-secondary: #059669;
   --accent-secondary-hover: #047857;
   --tag-bg: #eef0ff;
@@ -33,6 +34,12 @@
   --inactive-color: #991b1b;
   --button-text: #fff;
   --bg-code: #f0f1f6;
+  --bg-input-alt: #fafaff;
   --success-border: #a7f3d0;
+  --restore-border: #b2dfdb;
+  --restore-hover-bg: #e8f5e9;
+  --alert-dot: #e63946;
+  --warn-accent: #f59e0b;
   --shadow-soft: 0 12px 30px rgba(26, 29, 46, 0.05);
+  --shadow-accent: 0 2px 6px rgba(79, 70, 229, 0.1);
 }

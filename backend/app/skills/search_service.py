@@ -12,7 +12,12 @@ from app.skills.models.skill_tag import SkillTag
 from app.skills.models.tag import Tag
 from app.skills.schemas.skill_response import SkillResponse
 from app.skills.schemas.skill_search_params import SkillSearchParams
-from app.skills.service import load_tag_names_for_skill, resolve_is_liked_by_user, resolve_user_role_on_skill
+from app.skills.service import (
+    count_collaborators_for_skill,
+    load_tag_names_for_skill,
+    resolve_is_liked_by_user,
+    resolve_user_role_on_skill,
+)
 
 
 def search_skills(
@@ -146,6 +151,7 @@ def _build_skill_response(
     tag_names = load_tag_names_for_skill(database_session, skill.id)
     is_liked_by_me = resolve_is_liked_by_user(database_session, skill.id, current_user)
     my_role = resolve_user_role_on_skill(database_session, skill, current_user)
+    collaborators_count = count_collaborators_for_skill(database_session, skill.id)
 
     return SkillResponse(
         id=skill.id,
@@ -165,6 +171,7 @@ def _build_skill_response(
         total_comments=skill.total_comments,
         tags=tag_names,
         collaboration_mode=skill.collaboration_mode,
+        collaborators_count=collaborators_count,
         is_active=skill.is_active,
         is_liked_by_me=is_liked_by_me,
         my_role=my_role,

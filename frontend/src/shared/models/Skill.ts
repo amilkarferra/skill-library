@@ -11,6 +11,7 @@ export interface Skill {
   categoryName: string;
   categorySlug: string;
   collaborationMode: 'closed' | 'open';
+  collaboratorsCount: number;
   currentVersion: string | null;
   totalLikes: number;
   totalDownloads: number;

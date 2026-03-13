@@ -3,14 +3,17 @@ import { EmptyState } from '../../shared/components/EmptyState';
 import { RequestRow } from './RequestRow';
 import {
   fetchMyCollaborationRequests,
+  fetchNotificationCount,
   handleCollaborationAction,
 } from './panel.service';
 import { useAuthStore } from '../../shared/stores/useAuthStore';
+import { useNotificationsStore } from '../../shared/stores/useNotificationsStore';
 import type { CollaborationRequest } from '../../shared/models/CollaborationRequest';
 import './RequestsSection.css';
 
 export function RequestsSection() {
   const { user } = useAuthStore();
+  const { setNotificationCounts } = useNotificationsStore();
   const [requests, setRequests] = useState<CollaborationRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -55,6 +58,11 @@ export function RequestsSection() {
     return { incomingRequests: incoming, sentRequests: sent };
   }, [requests, user]);
 
+  const refreshNotificationCounts = useCallback(async () => {
+    const updatedCounts = await fetchNotificationCount();
+    setNotificationCounts(updatedCounts);
+  }, [setNotificationCounts]);
+
   const handleAction = useCallback(async (
     requestId: number,
     action: 'accept' | 'reject' | 'cancel'
@@ -63,13 +71,14 @@ export function RequestsSection() {
     try {
       await handleCollaborationAction(requestId, action);
       await loadRequests();
+      await refreshNotificationCounts();
     } catch (error) {
       const errorMessage = error instanceof Error
         ? error.message
         : 'Failed to process request';
       setActionError(errorMessage);
     }
-  }, [loadRequests]);
+  }, [loadRequests, refreshNotificationCounts]);
 
   const hasIncoming = incomingRequests.length > 0;
   const hasSent = sentRequests.length > 0;

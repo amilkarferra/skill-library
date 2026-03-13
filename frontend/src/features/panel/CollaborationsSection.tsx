@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Users } from 'lucide-react';
+import { Users, Upload } from 'lucide-react';
 import { EmptyState } from '../../shared/components/EmptyState';
 import { CollabModeBadge } from '../../shared/components/CollabModeBadge';
 import { fetchMyCollaborations } from './panel.service';
@@ -65,24 +65,27 @@ export function CollaborationsSection() {
       {hasSkills && (
         <div className="collaborations-list">
           {skills.map((skill) => (
-            <Link
-              key={skill.id}
-              to={`/skills/${skill.name}`}
-              className="collaboration-item"
-            >
-              <div className="collaboration-info">
+            <div key={skill.id} className="collaboration-item">
+              <Link to={`/skills/${skill.name}`} className="collaboration-info">
                 <span className="collaboration-name">{skill.displayName}</span>
                 <span className="collaboration-owner">
                   @{skill.ownerUsername}
                 </span>
-              </div>
+              </Link>
               <div className="collaboration-meta">
                 <CollabModeBadge collaborationMode={skill.collaborationMode} />
                 <span className="collaboration-version">
                   {skill.currentVersion ? `v${skill.currentVersion}` : '-'}
                 </span>
+                <Link
+                  to={`/skills/${skill.name}?tab=versions`}
+                  className="collaboration-propose-link"
+                  title="Propose version"
+                >
+                  <Upload size={13} />
+                </Link>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       )}

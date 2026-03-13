@@ -3,9 +3,10 @@
   align-items: center;
   justify-content: space-between;
   padding: 8px 20px;
-  background: var(--accent-bg);
+  background: var(--accent-bg-strong);
   border-bottom: 1px solid var(--border-main);
-  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.1);
+  border-left: 3px solid var(--accent);
+  box-shadow: var(--shadow-accent);
   position: relative;
   z-index: 1;
 }
@@ -19,9 +20,9 @@
 }
 
 .notification-banner-dot {
-  width: 6px;
-  height: 6px;
-  background: #e63946;
+  width: 8px;
+  height: 8px;
+  background: var(--alert-dot);
   flex-shrink: 0;
   border-radius: 50%;
 }

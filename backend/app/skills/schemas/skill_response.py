@@ -15,6 +15,7 @@ class SkillResponse(CamelCaseSchema):
     owner_id: int
     owner_username: str
     owner_display_name: str
+    collaboration_mode: str
     current_version: str | None
     total_likes: int
     total_downloads: int
@@ -22,6 +23,7 @@ class SkillResponse(CamelCaseSchema):
     tags: list[str]
     is_active: bool
     is_liked_by_me: bool
+    collaborators_count: int
     my_role: str | None
     created_at: datetime
     updated_at: datetime

@@ -381,6 +381,7 @@ def map_request_to_response(
     requester = database_session.query(User).filter(
         User.id == collaboration_request.requester_id
     ).first()
+    owner = _find_user_by_id(database_session, skill.owner_id)
     return CollaborationRequestResponse(
         id=collaboration_request.id,
         skill_id=skill.id,
@@ -388,8 +389,19 @@ def map_request_to_response(
         skill_display_name=skill.display_name,
         requester_username=requester.username,
         requester_display_name=requester.display_name,
+        owner_username=owner.username,
+        owner_display_name=owner.display_name,
         direction=collaboration_request.direction.value,
         status=collaboration_request.status.value,
         created_at=collaboration_request.created_at,
         resolved_at=collaboration_request.resolved_at,
     )
+
+
+def _find_user_by_id(
+    database_session: Session,
+    user_id: int,
+) -> User:
+    return database_session.query(User).filter(
+        User.id == user_id
+    ).first()

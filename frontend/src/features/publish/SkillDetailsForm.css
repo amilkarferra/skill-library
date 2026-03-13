@@ -140,7 +140,7 @@ textarea.skill-details-input {
 
 .skill-details-auto-filled .skill-details-input {
   border-color: var(--border-accent);
-  background: #fafaff;
+  background: var(--bg-input-alt);
 }
 
 .skill-details-field-wrapper {

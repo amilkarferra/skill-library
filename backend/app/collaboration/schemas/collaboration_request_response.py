@@ -10,6 +10,8 @@ class CollaborationRequestResponse(CamelCaseSchema):
     skill_display_name: str
     requester_username: str
     requester_display_name: str
+    owner_username: str
+    owner_display_name: str
     direction: str
     status: str
     created_at: datetime

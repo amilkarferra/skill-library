@@ -13,6 +13,7 @@ import { SkillEditForm } from './SkillEditForm';
 import { OverviewTab } from './OverviewTab';
 import { VersionsTab } from './VersionsTab';
 import { CommentsTab } from './CommentsTab';
+import { CollaboratorsTab } from './CollaboratorsTab';
 import { del } from '../../shared/services/api.client';
 import {
   fetchSkillBySlug,
@@ -30,11 +31,11 @@ import type { SkillVersion } from '../../shared/models/SkillVersion';
 import type { Comment } from '../../shared/models/Comment';
 import './SkillDetailPage.css';
 
-type TabId = 'overview' | 'versions' | 'comments';
+type TabId = 'overview' | 'versions' | 'comments' | 'collaborators';
 
 const COMMENTS_PAGE_SIZE = 15;
 
-const VALID_TABS: ReadonlySet<string> = new Set(['overview', 'versions', 'comments']);
+const VALID_TABS: ReadonlySet<string> = new Set(['overview', 'versions', 'comments', 'collaborators']);
 
 function resolveInitialTab(searchParams: URLSearchParams): TabId {
   const tabParam = searchParams.get('tab') ?? '';
@@ -62,6 +63,7 @@ export function SkillDetailPage() {
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
   const [isUpdatingComment, setIsUpdatingComment] = useState(false);
   const [isCollabRequesting, setIsCollabRequesting] = useState(false);
+  const [isCollabRequestSent, setIsCollabRequestSent] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
   const commentsPagination = usePagination(COMMENTS_PAGE_SIZE);
@@ -240,6 +242,7 @@ export function SkillDetailPage() {
     setActionError(null);
     try {
       await requestCollaboration(slug);
+      setIsCollabRequestSent(true);
     } catch (error) {
       const errorMessage = error instanceof Error
         ? error.message
@@ -334,6 +337,7 @@ export function SkillDetailPage() {
   const isOverviewActive = activeTab === 'overview';
   const isVersionsActive = activeTab === 'versions';
   const isCommentsActive = activeTab === 'comments';
+  const isCollaboratorsActive = activeTab === 'collaborators';
 
   const currentUserId = user?.id ?? null;
   const isOwner = skill.myRole === 'owner';
@@ -382,6 +386,7 @@ export function SkillDetailPage() {
           onToggleLike={handleToggleLike}
           onRequestCollaboration={handleRequestCollaboration}
           isCollabRequesting={isCollabRequesting}
+          isCollabRequestSent={isCollabRequestSent}
         />
       )}
 
@@ -394,6 +399,7 @@ export function SkillDetailPage() {
           { id: 'overview', label: 'Overview' },
           { id: 'versions', label: 'Versions', count: versions.length },
           { id: 'comments', label: 'Comments', count: skill.totalComments },
+          { id: 'collaborators', label: 'Collaborators', count: skill.collaboratorsCount },
         ]}
         activeTabId={activeTab}
         onSelectTab={handleSelectTab}
@@ -420,6 +426,13 @@ export function SkillDetailPage() {
             onSubmitComment={handleSubmitComment}
             onEditComment={handleEditComment}
             onDeleteComment={handleDeleteComment}
+          />
+        )}
+        {isCollaboratorsActive && (
+          <CollaboratorsTab
+            slug={slug}
+            isOwner={isOwner}
+            skillOwnerId={skill.ownerId}
           />
         )}
       </div>

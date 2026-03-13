@@ -65,7 +65,6 @@
   gap: 10px;
 }
 
-.request-row-user,
 .request-row-date {
   font-size: 10px;
   color: var(--text-muted);
@@ -77,6 +76,10 @@
   letter-spacing: 0.8px;
   text-transform: uppercase;
   color: var(--accent);
+}
+
+.request-row-type--sent {
+  color: var(--text-muted);
 }
 
 .request-row-actions {

@@ -287,6 +287,7 @@ def _build_detail_response(
     tag_names = service.load_tag_names_for_skill(database_session, skill.id)
     is_liked_by_me = service.resolve_is_liked_by_user(database_session, skill.id, current_user)
     my_role = service.resolve_user_role_on_skill(database_session, skill, current_user)
+    collaborators_count = service.count_collaborators_for_skill(database_session, skill.id)
 
     return SkillDetailResponse(
         id=skill.id,
@@ -301,6 +302,7 @@ def _build_detail_response(
         owner_username=owner.username,
         owner_display_name=owner.display_name,
         collaboration_mode=skill.collaboration_mode.value,
+        collaborators_count=collaborators_count,
         current_version=skill.current_version,
         total_likes=skill.total_likes,
         total_downloads=skill.total_downloads,

@@ -1,4 +1,4 @@
-import { Download, Heart, MessageSquare, ArrowDownToLine, Users } from 'lucide-react';
+import { Download, Heart, MessageSquare, ArrowDownToLine, Users, Check } from 'lucide-react';
 import { Button } from '../../shared/components/Button';
 import { TagList } from '../../shared/components/TagList';
 import { CollabModeBadge } from '../../shared/components/CollabModeBadge';
@@ -13,6 +13,7 @@ interface SkillDetailHeaderProps {
   readonly onToggleLike: () => void;
   readonly onRequestCollaboration: () => void;
   readonly isCollabRequesting: boolean;
+  readonly isCollabRequestSent: boolean;
 }
 
 export function SkillDetailHeader({
@@ -21,6 +22,7 @@ export function SkillDetailHeader({
   onToggleLike,
   onRequestCollaboration,
   isCollabRequesting,
+  isCollabRequestSent,
 }: SkillDetailHeaderProps) {
   const { handleDownload } = useSkillActions(skill);
   const isLiked = skill.isLikedByMe === true;
@@ -60,14 +62,20 @@ export function SkillDetailHeader({
               {isLiked ? 'Liked' : 'Like'}
             </button>
           )}
-          {shouldShowCollabButton && (
+          {shouldShowCollabButton && !isCollabRequestSent && (
             <Button
               variant="secondary"
               onClick={onRequestCollaboration}
               disabled={isCollabRequesting}
             >
               <Users size={14} />
-              Collaborate
+              {isCollabRequesting ? 'Sending...' : 'Collaborate'}
+            </Button>
+          )}
+          {shouldShowCollabButton && isCollabRequestSent && (
+            <Button variant="success" disabled>
+              <Check size={14} />
+              Request Sent
             </Button>
           )}
         </div>
