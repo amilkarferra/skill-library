@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skill Library - Lighter Layout</title>
+<style>
+  :root {
+    --bg-page: #f4f5f9;
+    --bg-container: #fff;
+    --bg-surface: #fcfcff;
+    --bg-sidebar: #f8f8fc;
+    --bg-row-alt: #f8f9fc;
+    --bg-row-hover: #f5f6fa;
+    --bg-search: #f0f1f6;
+    --border-main: #d8dbe6;
+    --border-row: #e8eaf0;
+    --text-primary: #1a1d2e;
+    --text-secondary: #4a4f6a;
+    --text-muted: #7c82a0;
+    --text-chevron: #b8bcd0;
+    --accent: #4f46e5;
+    --accent-hover: #4338ca;
+    --accent-bg: #eef0ff;
+    --accent-secondary: #059669;
+    --accent-secondary-hover: #047857;
+    --tag-bg: #eef0ff;
+    --tag-color: #4f46e5;
+    --danger: #dc2626;
+    --danger-border: #f0c4c4;
+    --danger-hover-bg: #fef2f2;
+    --button-text: #fff;
+    --badge-bg: #4f46e5;
+    --sidebar-active-border: #4f46e5;
+    --sidebar-active-color: #4f46e5;
+    --expanded-border: #4f46e5;
+    --bg-expanded-desc: #f8f8fc;
+    --bg-pagination: #f8f8fc;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg-page); }
+
+  .container { background: var(--bg-container); border: 1px solid var(--border-main); max-width: 1180px; margin: 16px auto; }
+
+  /* Nav */
+  .nav { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; border-bottom: 1px solid var(--border-main); }
+  .nav-left { display: flex; align-items: center; gap: 16px; }
+  .logo { font-size: 15px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.3px; }
+  .logo span { color: var(--accent); font-weight: 700; }
+  .search-box { display: flex; align-items: center; gap: 6px; background: var(--bg-search); border: 1px solid var(--border-main); padding: 7px 12px; width: 300px; font-size: 12px; color: var(--text-muted); }
+  .nav-right { display: flex; gap: 10px; align-items: center; font-size: 12px; color: var(--text-secondary); }
+  .btn-publish { padding: 6px 14px; background: var(--accent); color: var(--button-text); border: none; font-size: 12px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: background 0.2s; }
+  .btn-publish:hover { background: var(--accent-hover); }
+
+  /* Layout */
+  .layout { display: flex; min-height: 480px; }
+
+  /* Sidebar - narrower, less dense */
+  .sidebar { width: 170px; padding: 18px 16px; border-right: 1px solid var(--border-main); flex-shrink: 0; background: var(--bg-sidebar); }
+  .sidebar-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
+  .sidebar-section { margin-bottom: 20px; }
+  .sidebar-item { padding: 5px 8px; font-size: 12px; color: var(--text-secondary); cursor: pointer; transition: color 0.15s; }
+  .sidebar-item:hover { color: var(--text-primary); }
+  .sidebar-item.active { color: var(--sidebar-active-color); font-weight: 600; border-left: 2px solid var(--sidebar-active-border); padding-left: 6px; }
+
+  /* Tags section - collapsible */
+  .tags-toggle { display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding: 0; }
+  .tags-toggle .sidebar-label { margin-bottom: 0; cursor: pointer; }
+  .tags-toggle svg { color: var(--text-muted); transition: transform 0.2s; }
+  .tags-toggle.open svg { transform: rotate(180deg); }
+  .tags-content { display: none; margin-top: 10px; }
+  .tags-content.visible { display: block; }
+  .tag-pill { display: inline-block; padding: 3px 8px; border: 1px solid var(--border-main); font-size: 10px; color: var(--text-secondary); margin: 0 3px 4px 0; cursor: pointer; background: var(--bg-container); transition: all 0.15s; }
+  .tag-pill:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Content header bar */
+  .content-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--border-row); background: var(--bg-surface); }
+  .content-header-count { font-size: 12px; color: var(--text-secondary); font-weight: 600; }
+  .sort-dropdown { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-secondary); cursor: pointer; padding: 4px 10px; border: 1px solid var(--border-main); background: var(--bg-container); }
+  .sort-dropdown:hover { border-color: var(--accent); color: var(--accent); }
+  .sort-dropdown svg { color: var(--text-muted); }
+
+  /* List */
+  .list { flex: 1; }
+
+  /* Row - 12px vertical padding */
+  .row { padding: 12px 16px; border-bottom: 1px solid var(--border-row); display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background 0.15s; }
+  .row:hover { background: var(--bg-row-hover); }
+  .row-alt { background: var(--bg-row-alt); }
+  .row-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; border: 1px solid var(--border-main); }
+  .row-body { flex: 1; min-width: 0; }
+  .row-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+  .row-ver { font-size: 10px; color: var(--text-muted); margin-left: 6px; }
+  .row-desc { font-size: 11px; color: var(--text-muted); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .row-stats { display: flex; gap: 14px; font-size: 11px; color: var(--text-muted); flex-shrink: 0; }
+  .row-stat { display: flex; align-items: center; gap: 3px; }
+  .chevron { color: var(--text-chevron); flex-shrink: 0; }
+
+  /* Expanded */
+  .expanded { border-bottom: 2px solid var(--expanded-border); background: var(--bg-container); }
+  .expanded-header { padding: 12px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-row); }
+  .badge { font-size: 9px; padding: 2px 6px; background: var(--badge-bg); color: var(--button-text); font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-left: 8px; }
+
+  .expanded-panel { padding: 14px 16px 16px 64px; }
+
+  .exp-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.7; padding: 12px 14px; border: 1px solid var(--border-row); background: var(--bg-expanded-desc); margin-bottom: 12px; }
+
+  .exp-tags { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
+  .exp-tag { padding: 3px 10px; background: var(--tag-bg); font-size: 10px; color: var(--tag-color); font-weight: 600; letter-spacing: 0.2px; }
+
+  .exp-meta { display: flex; gap: 20px; margin-bottom: 14px; flex-wrap: wrap; }
+  .exp-meta-item { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+  .exp-meta-item strong { color: var(--text-primary); font-weight: 600; }
+  .exp-meta-item svg { color: var(--text-muted); }
+
+  .exp-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .btn { padding: 6px 12px; font-size: 11px; font-weight: 400; cursor: pointer; display: flex; align-items: center; gap: 5px; border: none; transition: all 0.2s; }
+  .btn-primary { font-weight: 500; background: var(--accent); color: var(--button-text); }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-secondary { background: var(--accent-secondary); color: var(--button-text); }
+  .btn-secondary:hover { background: var(--accent-secondary-hover); }
+  .btn-outline { background: var(--bg-container); color: var(--text-secondary); border: 1px solid var(--border-main); }
+  .btn-outline:hover { background: var(--bg-row-hover); }
+  .btn-danger { background: var(--bg-container); color: var(--danger); border: 1px solid var(--danger-border); }
+  .btn-danger:hover { background: var(--danger-hover-bg); }
+  .spacer { flex: 1; }
+
+  /* Pagination */
+  .pagination { padding: 10px 16px; display: flex; justify-content: center; gap: 2px; border-top: 1px solid var(--border-main); background: var(--bg-pagination); }
+  .pg { padding: 5px 10px; font-size: 11px; color: var(--text-secondary); cursor: pointer; transition: all 0.15s; }
+  .pg:hover { background: var(--border-row); }
+  .pg.active { background: var(--accent); color: var(--button-text); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Nav -->
+  <div class="nav">
+    <div class="nav-left">
+      <div class="logo">skill<span>library</span></div>
+      <div class="search-box">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7c82a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        Search skills...
+      </div>
+    </div>
+    <div class="nav-right">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4a4f6a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      @amilkar
+      <button class="btn-publish">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+        Publish
+      </button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <!-- Sidebar - narrower, no counts, no sort, collapsible tags -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Categories</div>
+        <div class="sidebar-item active">All</div>
+        <div class="sidebar-item">Frontend</div>
+        <div class="sidebar-item">Backend</div>
+        <div class="sidebar-item">Testing</div>
+        <div class="sidebar-item">DevOps</div>
+        <div class="sidebar-item">Architecture</div>
+        <div class="sidebar-item">Tooling</div>
+      </div>
+      <div class="sidebar-section">
+        <div class="tags-toggle" id="tagsToggle">
+          <div class="sidebar-label">Tags</div>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+        <div class="tags-content" id="tagsContent">
+          <span class="tag-pill">angular</span>
+          <span class="tag-pill">react</span>
+          <span class="tag-pill">tdd</span>
+          <span class="tag-pill">python</span>
+          <span class="tag-pill">clean-code</span>
+          <span class="tag-pill">debugging</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- List -->
+    <div class="list">
+      <!-- Content header bar with count + sort -->
+      <div class="content-header">
+        <div class="content-header-count">2,340 skills</div>
+        <div class="sort-dropdown">
+          Sort: Most popular
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+      </div>
+
+      <!-- EXPANDED ROW: Angular Senior Developer -->
+      <div class="expanded">
+        <div class="expanded-header">
+          <div class="row-icon" style="background:#eef0ff; color:#5b6abf;">A</div>
+          <div class="row-body">
+            <div>
+              <span class="row-name">Angular Senior Developer</span>
+              <span class="row-ver">v2.1.0</span>
+              <span class="badge">Owner</span>
+            </div>
+            <div class="row-desc">Senior Angular 20+ developer skill for writing, reviewing, and debugging</div>
+          </div>
+          <div class="row-stats">
+            <div class="row-stat">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              @amilkar
+            </div>
+            <div class="row-stat">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              342
+            </div>
+            <div class="row-stat">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+              1.2k
+            </div>
+          </div>
+          <div class="chevron">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+          </div>
+        </div>
+
+        <div class="expanded-panel">
+          <div class="exp-desc">
+            Senior Angular 20+ developer skill for writing, reviewing, refactoring, and debugging Angular code following modern best practices. Covers standalone components, signals, reactive forms, services, state management, routing, Material integration, mappers, validators, pipes, guards, interceptors, and testing. Enforces strict typing, pure functions, no mutations, signal-based architecture, and clean naming conventions.
+          </div>
+
+          <div class="exp-tags">
+            <span class="exp-tag">angular</span>
+            <span class="exp-tag">signals</span>
+            <span class="exp-tag">standalone</span>
+            <span class="exp-tag">clean-code</span>
+            <span class="exp-tag">typescript</span>
+          </div>
+
+          <div class="exp-meta">
+            <div class="exp-meta-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+              <strong>Frontend</strong>
+            </div>
+            <div class="exp-meta-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+              <strong>Mar 8, 2026</strong>
+            </div>
+            <div class="exp-meta-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+              <strong>Open</strong> collaboration
+            </div>
+            <div class="exp-meta-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <strong>3</strong> collaborators
+            </div>
+          </div>
+
+          <div class="exp-actions">
+            <button class="btn btn-primary">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+              Download
+            </button>
+            <button class="btn btn-secondary">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+              New version
+            </button>
+            <button class="btn btn-outline">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+              Collaborators
+            </button>
+            <button class="btn btn-outline">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              View detail
+            </button>
+            <div class="spacer"></div>
+            <button class="btn btn-danger">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 2: TDD -->
+      <div class="row row-alt">
+        <div class="row-icon" style="background:#ecfdf5; color:#059669;">T</div>
+        <div class="row-body">
+          <div><span class="row-name">TDD Workflow</span><span class="row-ver">v1.3.0</span></div>
+          <div class="row-desc">Test-driven development skill that enforces red-green-refactor cycle</div>
+        </div>
+        <div class="row-stats">
+          <div class="row-stat"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> @carlos</div>
+          <div class="row-stat"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> 189</div>
+          <div class="row-stat"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg> 876</div>
+        </div>
+        <div class="chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+      </div>
+
+      <!-- ROW 3: Python -->
+      <div class="row">
+        <div class="row-icon" style="background:#fefce8; color:#b8860b;">P</div>
+        <div class="row-body">
+          <div><span class="row-name">Python Clean Code Mentor</span><span class="row-ver">v3.0.1</span></div>
+          <div class="row-desc">Clean code mentor for Python focused on naming and maintainability</div>
+        </div>
+        <div class="row-stats">
+          <div class="row-stat"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> @maria</div>
+          <div class="row-stat"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> 521</div>
+          <div class="row-stat"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg> 2.3k</div>
+        </div>
+        <div class="chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+      </div>
+
+      <!-- ROW 4: Debugging -->
+      <div class="row row-alt">
+        <div class="row-icon" style="background:#fef2f2; color:#dc2626;">S</div>
+        <div class="row-body">
+          <div><span class="row-name">Systematic Debugging</span><span class="row-ver">v1.0.0</span></div>
+          <div class="row-desc">Systematic approach to debugging that traces root causes before proposing fixes</div>
+        </div>
+        <div class="row-stats">
+          <div class="row-stat"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> @jorge</div>
+          <div class="row-stat"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> 95</div>
+          <div class="row-stat"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg> 430</div>
+        </div>
+        <div class="chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+      </div>
+
+      <!-- ROW 5: React Native -->
+      <div class="row">
+        <div class="row-icon" style="background:#f3f0ff; color:#7c3aed;">R</div>
+        <div class="row-body">
+          <div><span class="row-name">React Native Expert</span><span class="row-ver">v1.5.0</span></div>
+          <div class="row-desc">Senior React Native developer with Expo, hooks, navigation, and performance</div>
+        </div>
+        <div class="row-stats">
+          <div class="row-stat"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> @amilkar</div>
+          <div class="row-stat"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> 267</div>
+          <div class="row-stat"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg> 1.5k</div>
+        </div>
+        <div class="chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination">
+        <span class="pg active">1</span>
+        <span class="pg">2</span>
+        <span class="pg">3</span>
+        <span class="pg" style="color:var(--text-chevron); cursor:default;">...</span>
+        <span class="pg">12</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var toggle = document.getElementById('tagsToggle');
+  var content = document.getElementById('tagsContent');
+  toggle.addEventListener('click', function() {
+    var isOpen = toggle.classList.contains('open');
+    if (isOpen) {
+      toggle.classList.remove('open');
+      content.classList.remove('visible');
+    } else {
+      toggle.classList.add('open');
+      content.classList.add('visible');
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vista My Panel - Layout Unificado Opcion D</title>
+<style>
+  :root {
+    --bg-page: #f4f5f9;
+    --bg-container: #fff;
+    --bg-surface: #fcfcff;
+    --bg-sidebar: #f8f8fc;
+    --bg-row-alt: #f8f9fc;
+    --bg-row-hover: #f5f6fa;
+    --bg-search: #f0f1f6;
+    --border-main: #d8dbe6;
+    --border-row: #e8eaf0;
+    --border-accent: #c7d2fe;
+    --text-primary: #1a1d2e;
+    --text-secondary: #4a4f6a;
+    --text-muted: #7c82a0;
+    --text-chevron: #b8bcd0;
+    --accent: #4f46e5;
+    --accent-hover: #4338ca;
+    --accent-bg: #eef0ff;
+    --accent-secondary: #059669;
+    --tag-bg: #eef0ff;
+    --tag-color: #4f46e5;
+    --danger: #dc2626;
+    --danger-border: #f0c4c4;
+    --danger-hover-bg: #fef2f2;
+    --button-text: #fff;
+    --alert-dot: #e63946;
+    --shadow-soft: 0 12px 30px rgba(26,29,46,0.05);
+    --inactive-bg: #fee2e2;
+    --inactive-color: #991b1b;
+    --success-bg: #dcfce7;
+    --success-color: #166534;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--bg-page); color: var(--text-primary); min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* === NAVBAR === */
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; background: var(--bg-container); border-bottom: 1px solid var(--border-main); }
+  .nav-left { display: flex; align-items: center; gap: 20px; }
+  .nav-logo { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.3px; text-decoration: none; }
+  .nav-logo-accent { color: var(--accent); }
+  .nav-links { display: flex; gap: 16px; }
+  .nav-link { font-size: 12px; color: var(--text-muted); text-decoration: none; }
+  .nav-link:hover { color: var(--text-primary); }
+  .nav-link--active { color: var(--accent); font-weight: 600; }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .nav-btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 11px; font-weight: 500; color: var(--button-text); background: var(--accent); border: 1px solid var(--accent); cursor: pointer; font-family: inherit; text-decoration: none; }
+  .nav-profile { position: relative; display: flex; align-items: center; gap: 5px; color: var(--text-secondary); font-size: 12px; }
+  .nav-username { font-weight: 600; }
+  .nav-notification-dot { position: absolute; top: -2px; left: 10px; width: 8px; height: 8px; background: var(--alert-dot); border: 2px solid var(--bg-container); border-radius: 50%; }
+
+  /* === MAIN LAYOUT === */
+  .layout-main { flex: 1; padding: 16px 24px 32px; max-width: 1180px; width: 100%; margin: 0 auto; }
+  .sidebar-layout { display: grid; grid-template-columns: 200px 1fr; min-height: calc(100vh - 60px - 48px); background: var(--bg-container); border: 1px solid var(--border-main); box-shadow: var(--shadow-soft); }
+
+  /* === GLOBAL NAV SIDEBAR === */
+  .global-sidebar { background: var(--bg-sidebar); border-right: 1px solid var(--border-main); padding: 16px; }
+  .global-sidebar-title { display: block; margin-bottom: 8px; font-size: 10px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); }
+  .global-sidebar-item { display: flex; align-items: center; gap: 9px; width: 100%; padding: 5px 8px; border: none; border-left: 2px solid transparent; background: none; color: var(--text-secondary); font-family: inherit; font-size: 12px; font-weight: 500; cursor: pointer; text-align: left; text-decoration: none; }
+  .global-sidebar-item:hover { background: var(--bg-row-hover); }
+  .global-sidebar-item--active { color: var(--accent); font-weight: 600; background: var(--bg-container); border-left-color: var(--accent); }
+  .global-sidebar-divider { height: 1px; background: var(--border-row); margin: 12px 0; }
+  .global-sidebar-icon { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+  .global-sidebar-count { margin-left: auto; font-size: 10px; background: var(--accent-bg); color: var(--accent); padding: 1px 6px; font-weight: 600; }
+
+  /* === PANEL CONTENT === */
+  .content-area { min-width: 0; display: flex; flex-direction: column; }
+  .panel-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--border-row); }
+  .panel-user-name { font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 2px; }
+  .panel-user-handle { font-size: 11px; color: var(--text-muted); }
+  .panel-section-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px 10px; }
+  .panel-section-title { font-size: 10px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); }
+  .panel-section-count { font-size: 11px; color: var(--text-muted); }
+
+  /* === MY SKILL ROWS === */
+  .my-skill-row { display: flex; align-items: center; gap: 12px; padding: 12px 24px; border-bottom: 1px solid var(--border-row); }
+  .my-skill-row:nth-child(even) { background: var(--bg-row-alt); }
+  .my-skill-tile { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: var(--accent-bg); color: var(--accent); font-size: 14px; font-weight: 700; flex-shrink: 0; }
+  .my-skill-main { flex: 1; min-width: 0; }
+  .my-skill-header { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
+  .my-skill-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+  .my-skill-version { font-size: 10px; padding: 1px 6px; background: var(--bg-sidebar); color: var(--text-secondary); border: 1px solid var(--border-main); font-weight: 600; letter-spacing: 0.6px; }
+  .my-skill-status { font-size: 9px; padding: 2px 7px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+  .my-skill-status--active { background: var(--success-bg); color: var(--success-color); }
+  .my-skill-status--inactive { background: var(--inactive-bg); color: var(--inactive-color); }
+  .my-skill-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+  .my-skill-meta { display: flex; gap: 14px; }
+  .my-skill-meta-item { font-size: 10px; color: var(--text-muted); display: inline-flex; align-items: center; gap: 3px; }
+  .my-skill-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; border: 1px solid transparent; cursor: pointer; font-family: inherit; }
+  .btn-small { padding: 6px 12px; font-size: 11px; font-weight: 400; }
+  .btn-secondary { color: var(--text-secondary); background: var(--bg-container); border-color: var(--border-main); }
+  .btn-secondary:hover { color: var(--accent); border-color: var(--accent); }
+  .btn-primary { color: var(--button-text); background: var(--accent); border-color: var(--accent); }
+  .btn-download { color: var(--button-text); background: var(--accent-secondary); border-color: var(--accent-secondary); }
+  .btn-danger-outline { color: var(--danger); background: var(--bg-container); border-color: var(--danger-border); }
+  .icon { stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  .view-label { position: fixed; top: 8px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; font-size: 11px; font-weight: 600; padding: 4px 14px; letter-spacing: 0.4px; z-index: 100; }
+</style>
+</head>
+<body>
+
+<div class="view-label">VISTA: MY PANEL (Opcion D)</div>
+
+<!-- NAVBAR -->
+<nav class="nav">
+  <div class="nav-left">
+    <a class="nav-logo" href="#">
+      <svg width="28" height="28" viewBox="0 0 28 28"><rect width="28" height="28" fill="#4f46e5"/><text x="14" y="19" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="Segoe UI">S</text></svg>
+      skill<span class="nav-logo-accent">library</span>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link" href="#">Explore</a>
+      <a class="nav-link nav-link--active" href="#">My Panel</a>
+    </div>
+  </div>
+  <div class="nav-right">
+    <a class="nav-btn" href="#">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+      Publish
+    </a>
+    <div class="nav-profile">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="nav-username">@amilkar</span>
+      <span class="nav-notification-dot"></span>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="layout-main">
+  <div class="sidebar-layout">
+
+    <!-- GLOBAL NAV SIDEBAR -->
+    <div class="global-sidebar">
+      <span class="global-sidebar-title">Navigate</span>
+      <a class="global-sidebar-item" href="#">
+        <svg class="global-sidebar-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        Explorer
+      </a>
+      <a class="global-sidebar-item" href="#">
+        <svg class="global-sidebar-icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+        Publish
+      </a>
+      <div class="global-sidebar-divider"></div>
+      <span class="global-sidebar-title">My Panel</span>
+      <a class="global-sidebar-item global-sidebar-item--active" href="#">
+        <svg class="global-sidebar-icon" viewBox="0 0 24 24"><path d="M20 7 12 3 4 7m16 0-8 4m8-4v10l-8 4M4 7l8 4M4 7v10l8 4m0-10v10"/></svg>
+        My Skills
+        <span class="global-sidebar-count">5</span>
+      </a>
+      <a class="global-sidebar-item" href="#">
+        <svg class="global-sidebar-icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Collaborations
+        <span class="global-sidebar-count">2</span>
+      </a>
+      <a class="global-sidebar-item" href="#">
+        <svg class="global-sidebar-icon" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+        My Likes
+        <span class="global-sidebar-count">8</span>
+      </a>
+      <div class="global-sidebar-divider"></div>
+      <a class="global-sidebar-item" href="#">
+        <svg class="global-sidebar-icon" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+        Settings
+      </a>
+    </div>
+
+    <!-- CONTENT: My Panel - My Skills -->
+    <div class="content-area">
+      <div class="panel-header">
+        <div class="panel-user-name">Amilkar Mercado</div>
+        <div class="panel-user-handle">@amilkar</div>
+      </div>
+
+      <div class="panel-section-header">
+        <span class="panel-section-title">My Skills</span>
+        <span class="panel-section-count">5 skills</span>
+      </div>
+
+      <!-- Skill rows -->
+      <div class="my-skill-row">
+        <div class="my-skill-tile">R</div>
+        <div class="my-skill-main">
+          <div class="my-skill-header">
+            <span class="my-skill-name">React Hooks Guide</span>
+            <span class="my-skill-version">v2.1.0</span>
+            <span class="my-skill-status my-skill-status--active">Active</span>
+          </div>
+          <div class="my-skill-desc">A comprehensive guide to React hooks patterns and best practices</div>
+          <div class="my-skill-meta">
+            <span class="my-skill-meta-item"><svg class="icon" width="11" height="11" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>28 likes</span>
+            <span class="my-skill-meta-item"><svg class="icon" width="11" height="11" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>142 downloads</span>
+            <span class="my-skill-meta-item"><svg class="icon" width="11" height="11" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>12 comments</span>
+          </div>
+        </div>
+        <div class="my-skill-actions">
+          <button class="btn btn-small btn-secondary"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>Edit</button>
+          <button class="btn btn-small btn-download"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>New version</button>
+        </div>
+      </div>
+
+      <div class="my-skill-row">
+        <div class="my-skill-tile">P</div>
+        <div class="my-skill-main">
+          <div class="my-skill-header">
+            <span class="my-skill-name">Python Clean Code Mentor</span>
+            <span class="my-skill-version">v1.3.0</span>
+            <span class="my-skill-status my-skill-status--active">Active</span>
+          </div>
+          <div class="my-skill-desc">Mentor and reviewer focused on clean code, precise naming, and maintainability</div>
+          <div class="my-skill-meta">
+            <span class="my-skill-meta-item"><svg class="icon" width="11" height="11" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>9 likes</span>
+            <span class="my-skill-meta-item"><svg class="icon" width="11" height="11" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>56 downloads</span>
+            <span class="my-skill-meta-item"><svg class="icon" width="11" height="11" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>3 comments</span>
+          </div>
+        </div>
+        <div class="my-skill-actions">
+          <button class="btn btn-small btn-secondary"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>Edit</button>
+          <button class="btn btn-small btn-download"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>New version</button>
+        </div>
+      </div>
+
+      <div class="my-skill-row">
+        <div class="my-skill-tile">T</div>
+        <div class="my-skill-main">
+          <div class="my-skill-header">
+            <span class="my-skill-name">TypeScript Clean Code Mentor</span>
+            <span class="my-skill-version">v2.0.0</span>
+            <span class="my-skill-status my-skill-status--active">Active</span>
+          </div>
+          <div class="my-skill-desc">Mentor and reviewer for TypeScript focused on clean code, strict typing, and maintainability</div>
+          <div class="my-skill-meta">
+            <span class="my-skill-meta-item"><svg class="icon" width="11" height="11" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>15 likes</span>
+            <span class="my-skill-meta-item"><svg class="icon" width="11" height="11" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>78 downloads</span>
+            <span class="my-skill-meta-item"><svg class="icon" width="11" height="11" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>5 comments</span>
+          </div>
+        </div>
+        <div class="my-skill-actions">
+          <button class="btn btn-small btn-secondary"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>Edit</button>
+          <button class="btn btn-small btn-download"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>New version</button>
+        </div>
+      </div>
+
+      <div class="my-skill-row">
+        <div class="my-skill-tile">C</div>
+        <div class="my-skill-main">
+          <div class="my-skill-header">
+            <span class="my-skill-name">C# Clean Code Mentor</span>
+            <span class="my-skill-version">v1.1.0</span>
+            <span class="my-skill-status my-skill-status--inactive">Inactive</span>
+          </div>
+          <div class="my-skill-desc">Clean code mentor for C#/.NET focused on maintainability and architecture</div>
+          <div class="my-skill-meta">
+            <span class="my-skill-meta-item"><svg class="icon" width="11" height="11" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>4 likes</span>
+            <span class="my-skill-meta-item"><svg class="icon" width="11" height="11" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>23 downloads</span>
+            <span class="my-skill-meta-item"><svg class="icon" width="11" height="11" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>1 comment</span>
+          </div>
+        </div>
+        <div class="my-skill-actions">
+          <button class="btn btn-small btn-secondary"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>Edit</button>
+        </div>
+      </div>
+
+      <div class="my-skill-row">
+        <div class="my-skill-tile">S</div>
+        <div class="my-skill-main">
+          <div class="my-skill-header">
+            <span class="my-skill-name">Skill Creator</span>
+            <span class="my-skill-version">v1.0.0</span>
+            <span class="my-skill-status my-skill-status--active">Active</span>
+          </div>
+          <div class="my-skill-desc">Guide for creating effective skills that extend Claude's capabilities</div>
+          <div class="my-skill-meta">
+            <span class="my-skill-meta-item"><svg class="icon" width="11" height="11" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>21 likes</span>
+            <span class="my-skill-meta-item"><svg class="icon" width="11" height="11" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>167 downloads</span>
+            <span class="my-skill-meta-item"><svg class="icon" width="11" height="11" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>8 comments</span>
+          </div>
+        </div>
+        <div class="my-skill-actions">
+          <button class="btn btn-small btn-secondary"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>Edit</button>
+          <button class="btn btn-small btn-download"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>New version</button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

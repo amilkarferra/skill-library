@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vista Explorer - Layout Unificado Opcion D</title>
+<style>
+  :root {
+    --bg-page: #f4f5f9;
+    --bg-container: #fff;
+    --bg-surface: #fcfcff;
+    --bg-sidebar: #f8f8fc;
+    --bg-row-alt: #f8f9fc;
+    --bg-row-hover: #f5f6fa;
+    --bg-search: #f0f1f6;
+    --border-main: #d8dbe6;
+    --border-row: #e8eaf0;
+    --border-accent: #c7d2fe;
+    --text-primary: #1a1d2e;
+    --text-secondary: #4a4f6a;
+    --text-muted: #7c82a0;
+    --text-chevron: #b8bcd0;
+    --accent: #4f46e5;
+    --accent-hover: #4338ca;
+    --accent-bg: #eef0ff;
+    --accent-secondary: #059669;
+    --tag-bg: #eef0ff;
+    --tag-color: #4f46e5;
+    --danger: #dc2626;
+    --button-text: #fff;
+    --alert-dot: #e63946;
+    --shadow-soft: 0 12px 30px rgba(26,29,46,0.05);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--bg-page); color: var(--text-primary); min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* === NAVBAR (fiel al actual) === */
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; background: var(--bg-container); border-bottom: 1px solid var(--border-main); }
+  .nav-left { display: flex; align-items: center; gap: 20px; }
+  .nav-logo { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.3px; text-decoration: none; }
+  .nav-logo-accent { color: var(--accent); }
+  .nav-links { display: flex; gap: 16px; }
+  .nav-link { font-size: 12px; color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
+  .nav-link:hover { color: var(--text-primary); }
+  .nav-link--active { color: var(--accent); font-weight: 600; }
+  .nav-search { position: relative; display: flex; align-items: center; width: 320px; }
+  .nav-search-icon { position: absolute; left: 12px; color: var(--text-muted); pointer-events: none; }
+  .nav-search-input { width: 100%; padding: 8px 12px 8px 36px; background: var(--bg-search); border: 1px solid var(--border-main); font-size: 12px; color: var(--text-primary); outline: none; font-family: inherit; }
+  .nav-search-input:focus { border-color: var(--accent); background: var(--bg-container); }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .nav-btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 11px; font-weight: 500; color: var(--button-text); background: var(--accent); border: 1px solid var(--accent); cursor: pointer; font-family: inherit; text-decoration: none; }
+  .nav-profile { position: relative; display: flex; align-items: center; gap: 5px; color: var(--text-secondary); font-size: 12px; cursor: pointer; }
+  .nav-username { font-weight: 600; color: var(--text-secondary); }
+  .nav-notification-dot { position: absolute; top: -2px; left: 10px; width: 8px; height: 8px; background: var(--alert-dot); border: 2px solid var(--bg-container); border-radius: 50%; }
+
+  /* === MAIN LAYOUT === */
+  .layout-main { flex: 1; padding: 16px 24px 32px; max-width: 1180px; width: 100%; margin: 0 auto; }
+  .sidebar-layout { display: grid; grid-template-columns: 200px 1fr; min-height: calc(100vh - 60px - 48px); background: var(--bg-container); border: 1px solid var(--border-main); box-shadow: var(--shadow-soft); }
+
+  /* === GLOBAL NAV SIDEBAR (Opcion D) === */
+  .global-sidebar { background: var(--bg-sidebar); border-right: 1px solid var(--border-main); padding: 16px; display: flex; flex-direction: column; }
+  .global-sidebar-title { display: block; padding: 0; margin-bottom: 8px; font-size: 10px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); }
+  .global-sidebar-item { display: flex; align-items: center; gap: 9px; width: 100%; padding: 5px 8px; border: none; border-left: 2px solid transparent; background: none; color: var(--text-secondary); font-family: inherit; font-size: 12px; font-weight: 500; cursor: pointer; text-align: left; text-decoration: none; transition: background 0.12s, color 0.12s; }
+  .global-sidebar-item:hover { background: var(--bg-row-hover); }
+  .global-sidebar-item--active { color: var(--accent); font-weight: 600; background: var(--bg-container); border-left-color: var(--accent); }
+  .global-sidebar-divider { height: 1px; background: var(--border-row); margin: 12px 0; }
+  .global-sidebar-icon { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+  /* === FILTER SIDEBAR (dentro del contenido, fiel al actual) === */
+  .filter-sidebar { padding: 0 16px; overflow-y: auto; }
+  .filter-section { margin-bottom: 22px; }
+  .filter-section-label { display: block; margin-bottom: 8px; font-size: 10px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); }
+  .filter-item { display: flex; align-items: center; width: 100%; padding: 5px 8px; border: none; border-left: 2px solid transparent; background: none; color: var(--text-secondary); font-family: inherit; font-size: 12px; font-weight: 500; cursor: pointer; text-align: left; transition: background 0.12s; }
+  .filter-item:hover { background: var(--bg-row-hover); }
+  .filter-item--active { color: var(--accent); font-weight: 600; background: var(--bg-container); border-left-color: var(--accent); }
+  .filter-item-count { margin-left: auto; font-size: 10px; color: var(--text-muted); }
+  .filter-item--active .filter-item-count { color: var(--accent); }
+  .filter-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .filter-tag { display: inline-block; padding: 3px 9px; border: 1px solid var(--border-main); background: var(--bg-container); color: var(--text-secondary); font-size: 10px; font-weight: 600; cursor: pointer; }
+  .filter-tag--selected { background: var(--accent-bg); border-color: var(--border-accent); color: var(--accent); }
+
+  /* === CONTENT AREA (fiel al actual) === */
+  .content-area { min-width: 0; display: flex; flex-direction: column; }
+  .inner-layout { display: grid; grid-template-columns: 170px 1fr; flex: 1; }
+  .inner-sidebar { background: var(--bg-sidebar); border-right: 1px solid var(--border-main); padding: 16px 0; }
+
+  /* === CATALOG === */
+  .catalog-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 12px; border-bottom: 1px solid var(--border-row); }
+  .catalog-count { font-size: 12px; font-weight: 600; color: var(--text-secondary); letter-spacing: 0.2px; }
+  .catalog-search-row { padding: 14px 20px; background: var(--bg-surface); border-bottom: 1px solid var(--border-row); }
+  .catalog-search { position: relative; display: flex; align-items: center; }
+  .catalog-search-icon { position: absolute; left: 10px; color: var(--text-muted); }
+  .catalog-search-input { width: 100%; padding: 7px 10px 7px 32px; background: var(--bg-search); border: 1px solid var(--border-main); font-size: 12px; color: var(--text-primary); outline: none; font-family: inherit; }
+
+  /* === SKILL ROW === */
+  .skill-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border-row); cursor: pointer; transition: background 0.12s; }
+  .skill-row:hover { background: var(--bg-row-hover); }
+  .skill-row--alt { background: var(--bg-row-alt); }
+  .skill-row-tile { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: var(--accent-bg); color: var(--accent); font-size: 14px; font-weight: 700; flex-shrink: 0; }
+  .skill-row-main { flex: 1; min-width: 0; }
+  .skill-row-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+  .skill-row-title-group { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .skill-row-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+  .skill-row-version { display: inline-block; padding: 1px 6px; font-size: 10px; font-weight: 600; letter-spacing: 0.6px; text-transform: uppercase; background: var(--bg-sidebar); color: var(--text-secondary); border: 1px solid var(--border-main); }
+  .skill-row-category { font-size: 10px; font-weight: 600; letter-spacing: 0.6px; text-transform: uppercase; color: var(--text-muted); flex-shrink: 0; }
+  .skill-row-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .skill-row-footer { display: flex; align-items: center; gap: 12px; }
+  .skill-row-meta { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-secondary); }
+  .skill-row-actions { display: flex; align-items: center; gap: 14px; margin-left: auto; flex-shrink: 0; }
+  .skill-row-action { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; color: var(--text-muted); cursor: pointer; }
+  .skill-row-action:hover { color: var(--accent); }
+  .skill-row-chevron { display: flex; align-items: center; justify-content: center; width: 28px; margin-left: 10px; flex-shrink: 0; color: var(--text-chevron); }
+  .icon { stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  .view-label { position: fixed; top: 8px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; font-size: 11px; font-weight: 600; padding: 4px 14px; letter-spacing: 0.4px; z-index: 100; }
+</style>
+</head>
+<body>
+
+<div class="view-label">VISTA: EXPLORER (Opcion D)</div>
+
+<!-- NAVBAR -->
+<nav class="nav">
+  <div class="nav-left">
+    <a class="nav-logo" href="#">
+      <svg width="28" height="28" viewBox="0 0 28 28"><rect width="28" height="28" fill="#4f46e5"/><text x="14" y="19" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="Segoe UI">S</text></svg>
+      skill<span class="nav-logo-accent">library</span>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link nav-link--active" href="#">Explore</a>
+      <a class="nav-link" href="#">My Panel</a>
+    </div>
+    <div class="nav-search">
+      <svg class="nav-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" class="nav-search-input" placeholder="Search skills..." />
+    </div>
+  </div>
+  <div class="nav-right">
+    <a class="nav-btn" href="#">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+      Publish
+    </a>
+    <div class="nav-profile">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="nav-username">@amilkar</span>
+      <span class="nav-notification-dot"></span>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="layout-main">
+  <div class="sidebar-layout">
+
+    <!-- GLOBAL NAV SIDEBAR -->
+    <div class="global-sidebar">
+      <span class="global-sidebar-title">Navigate</span>
+      <a class="global-sidebar-item global-sidebar-item--active" href="#">
+        <svg class="global-sidebar-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        Explorer
+      </a>
+      <a class="global-sidebar-item" href="#">
+        <svg class="global-sidebar-icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+        Publish
+      </a>
+      <div class="global-sidebar-divider"></div>
+      <span class="global-sidebar-title">My Panel</span>
+      <a class="global-sidebar-item" href="#">
+        <svg class="global-sidebar-icon" viewBox="0 0 24 24"><path d="M20 7 12 3 4 7m16 0-8 4m8-4v10l-8 4M4 7l8 4M4 7v10l8 4m0-10v10"/></svg>
+        My Skills
+      </a>
+      <a class="global-sidebar-item" href="#">
+        <svg class="global-sidebar-icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Collaborations
+      </a>
+      <a class="global-sidebar-item" href="#">
+        <svg class="global-sidebar-icon" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+        My Likes
+      </a>
+      <div class="global-sidebar-divider"></div>
+      <a class="global-sidebar-item" href="#">
+        <svg class="global-sidebar-icon" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+        Settings
+      </a>
+    </div>
+
+    <!-- CONTENT: Explorer con FilterSidebar + Catalog -->
+    <div class="content-area">
+      <div class="inner-layout">
+        <!-- FilterSidebar actual -->
+        <div class="inner-sidebar">
+          <div class="filter-sidebar">
+            <div class="filter-section">
+              <span class="filter-section-label">Categories</span>
+              <button class="filter-item filter-item--active">All <span class="filter-item-count">47</span></button>
+              <button class="filter-item">Development <span class="filter-item-count">18</span></button>
+              <button class="filter-item">Design <span class="filter-item-count">12</span></button>
+              <button class="filter-item">DevOps <span class="filter-item-count">8</span></button>
+              <button class="filter-item">Testing <span class="filter-item-count">5</span></button>
+              <button class="filter-item">Documentation <span class="filter-item-count">4</span></button>
+            </div>
+            <div class="filter-section">
+              <span class="filter-section-label">Sort by</span>
+              <button class="filter-item filter-item--active">Newest</button>
+              <button class="filter-item">Most liked</button>
+              <button class="filter-item">Most downloaded</button>
+              <button class="filter-item">Name A-Z</button>
+            </div>
+            <div class="filter-section">
+              <span class="filter-section-label">Popular tags</span>
+              <div class="filter-tags">
+                <button class="filter-tag filter-tag--selected">react</button>
+                <button class="filter-tag">angular</button>
+                <button class="filter-tag">python</button>
+                <button class="filter-tag">docker</button>
+                <button class="filter-tag">typescript</button>
+                <button class="filter-tag">testing</button>
+                <button class="filter-tag">ci-cd</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Catalog list -->
+        <div style="min-width:0;">
+          <div class="catalog-header">
+            <span class="catalog-count">47 skills</span>
+          </div>
+          <div class="catalog-search-row">
+            <div class="catalog-search">
+              <svg class="catalog-search-icon icon" width="14" height="14" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              <input type="text" class="catalog-search-input" placeholder="Search skills..." />
+            </div>
+          </div>
+
+          <!-- Skill rows -->
+          <div class="skill-row">
+            <div class="skill-row-tile">R</div>
+            <div class="skill-row-main">
+              <div class="skill-row-header">
+                <div class="skill-row-title-group">
+                  <span class="skill-row-name">React Hooks Guide</span>
+                  <span class="skill-row-version">v2.1.0</span>
+                </div>
+                <span class="skill-row-category">DEVELOPMENT</span>
+              </div>
+              <div class="skill-row-desc">A comprehensive guide to React hooks patterns and best practices for modern applications</div>
+              <div class="skill-row-footer">
+                <span class="skill-row-meta"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>@johndoe</span>
+                <span class="skill-row-meta"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M20 7 12 3 4 7m16 0-8 4m8-4v10l-8 4M4 7l8 4M4 7v10l8 4m0-10v10"/></svg>Open collaboration</span>
+              </div>
+            </div>
+            <div class="skill-row-actions">
+              <span class="skill-row-action"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>28</span>
+              <span class="skill-row-action"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>142</span>
+              <span class="skill-row-action"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>12</span>
+            </div>
+            <div class="skill-row-chevron"><svg class="icon" width="18" height="18" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></div>
+          </div>
+
+          <div class="skill-row skill-row--alt">
+            <div class="skill-row-tile">A</div>
+            <div class="skill-row-main">
+              <div class="skill-row-header">
+                <div class="skill-row-title-group">
+                  <span class="skill-row-name">Angular Signals Deep Dive</span>
+                  <span class="skill-row-version">v1.0.0</span>
+                </div>
+                <span class="skill-row-category">DEVELOPMENT</span>
+              </div>
+              <div class="skill-row-desc">Complete guide to Angular signals, computed values, and reactive patterns</div>
+              <div class="skill-row-footer">
+                <span class="skill-row-meta"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>@sarah_dev</span>
+                <span class="skill-row-meta"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M20 7 12 3 4 7m16 0-8 4m8-4v10l-8 4M4 7l8 4M4 7v10l8 4m0-10v10"/></svg>Closed collaboration</span>
+              </div>
+            </div>
+            <div class="skill-row-actions">
+              <span class="skill-row-action"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>15</span>
+              <span class="skill-row-action"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>89</span>
+              <span class="skill-row-action"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>7</span>
+            </div>
+            <div class="skill-row-chevron"><svg class="icon" width="18" height="18" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></div>
+          </div>
+
+          <div class="skill-row">
+            <div class="skill-row-tile">D</div>
+            <div class="skill-row-main">
+              <div class="skill-row-header">
+                <div class="skill-row-title-group">
+                  <span class="skill-row-name">Docker Compose Patterns</span>
+                  <span class="skill-row-version">v3.2.1</span>
+                </div>
+                <span class="skill-row-category">DEVOPS</span>
+              </div>
+              <div class="skill-row-desc">Production-ready Docker Compose patterns for microservices architectures</div>
+              <div class="skill-row-footer">
+                <span class="skill-row-meta"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>@devops_mike</span>
+                <span class="skill-row-meta"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M20 7 12 3 4 7m16 0-8 4m8-4v10l-8 4M4 7l8 4M4 7v10l8 4m0-10v10"/></svg>Open collaboration</span>
+              </div>
+            </div>
+            <div class="skill-row-actions">
+              <span class="skill-row-action"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>42</span>
+              <span class="skill-row-action"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>231</span>
+              <span class="skill-row-action"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>19</span>
+            </div>
+            <div class="skill-row-chevron"><svg class="icon" width="18" height="18" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></div>
+          </div>
+
+          <div class="skill-row skill-row--alt">
+            <div class="skill-row-tile">P</div>
+            <div class="skill-row-main">
+              <div class="skill-row-header">
+                <div class="skill-row-title-group">
+                  <span class="skill-row-name">Python Clean Code Mentor</span>
+                  <span class="skill-row-version">v1.3.0</span>
+                </div>
+                <span class="skill-row-category">DEVELOPMENT</span>
+              </div>
+              <div class="skill-row-desc">Mentor and reviewer focused on clean code, precise naming, and maintainability</div>
+              <div class="skill-row-footer">
+                <span class="skill-row-meta"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>@amilkar</span>
+                <span class="skill-row-meta"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M20 7 12 3 4 7m16 0-8 4m8-4v10l-8 4M4 7l8 4M4 7v10l8 4m0-10v10"/></svg>Open collaboration</span>
+              </div>
+            </div>
+            <div class="skill-row-actions">
+              <span class="skill-row-action"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>9</span>
+              <span class="skill-row-action"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>56</span>
+              <span class="skill-row-action"><svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>3</span>
+            </div>
+            <div class="skill-row-chevron"><svg class="icon" width="18" height="18" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
