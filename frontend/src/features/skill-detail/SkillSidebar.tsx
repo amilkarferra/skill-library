@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import {
   Download,
   Heart,
@@ -7,16 +6,15 @@ import {
   Trash2,
   Users,
 } from 'lucide-react';
-import { fetchSkillVersionDownloadUrl } from './skill-detail.service';
 import { Button } from '../../shared/components/Button';
 import { TagList } from '../../shared/components/TagList';
 import { CollabModeBadge } from '../../shared/components/CollabModeBadge';
+import { useSkillActions } from '../../shared/hooks/useSkillActions';
 import type { Skill } from '../../shared/models/Skill';
 import './SkillSidebar.css';
 
 interface SkillSidebarProps {
   readonly skill: Skill;
-  readonly slug: string;
   readonly isAuthenticated: boolean;
   readonly onToggleLike: () => void;
   readonly onRequestCollaboration: () => void;
@@ -26,13 +24,13 @@ interface SkillSidebarProps {
 
 export function SkillSidebar({
   skill,
-  slug,
   isAuthenticated,
   onToggleLike,
   onRequestCollaboration,
   onDelete,
   isCollabRequesting,
 }: SkillSidebarProps) {
+  const { handleDownload } = useSkillActions(skill);
   const isLiked = skill.isLikedByMe === true;
   const isOwner = skill.myRole === 'owner';
   const isCollaborator = skill.myRole === 'collaborator';
@@ -44,18 +42,15 @@ export function SkillSidebar({
     ? 'skill-sidebar-like skill-sidebar-like--active'
     : 'skill-sidebar-like';
 
-  const handleDownload = useCallback(async () => {
-    const currentVersion = skill.currentVersion;
-    const hasNoCurrentVersion = currentVersion === null;
-    if (hasNoCurrentVersion) return;
-    const downloadInfo = await fetchSkillVersionDownloadUrl(slug, currentVersion);
-    window.open(downloadInfo.downloadUrl, '_blank');
-  }, [slug, skill.currentVersion]);
-
   return (
     <aside className="skill-sidebar">
-      {hasCurrentVersion && (
-        <Button variant="download" size="large" isFullWidth onClick={handleDownload}>
+      {hasCurrentVersion && handleDownload !== null && (
+        <Button
+          variant="download"
+          size="large"
+          isFullWidth
+          onClick={handleDownload}
+        >
           <Download size={16} />
           Download v{skill.currentVersion}
         </Button>

@@ -1,0 +1,46 @@
+.skill-quick-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.skill-quick-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border: none;
+  background: none;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 11px;
+  color: var(--text-muted);
+  transition: color 0.12s, background 0.12s;
+}
+
+.skill-quick-action--interactive {
+  cursor: pointer;
+}
+
+.skill-quick-action--interactive:hover {
+  color: var(--text-primary);
+  background: var(--bg-row-hover);
+}
+
+.skill-quick-action--liked {
+  color: var(--accent);
+}
+
+.skill-quick-action--liked:hover {
+  color: var(--accent-hover);
+}
+
+.skill-quick-action--small {
+  padding: 2px 4px;
+  font-size: 10px;
+}
+
+.skill-quick-action-icon {
+  display: flex;
+  align-items: center;
+}

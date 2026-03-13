@@ -88,14 +88,6 @@
   margin-left: 16px;
 }
 
-.like-item-stat {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
 .like-item-unlike {
   display: inline-flex;
   align-items: center;

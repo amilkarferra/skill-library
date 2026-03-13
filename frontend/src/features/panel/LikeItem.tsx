@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Download } from 'lucide-react';
+import { Heart } from 'lucide-react';
+import { SkillQuickActions } from '../../shared/components/SkillQuickActions';
 import type { SkillSummary } from '../../shared/models/SkillSummary';
 
 interface LikeItemProps {
@@ -18,17 +19,16 @@ export function LikeItem({ skill, onUnlike }: LikeItemProps) {
       <Link to={`/skills/${skill.name}`} className="like-item-info">
         <span className="like-item-name">{skill.displayName}</span>
         <span className="like-item-owner">@{skill.ownerUsername}</span>
-        <span className="like-item-description">{skill.shortDescription}</span>
+        <span className="like-item-description">
+          {skill.shortDescription}
+        </span>
       </Link>
       <div className="like-item-meta">
-        <span className="like-item-stat">
-          <Heart size={12} />
-          {skill.totalLikes}
-        </span>
-        <span className="like-item-stat">
-          <Download size={12} />
-          {skill.totalDownloads}
-        </span>
+        <SkillQuickActions
+          totalLikes={skill.totalLikes}
+          totalDownloads={skill.totalDownloads}
+          size="small"
+        />
         <button className="like-item-unlike" onClick={handleUnlikeClick}>
           <Heart size={13} />
           Unlike

@@ -1,16 +1,14 @@
-import { useCallback } from 'react';
 import { Download, Heart, MessageSquare, ArrowDownToLine, Users } from 'lucide-react';
 import { Button } from '../../shared/components/Button';
 import { TagList } from '../../shared/components/TagList';
 import { CollabModeBadge } from '../../shared/components/CollabModeBadge';
 import { StatCard } from '../../shared/components/StatCard';
-import { fetchSkillVersionDownloadUrl } from './skill-detail.service';
+import { useSkillActions } from '../../shared/hooks/useSkillActions';
 import type { Skill } from '../../shared/models/Skill';
 import './SkillDetailHeader.css';
 
 interface SkillDetailHeaderProps {
   readonly skill: Skill;
-  readonly slug: string;
   readonly isAuthenticated: boolean;
   readonly onToggleLike: () => void;
   readonly onRequestCollaboration: () => void;
@@ -19,12 +17,12 @@ interface SkillDetailHeaderProps {
 
 export function SkillDetailHeader({
   skill,
-  slug,
   isAuthenticated,
   onToggleLike,
   onRequestCollaboration,
   isCollabRequesting,
 }: SkillDetailHeaderProps) {
+  const { handleDownload } = useSkillActions(skill);
   const isLiked = skill.isLikedByMe === true;
   const isOwner = skill.myRole === 'owner';
   const isCollaborator = skill.myRole === 'collaborator';
@@ -37,23 +35,17 @@ export function SkillDetailHeader({
     ? 'detail-header-like detail-header-like--active'
     : 'detail-header-like';
 
-  const handleDownload = useCallback(async () => {
-    const currentVersion = skill.currentVersion;
-    const hasNoVersion = currentVersion === null;
-    if (hasNoVersion) return;
-    const downloadResponse = await fetchSkillVersionDownloadUrl(slug, currentVersion);
-    window.open(downloadResponse.downloadUrl, '_blank');
-  }, [slug, skill.currentVersion]);
-
   return (
     <header className="detail-header">
       <div className="detail-header-top">
         <div className="detail-header-identity">
           <h1 className="detail-header-title">{skill.displayName}</h1>
-          <p className="detail-header-description">{skill.shortDescription}</p>
+          <p className="detail-header-description">
+            {skill.shortDescription}
+          </p>
         </div>
         <div className="detail-header-actions">
-          {hasCurrentVersion && (
+          {hasCurrentVersion && handleDownload !== null && (
             <Button variant="download" onClick={handleDownload}>
               <Download size={16} />
               Download v{skill.currentVersion}
@@ -61,7 +53,10 @@ export function SkillDetailHeader({
           )}
           {isAuthenticated && (
             <button className={likeButtonClass} onClick={onToggleLike}>
-              <Heart size={16} fill={isLiked ? 'currentColor' : 'none'} />
+              <Heart
+                size={16}
+                fill={isLiked ? 'currentColor' : 'none'}
+              />
               {isLiked ? 'Liked' : 'Like'}
             </button>
           )}
@@ -80,16 +75,24 @@ export function SkillDetailHeader({
 
       <div className="detail-header-meta">
         <span className="detail-header-meta-item">
-          by <a href={`/?author=${skill.ownerUsername}`} className="detail-header-meta-link">
+          by{' '}
+          <a
+            href={`/?author=${skill.ownerUsername}`}
+            className="detail-header-meta-link"
+          >
             @{skill.ownerUsername}
           </a>
         </span>
         <span className="detail-header-meta-dot" />
-        <span className="detail-header-meta-item">{skill.categoryName}</span>
+        <span className="detail-header-meta-item">
+          {skill.categoryName}
+        </span>
         {hasCurrentVersion && (
           <>
             <span className="detail-header-meta-dot" />
-            <span className="detail-header-meta-item">v{skill.currentVersion}</span>
+            <span className="detail-header-meta-item">
+              v{skill.currentVersion}
+            </span>
           </>
         )}
         <span className="detail-header-meta-dot" />

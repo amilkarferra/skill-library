@@ -1,8 +1,9 @@
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Download, Pencil, History, Users, Trash2, RotateCcw } from 'lucide-react';
+import { Pencil, History, Users, Trash2, RotateCcw } from 'lucide-react';
 import { StatusBadge } from '../../shared/components/StatusBadge';
 import { CollabModeBadge } from '../../shared/components/CollabModeBadge';
+import { SkillQuickActions } from '../../shared/components/SkillQuickActions';
 import type { SkillSummary } from '../../shared/models/SkillSummary';
 import './MySkillRow.css';
 
@@ -53,16 +54,11 @@ export function MySkillRow({ skill, onDelete, onRestore }: MySkillRowProps) {
         <span className="my-skill-row-version">{versionLabel}</span>
       </td>
       <td className="my-skill-row-cell my-skill-row-cell--center">
-        <div className="my-skill-row-stats">
-          <span className="my-skill-row-stat">
-            <Heart size={11} />
-            {skill.totalLikes}
-          </span>
-          <span className="my-skill-row-stat">
-            <Download size={11} />
-            {skill.totalDownloads}
-          </span>
-        </div>
+        <SkillQuickActions
+          totalLikes={skill.totalLikes}
+          totalDownloads={skill.totalDownloads}
+          size="small"
+        />
       </td>
       <td className="my-skill-row-cell my-skill-row-cell--center">
         <CollabModeBadge collaborationMode={skill.collaborationMode} />

@@ -46,21 +46,6 @@
   color: var(--text-muted);
 }
 
-.my-skill-row-stats {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.my-skill-row-stat {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
 .my-skill-row-actions {
   display: flex;
   align-items: center;

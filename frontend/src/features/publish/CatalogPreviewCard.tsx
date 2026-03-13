@@ -1,6 +1,6 @@
+import { SkillInitialTile } from '../../shared/components/SkillInitialTile';
 import './CatalogPreviewCard.css';
 
-const DEFAULT_INITIAL = 'S';
 const PLACEHOLDER_NAME = 'Skill name';
 const PLACEHOLDER_DESCRIPTION = 'Short description';
 const PLACEHOLDER_CATEGORY = 'Category';
@@ -21,7 +21,6 @@ export function CatalogPreviewCard({
   tags,
   categoryName,
 }: CatalogPreviewCardProps) {
-  const skillInitial = extractInitial(displayName);
   const hasDisplayName = displayName.trim().length > 0;
   const hasDescription = shortDescription.trim().length > 0;
   const hasCategoryName = categoryName.trim().length > 0;
@@ -35,7 +34,7 @@ export function CatalogPreviewCard({
     <div>
       <div className="catalog-preview-label">Catalog Preview</div>
       <div className="catalog-preview-card">
-        <div className="catalog-preview-tile">{skillInitial}</div>
+        <SkillInitialTile displayName={displayName} />
         <div className="catalog-preview-content">
           <div className={nameClassName}>
             {hasDisplayName ? displayName : PLACEHOLDER_NAME}
@@ -55,14 +54,6 @@ export function CatalogPreviewCard({
       </div>
     </div>
   );
-}
-
-function extractInitial(displayName: string): string {
-  const trimmed = displayName.trim();
-  if (trimmed.length === 0) {
-    return DEFAULT_INITIAL;
-  }
-  return trimmed.slice(0, 1).toUpperCase();
 }
 
 function buildNameClassName(hasDisplayName: boolean): string {

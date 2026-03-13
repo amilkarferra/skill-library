@@ -4,7 +4,7 @@ import { EmptyState } from '../../shared/components/EmptyState';
 import { VersionStatusBadge } from '../../shared/components/VersionStatusBadge';
 import { formatFileSize } from '../../shared/formatters/format-file-size';
 import { formatDate } from '../../shared/formatters/format-date';
-import { fetchSkillVersionDownloadUrl } from './skill-detail.service';
+import { fetchSkillVersionDownloadUrl } from '../../shared/services/skill-actions.service';
 import type { SkillVersion } from '../../shared/models/SkillVersion';
 import './VersionsTab.css';
 

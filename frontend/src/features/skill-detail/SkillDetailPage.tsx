@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { ChevronRight, Trash2 } from 'lucide-react';
 import { useAuthStore } from '../../shared/stores/useAuthStore';
 import { useLikeStore } from '../../shared/stores/useLikeStore';
@@ -17,12 +17,12 @@ import {
   fetchSkillVersions,
   fetchSkillComments,
   fetchSkillContent,
-  toggleSkillLike,
   postComment,
   updateComment,
   deleteComment,
   requestCollaboration,
 } from './skill-detail.service';
+import { toggleSkillLike } from '../../shared/services/skill-actions.service';
 import type { Skill } from '../../shared/models/Skill';
 import type { SkillVersion } from '../../shared/models/SkillVersion';
 import type { Comment } from '../../shared/models/Comment';
@@ -32,8 +32,17 @@ type TabId = 'overview' | 'versions' | 'comments';
 
 const COMMENTS_PAGE_SIZE = 15;
 
+const VALID_TABS: ReadonlySet<string> = new Set(['overview', 'versions', 'comments']);
+
+function resolveInitialTab(searchParams: URLSearchParams): TabId {
+  const tabParam = searchParams.get('tab') ?? '';
+  const isValidTab = VALID_TABS.has(tabParam);
+  return isValidTab ? (tabParam as TabId) : 'overview';
+}
+
 export function SkillDetailPage() {
   const { slug } = useParams<{ slug: string }>();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuthStore();
 
@@ -43,7 +52,8 @@ export function SkillDetailPage() {
   const [skillMarkdownContent, setSkillMarkdownContent] = useState('');
   const [versions, setVersions] = useState<SkillVersion[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
-  const [activeTab, setActiveTab] = useState<TabId>('overview');
+  const initialTab = resolveInitialTab(searchParams);
+  const [activeTab, setActiveTab] = useState<TabId>(initialTab);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
@@ -328,7 +338,6 @@ export function SkillDetailPage() {
 
       <SkillDetailHeader
         skill={skill}
-        slug={slug}
         isAuthenticated={isAuthenticated}
         onToggleLike={handleToggleLike}
         onRequestCollaboration={handleRequestCollaboration}
