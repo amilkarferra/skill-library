@@ -36,6 +36,40 @@
   color: var(--text-muted);
 }
 
+.catalog-active-filter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  background: var(--accent-bg);
+  border-bottom: 1px solid var(--border-row);
+  font-size: 12px;
+  color: var(--accent);
+}
+
+.catalog-active-filter-label {
+  font-weight: 600;
+}
+
+.catalog-active-filter-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.catalog-active-filter-clear:hover {
+  background: var(--accent-hover);
+}
+
 .catalog-error {
   padding: 12px 16px;
   margin: 16px 20px 0;

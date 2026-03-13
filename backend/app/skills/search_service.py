@@ -73,6 +73,8 @@ def _apply_text_filter(query: Query, query_text: str | None) -> Query:
             Skill.name.ilike(pattern),
             Skill.short_description.ilike(pattern),
             Skill.long_description.ilike(pattern),
+            User.username.ilike(pattern),
+            User.display_name.ilike(pattern),
             Skill.id.in_(matching_tag_skill_ids),
         )
     )

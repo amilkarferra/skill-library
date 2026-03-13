@@ -1,4 +1,5 @@
 import { Download, Heart, MessageSquare, ArrowDownToLine, Users, Check } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Button } from '../../shared/components/Button';
 import { TagList } from '../../shared/components/TagList';
 import { CollabModeBadge } from '../../shared/components/CollabModeBadge';
@@ -84,12 +85,12 @@ export function SkillDetailHeader({
       <div className="detail-header-meta">
         <span className="detail-header-meta-item">
           by{' '}
-          <a
-            href={`/?author=${skill.ownerUsername}`}
+          <Link
+            to={`/?author=${skill.ownerUsername}`}
             className="detail-header-meta-link"
           >
             @{skill.ownerUsername}
-          </a>
+          </Link>
         </span>
         <span className="detail-header-meta-dot" />
         <span className="detail-header-meta-item">

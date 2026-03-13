@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import type { Skill } from '../../shared/models/Skill';
 import type { SkillFilters } from '../../shared/models/SkillFilters';
 import { useDebounce } from '../../shared/hooks/useDebounce';
@@ -28,6 +29,7 @@ export function CatalogPage() {
     searchQuery,
     selectedCategory,
     selectedTags,
+    selectedAuthor,
     selectedSort,
     categories,
     popularTags,
@@ -35,12 +37,14 @@ export function CatalogPage() {
     setSearchQuery,
     setSelectedCategory,
     toggleSelectedTag,
+    setSelectedAuthor,
     setSelectedSort,
     setCategories,
     setPopularTags,
     setIsSidebarDataLoaded,
   } = useCatalogStore();
 
+  const [searchParams, setSearchParams] = useSearchParams();
   const { lastLikeUpdate } = useLikeStore();
 
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -60,6 +64,14 @@ export function CatalogPage() {
     resetToFirstPage,
   } = pagination;
 
+  useEffect(() => {
+    const authorFromUrl = searchParams.get('author') || '';
+    const isAuthorChanged = authorFromUrl !== selectedAuthor;
+    if (isAuthorChanged) {
+      setSelectedAuthor(authorFromUrl);
+    }
+  }, [searchParams, selectedAuthor, setSelectedAuthor]);
+
   const loadSkills = useCallback(async () => {
     setIsLoading(true);
     setLoadError(null);
@@ -68,6 +80,7 @@ export function CatalogPage() {
       searchQuery: debouncedQuery || undefined,
       category: selectedCategory || undefined,
       tags: selectedTags.length > 0 ? selectedTags : undefined,
+      author: selectedAuthor || undefined,
       sort: selectedSort,
       page: currentPage,
       pageSize: pageSize,
@@ -89,6 +102,7 @@ export function CatalogPage() {
     debouncedQuery,
     selectedCategory,
     selectedTags,
+    selectedAuthor,
     selectedSort,
     currentPage,
     pageSize,
@@ -160,6 +174,15 @@ export function CatalogPage() {
     [setSelectedSort, resetToFirstPage]
   );
 
+  const handleClearAuthor = useCallback(
+    () => {
+      setSelectedAuthor('');
+      setSearchParams({});
+      resetToFirstPage();
+    },
+    [setSelectedAuthor, setSearchParams, resetToFirstPage]
+  );
+
   const handleSearchChange = useCallback(
     (query: string) => {
       setSearchQuery(query);
@@ -198,6 +221,7 @@ export function CatalogPage() {
 
   const hasSkills = skills.length > 0;
   const hasError = loadError !== null;
+  const hasAuthorFilter = selectedAuthor.length > 0;
 
   return (
     <SidebarLayout
@@ -223,6 +247,19 @@ export function CatalogPage() {
         <div className="catalog-search-row">
           <SearchBar value={searchQuery} onChange={handleSearchChange} />
         </div>
+        {hasAuthorFilter && (
+          <div className="catalog-active-filter">
+            <span className="catalog-active-filter-label">
+              Author: @{selectedAuthor}
+            </span>
+            <button
+              className="catalog-active-filter-clear"
+              onClick={handleClearAuthor}
+            >
+              x
+            </button>
+          </div>
+        )}
         {hasError && (
           <div className="catalog-error">{loadError}</div>
         )}
