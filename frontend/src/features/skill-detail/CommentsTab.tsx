@@ -37,7 +37,18 @@ export function CommentsTab({
 }: CommentsTabProps) {
   const hasComments = comments.length > 0;
 
-  const resolveCanModify = useCallback(
+  const resolveCanEdit = useCallback(
+    (comment: Comment): boolean => {
+      const isNotAuthenticated = currentUserId === null;
+      if (isNotAuthenticated) return false;
+
+      const isCommentAuthor = comment.authorId === currentUserId;
+      return isCommentAuthor;
+    },
+    [currentUserId]
+  );
+
+  const resolveCanDelete = useCallback(
     (comment: Comment): boolean => {
       const isNotAuthenticated = currentUserId === null;
       if (isNotAuthenticated) return false;
@@ -63,7 +74,8 @@ export function CommentsTab({
             <CommentItem
               key={comment.id}
               comment={comment}
-              canModify={resolveCanModify(comment)}
+              canEdit={resolveCanEdit(comment)}
+              canDelete={resolveCanDelete(comment)}
               isUpdating={isUpdating}
               onEdit={onEditComment}
               onDelete={onDeleteComment}

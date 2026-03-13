@@ -1,16 +1,16 @@
 .tag-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 6px;
 }
 
 .tag-pill {
   display: inline-block;
-  padding: 3px 9px;
+  padding: 3px 10px;
   background: var(--tag-bg);
   color: var(--tag-color);
-  font-size: 10px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 500;
   letter-spacing: 0.2px;
   border: 1px solid var(--border-accent);
 }

@@ -1,23 +1,28 @@
 .comment-item {
-  padding: 16px 0;
-  border-bottom: 1px solid var(--border-row);
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background: var(--bg-container);
+  border: 1px solid var(--border-main);
 }
 
-.comment-item:last-child {
-  border-bottom: none;
+.comment-item-body {
+  flex: 1;
+  min-width: 0;
 }
 
 .comment-item-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .comment-item-author {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
 .comment-item-displayname {
@@ -47,30 +52,34 @@
 .comment-item-actions {
   display: flex;
   align-items: center;
-  gap: 4px;
-  margin-top: 8px;
+  gap: 2px;
+  flex-shrink: 0;
 }
 
 .comment-item-action-button {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 8px;
-  font-size: 11px;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
   color: var(--text-muted);
   border: 1px solid transparent;
   background: none;
-  transition: all 0.15s;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
 }
 
 .comment-item-action-button:hover {
   color: var(--accent);
   border-color: var(--border-main);
+  background: var(--bg-row-hover);
 }
 
 .comment-item-action-button--danger:hover {
   color: var(--danger);
   border-color: var(--danger-border);
+  background: var(--danger-hover-bg);
 }
 
 .comment-item-edit-textarea {

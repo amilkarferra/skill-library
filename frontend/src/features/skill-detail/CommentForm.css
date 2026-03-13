@@ -1,13 +1,23 @@
 .comment-form {
-  padding: 16px 0;
-  border-bottom: 1px solid var(--border-row);
+  padding: 16px;
+  margin-bottom: 16px;
+  background: var(--bg-container);
+  border: 1px solid var(--border-main);
+}
+
+.comment-form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 8px;
 }
 
 .comment-form-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 8px;
+  margin-top: 10px;
 }
 
 .comment-form-char-count {
@@ -23,8 +33,10 @@
 .comment-form-signin {
   font-size: 13px;
   color: var(--text-muted);
-  padding: 16px 0;
-  border-bottom: 1px solid var(--border-row);
+  padding: 16px;
+  margin-bottom: 16px;
+  background: var(--bg-container);
+  border: 1px solid var(--border-main);
 }
 
 .comment-form-signin-link {

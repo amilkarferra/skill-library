@@ -59,6 +59,7 @@ export function CommentForm({
 
   return (
     <div className="comment-form">
+      <span className="comment-form-label">Leave a comment</span>
       <TextArea
         placeholder="Write a comment..."
         value={commentText}
