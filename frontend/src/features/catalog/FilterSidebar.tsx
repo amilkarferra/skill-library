@@ -108,7 +108,6 @@ export function FilterSidebar({
                 onClick={() => handleTagClick(tag.name)}
               >
                 {tag.name}
-                <span className="filter-item-count">{tag.usageCount}</span>
               </button>
             );
           })}

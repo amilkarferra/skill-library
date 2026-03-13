@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Collaborators tab on skill detail page** — new `CollaboratorsTab` component with full collaborator management: list collaborators with join dates, owner-only remove with confirmation dialog, and owner-only invite via user search
+- **Collaborators count in skill API responses** — `collaboratorsCount` field added to both `SkillResponse` (search/list) and `SkillDetailResponse` (single skill) via SQL COUNT on `skill_collaborators` table
+- **Collaborators count in SkillRowExpanded metadata** — shows "N collaborators" with Users icon when count > 0
+- **Collaborators button in SkillRowExpanded** — owner-only "Collaborators" button navigates to skill detail collaborators tab (`?tab=collaborators`)
+- **Collaborators count in SkillSidebar** — displays collaborator count in the Collaboration section alongside the CollabModeBadge
+- **`formatCollaboratorsLabel` shared formatter** — pure function returning "1 collaborator" / "N collaborators"; used by SkillRowExpanded and SkillSidebar (DRY extraction)
+- **Collaborator service functions** — `fetchCollaborators`, `inviteCollaborator`, `removeCollaborator`, `searchUsers` added to `skill-detail.service.ts`
+- **`Collaborator` model** — new TypeScript interface matching backend `CollaboratorResponse`
 - **`CountBadge` shared component** — renders a count badge with `default` (accent) and `warning` variants; returns null when count is zero; replaces inline badge CSS in PanelSidebar
 - **`SectionHeader` shared component** — reusable section header with icon, title, and optional CountBadge; used by MySkillsSection for Proposed Versions and Collaboration Requests sub-sections
 - **Category skill counts** — `GET /categories` now returns `skillCount` per category via LEFT JOIN + COUNT; FilterSidebar displays count next to each category name and computed total next to "All"
@@ -18,6 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Tags sent as JSON string instead of individual form values** (BUG) — `SkillDetailsForm` used `JSON.stringify(selectedTags)` creating corrupted tags like `[]` and `["python"]` in the database; fixed to `forEach` + `append`
+- **Tag chips showing usageCount concatenated to name** — removed `usageCount` span from `FilterSidebar` tag chips; count is useful for categories but noise for compact tag chips
 - **`collaboration_mode` missing from `SkillResponse`** (BUG) — field was absent from Pydantic schema and `_build_skill_response`, causing all skills to show "Closed collaboration" regardless of actual mode
 - **`list_user_skills` filtering only active skills** — removed `is_active == True` filter so MySkillsSection shows both active and inactive skills (frontend already handles both states with delete/restore buttons)
 

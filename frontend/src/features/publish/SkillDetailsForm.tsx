@@ -116,7 +116,7 @@ export function SkillDetailsForm({
         formData.append('shortDescription', shortDescription);
         formData.append('longDescription', longDescription);
         formData.append('categoryId', String(selectedCategoryId));
-        formData.append('tags', JSON.stringify(selectedTags));
+        selectedTags.forEach(tag => formData.append('tags', tag));
         formData.append('collaborationMode', collaborationMode);
 
         const skill = await createSkill(formData);
