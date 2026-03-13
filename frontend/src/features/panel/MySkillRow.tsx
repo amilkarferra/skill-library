@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Pencil, History, Users, Trash2, RotateCcw } from 'lucide-react';
+import { Pencil, History, Users, Ban, RotateCcw, Trash2 } from 'lucide-react';
 import { StatusBadge } from '../../shared/components/StatusBadge';
 import { CollabModeBadge } from '../../shared/components/CollabModeBadge';
 import { SkillQuickActions } from '../../shared/components/SkillQuickActions';
@@ -33,7 +33,7 @@ export function MySkillRow({ skill, onDelete, onRestore }: MySkillRowProps) {
   }, [navigate, skill.name]);
 
   const handleCollaborators = useCallback(() => {
-    navigate(`/skills/${skill.name}`);
+    navigate(`/skills/${skill.name}?tab=collaborators`);
   }, [navigate, skill.name]);
 
   const handleDelete = useCallback(() => {
@@ -72,44 +72,56 @@ export function MySkillRow({ skill, onDelete, onRestore }: MySkillRowProps) {
       </div>
       <div className="my-skills-col-actions">
         <div className="my-skill-row-actions">
-          <button
-            className="my-skill-row-action"
-            title="Edit"
-            onClick={handleEdit}
-          >
-            <Pencil size={ACTION_ICON_SIZE} />
-          </button>
-          <button
-            className="my-skill-row-action"
-            title="Versions"
-            onClick={handleVersions}
-          >
-            <History size={ACTION_ICON_SIZE} />
-          </button>
-          <button
-            className="my-skill-row-action"
-            title="Collaborators"
-            onClick={handleCollaborators}
-          >
-            <Users size={ACTION_ICON_SIZE} />
-          </button>
           {skill.isActive && (
-            <button
-              className="my-skill-row-action my-skill-row-action--danger"
-              title="Deactivate"
-              onClick={handleDelete}
-            >
-              <Trash2 size={ACTION_ICON_SIZE} />
-            </button>
+            <>
+              <button
+                className="my-skill-row-action"
+                title="Edit"
+                onClick={handleEdit}
+              >
+                <Pencil size={ACTION_ICON_SIZE} />
+              </button>
+              <button
+                className="my-skill-row-action"
+                title="Versions"
+                onClick={handleVersions}
+              >
+                <History size={ACTION_ICON_SIZE} />
+              </button>
+              <button
+                className="my-skill-row-action"
+                title="Collaborators"
+                onClick={handleCollaborators}
+              >
+                <Users size={ACTION_ICON_SIZE} />
+              </button>
+              <button
+                className="my-skill-row-action my-skill-row-action--danger"
+                title="Deactivate"
+                onClick={handleDelete}
+              >
+                <Ban size={ACTION_ICON_SIZE} />
+              </button>
+            </>
           )}
           {!skill.isActive && (
-            <button
-              className="my-skill-row-action my-skill-row-action--restore"
-              title="Restore"
-              onClick={handleRestore}
-            >
-              <RotateCcw size={ACTION_ICON_SIZE} />
-            </button>
+            <>
+              <button
+                className="my-skill-row-action my-skill-row-action--restore"
+                title="Restore"
+                onClick={handleRestore}
+              >
+                <RotateCcw size={ACTION_ICON_SIZE} />
+                Restore
+              </button>
+              <button
+                className="my-skill-row-action my-skill-row-action--danger"
+                title="Delete permanently"
+                onClick={handleDelete}
+              >
+                <Trash2 size={ACTION_ICON_SIZE} />
+              </button>
+            </>
           )}
         </div>
       </div>

@@ -76,10 +76,14 @@
 }
 
 .my-skill-row-action--restore {
-  color: var(--success-color);
-  border-color: var(--success-border);
+  width: auto;
+  padding: 4px 8px;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--accent-secondary);
+  border-color: #b2dfdb;
 }
 
 .my-skill-row-action--restore:hover {
-  background: var(--success-bg);
+  background: #e8f5e9;
 }

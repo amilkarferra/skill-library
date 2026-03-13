@@ -118,7 +118,7 @@ export function MySkillsSection() {
         </div>
         <Link to="/publish" className="button button--primary button--small">
           <Plus size={ICON_SIZE_SMALL} />
-          Publish New
+          New Skill
         </Link>
       </div>
       {!hasSkills && (
