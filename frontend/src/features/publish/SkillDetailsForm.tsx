@@ -8,6 +8,7 @@ import { CatalogPreviewCard } from './CatalogPreviewCard';
 import { CategoryChips } from '../../shared/components/CategoryChips';
 import { TagsAutocomplete } from '../../shared/components/TagsAutocomplete';
 import { MarkdownEditor } from '../../shared/components/MarkdownEditor';
+import { CollaborationModeSelector } from '../../shared/components/CollaborationModeSelector';
 import { AlertMessage } from '../../shared/components/AlertMessage';
 import { Button } from '../../shared/components/Button';
 import { ApiError } from '../../shared/services/api.client';
@@ -94,13 +95,12 @@ export function SkillDetailsForm({
     setSelectedTags(tags);
   }, []);
 
-  const handleCollaborationModeClosedChange = useCallback(() => {
-    setCollaborationMode('closed');
-  }, []);
-
-  const handleCollaborationModeOpenChange = useCallback(() => {
-    setCollaborationMode('open');
-  }, []);
+  const handleCollaborationModeChange = useCallback(
+    (mode: 'closed' | 'open') => {
+      setCollaborationMode(mode);
+    },
+    []
+  );
 
   const handleSubmit = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
@@ -142,8 +142,6 @@ export function SkillDetailsForm({
   const longDescriptionFieldClass = buildFieldClassName(isLongDescriptionFieldExtracted);
   const hasSubmitError = submitError !== null;
   const hasSlugError = slugError !== null;
-  const isCollaborationClosed = collaborationMode === 'closed';
-  const isCollaborationOpen = collaborationMode === 'open';
 
   return (
     <form className="skill-details-form" onSubmit={handleSubmit}>
@@ -279,31 +277,10 @@ export function SkillDetailsForm({
           Collaboration mode
           <span className="skill-details-required">*</span>
         </label>
-        <div className="skill-details-radio-group">
-          <label className="skill-details-radio">
-            <input
-              type="radio"
-              name="collaboration-mode"
-              value="closed"
-              checked={isCollaborationClosed}
-              onChange={handleCollaborationModeClosedChange}
-            />
-            Closed
-          </label>
-          <label className="skill-details-radio">
-            <input
-              type="radio"
-              name="collaboration-mode"
-              value="open"
-              checked={isCollaborationOpen}
-              onChange={handleCollaborationModeOpenChange}
-            />
-            Open
-          </label>
-        </div>
-        <div className="skill-details-hint">
-          Closed: only you can contribute. Open: others can request collaboration.
-        </div>
+        <CollaborationModeSelector
+          selectedMode={collaborationMode}
+          onSelectMode={handleCollaborationModeChange}
+        />
       </div>
 
       <div className="skill-details-actions">

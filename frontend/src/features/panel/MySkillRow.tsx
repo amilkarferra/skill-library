@@ -20,7 +20,7 @@ export function MySkillRow({ skill, onDelete, onRestore }: MySkillRowProps) {
   const versionLabel = hasVersion ? `v${skill.currentVersion}` : 'No version';
 
   const handleEdit = useCallback(() => {
-    navigate(`/skills/${skill.name}`);
+    navigate(`/skills/${skill.name}?edit=true`);
   }, [navigate, skill.name]);
 
   const handleVersions = useCallback(() => {

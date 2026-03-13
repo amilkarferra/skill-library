@@ -186,31 +186,6 @@ textarea.skill-details-input {
   margin-top: 4px;
 }
 
-.skill-details-radio-group {
-  display: flex;
-  gap: 16px;
-}
-
-.skill-details-radio {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: var(--text-secondary);
-  cursor: pointer;
-}
-
-.skill-details-radio input[type="radio"] {
-  accent-color: var(--accent);
-  cursor: pointer;
-}
-
-.skill-details-hint {
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-top: 4px;
-}
-
 .skill-details-actions {
   display: flex;
   justify-content: flex-end;
