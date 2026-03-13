@@ -27,7 +27,9 @@ from app.skills.schemas.tag_response import TagResponse
 from app.skills import search_service
 from app.skills import service
 from app.versions import blob_service
-from app.versions.frontmatter_service import extract_frontmatter_from_skill_file
+from app.skills.schemas.skill_content_response import SkillContentResponse
+from app.downloads import service as download_service
+from app.versions.frontmatter_service import extract_frontmatter_from_skill_file, extract_markdown_body_from_skill_file
 from app.versions import service as version_service
 from app.versions.semver import is_valid_semver
 
@@ -67,6 +69,25 @@ def get_skill_detail(
 ) -> SkillDetailResponse:
     skill = service.find_active_skill_by_slug(database_session, slug)
     return _build_detail_response(database_session, skill, current_user)
+
+
+@router.get("/skills/{slug}/content", response_model=SkillContentResponse)
+def get_skill_content(
+    slug: str,
+    database_session: Session = Depends(provide_database_session),
+) -> SkillContentResponse:
+    skill = service.find_active_skill_by_slug(database_session, slug)
+
+    latest_version = download_service.get_latest_published_version(
+        database_session, skill.id
+    )
+    has_no_version = latest_version is None
+    if has_no_version:
+        return SkillContentResponse(markdown_content="")
+
+    blob_content = blob_service.download_blob_content(latest_version.blob_url)
+    markdown_body = extract_markdown_body_from_skill_file(blob_content)
+    return SkillContentResponse(markdown_content=markdown_body)
 
 
 @router.post("/skills", response_model=SkillDetailResponse, status_code=201)

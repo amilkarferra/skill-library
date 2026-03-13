@@ -80,6 +80,20 @@ def generate_download_sas_url(blob_url: str) -> str:
     return f"{container_client.get_blob_client(blob_name).url}?{sas_token}"
 
 
+def download_blob_content(blob_url: str) -> bytes:
+    blob_service_client = _get_blob_service_client()
+    url_after_container = blob_url.split(
+        f"{settings.azure_storage_container}/"
+    )[1]
+    blob_name = url_after_container.split("?")[0]
+
+    container_client = blob_service_client.get_container_client(
+        settings.azure_storage_container
+    )
+    blob_client = container_client.get_blob_client(blob_name)
+    return blob_client.download_blob().readall()
+
+
 def delete_blob(blob_url: str) -> None:
     blob_service_client = _get_blob_service_client()
     url_after_container = blob_url.split(

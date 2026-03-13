@@ -4,7 +4,7 @@ from posixpath import basename as posix_basename
 
 import yaml
 
-from app.shared.constants import SHORT_DESCRIPTION_MAX_LENGTH, ZIP_FILE_MAGIC_BYTES
+from app.shared.constants import ZIP_FILE_MAGIC_BYTES
 
 SKILL_MARKDOWN_FILENAME = "SKILL.MD"
 
@@ -62,15 +62,45 @@ def _build_display_name(raw_name: str) -> str:
     return raw_name
 
 
-TRUNCATION_SUFFIX = "..."
-TRUNCATION_BODY_LENGTH = SHORT_DESCRIPTION_MAX_LENGTH - len(TRUNCATION_SUFFIX)
+def _find_first_markdown_entry(entry_names: list[str]) -> str | None:
+    markdown_entries = [name for name in entry_names if name.lower().endswith(".md")]
+    has_no_matches = len(markdown_entries) == 0
+    if has_no_matches:
+        return None
+    markdown_entries.sort(key=lambda name: name.count("/"))
+    return markdown_entries[0]
 
 
-def _truncate_short_description(raw_description: str) -> str:
-    is_within_limit = len(raw_description) <= SHORT_DESCRIPTION_MAX_LENGTH
-    if is_within_limit:
-        return raw_description
-    return raw_description[:TRUNCATION_BODY_LENGTH] + TRUNCATION_SUFFIX
+def _extract_any_markdown_from_zip(file_content: bytes) -> str:
+    zip_buffer = io.BytesIO(file_content)
+    with zipfile.ZipFile(zip_buffer, "r") as zip_file:
+        first_entry = _find_first_markdown_entry(zip_file.namelist())
+        has_no_markdown = first_entry is None
+        if has_no_markdown:
+            return ""
+        return zip_file.read(first_entry).decode("utf-8")
+
+
+def _strip_yaml_frontmatter(markdown_text: str) -> str:
+    is_missing_frontmatter = not markdown_text.startswith("---")
+    if is_missing_frontmatter:
+        return markdown_text
+
+    frontmatter_sections = markdown_text.split("---", 2)
+    has_valid_structure = len(frontmatter_sections) >= 3
+    if has_valid_structure:
+        return frontmatter_sections[2].strip()
+    return markdown_text
+
+
+def extract_markdown_body_from_skill_file(file_content: bytes) -> str:
+    is_zip_file = file_content[:4] == ZIP_FILE_MAGIC_BYTES
+    if is_zip_file:
+        raw_markdown = _extract_any_markdown_from_zip(file_content)
+    else:
+        raw_markdown = file_content.decode("utf-8")
+
+    return _strip_yaml_frontmatter(raw_markdown)
 
 
 def extract_frontmatter_from_skill_file(
@@ -87,5 +117,5 @@ def extract_frontmatter_from_skill_file(
     raw_description = str(frontmatter.get("description", ""))
     return {
         "name": _build_display_name(raw_name),
-        "description": _truncate_short_description(raw_description),
+        "description": raw_description,
     }
