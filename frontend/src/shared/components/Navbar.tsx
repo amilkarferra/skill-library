@@ -24,51 +24,53 @@ export function Navbar() {
   const panelLinkClassName = buildNavbarLinkClass(isPanelPage);
 
   return (
-    <nav className="nav">
-      <div className="nav-left">
-        <Link to="/" className="nav-logo">
-          <AppLogo size={LOGO_SIZE} />
-          skill<span className="nav-logo-accent">library</span>
-        </Link>
-        <div className="nav-links">
-          <Link to="/" className={exploreLinkClassName}>
-            Explore
+    <div className="nav-wrapper">
+      <nav className="nav">
+        <div className="nav-left">
+          <Link to="/" className="nav-logo">
+            <AppLogo size={LOGO_SIZE} />
+            skill<span className="nav-logo-accent">library</span>
           </Link>
-          {isAuthenticated && (
-            <Link to="/panel" className={panelLinkClassName}>
-              My Panel
+          <div className="nav-links">
+            <Link to="/" className={exploreLinkClassName}>
+              Explore
+            </Link>
+            {isAuthenticated && (
+              <Link to="/panel" className={panelLinkClassName}>
+                My Panel
+              </Link>
+            )}
+          </div>
+        </div>
+        <div className="nav-right">
+          {isAuthenticated ? (
+            <>
+              <Link
+                to="/publish"
+                className="button button--primary button--small"
+              >
+                <Upload size={ICON_SIZE_SMALL} />
+                Publish
+              </Link>
+              <div className="nav-profile">
+                <User size={ICON_SIZE_MEDIUM} />
+                <span className="nav-username">@{user?.username}</span>
+                {hasPendingNotifications && (
+                  <span className="nav-notification-dot" />
+                )}
+              </div>
+            </>
+          ) : (
+            <Link
+              to="/login"
+              className="button button--primary button--small"
+            >
+              Sign in
             </Link>
           )}
         </div>
-      </div>
-      <div className="nav-right">
-        {isAuthenticated ? (
-          <>
-            <Link
-              to="/publish"
-              className="button button--primary button--small"
-            >
-              <Upload size={ICON_SIZE_SMALL} />
-              Publish
-            </Link>
-            <div className="nav-profile">
-              <User size={ICON_SIZE_MEDIUM} />
-              <span className="nav-username">@{user?.username}</span>
-              {hasPendingNotifications && (
-                <span className="nav-notification-dot" />
-              )}
-            </div>
-          </>
-        ) : (
-          <Link
-            to="/login"
-            className="button button--primary button--small"
-          >
-            Sign in
-          </Link>
-        )}
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
 }
 
