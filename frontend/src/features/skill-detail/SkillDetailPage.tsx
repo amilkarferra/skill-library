@@ -1,13 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
-import { ChevronRight, Trash2 } from 'lucide-react';
+import { ChevronRight, Pencil, Trash2 } from 'lucide-react';
 import { useAuthStore } from '../../shared/stores/useAuthStore';
 import { useLikeStore } from '../../shared/stores/useLikeStore';
 import { useConfirmDialog } from '../../shared/hooks/useConfirmDialog';
 import { usePagination } from '../../shared/hooks/usePagination';
 import { Button } from '../../shared/components/Button';
 import { ConfirmDialog } from '../../shared/components/ConfirmDialog';
+import { TabBar } from '../../shared/components/TabBar';
 import { SkillDetailHeader } from './SkillDetailHeader';
+import { SkillEditForm } from './SkillEditForm';
 import { OverviewTab } from './OverviewTab';
 import { VersionsTab } from './VersionsTab';
 import { CommentsTab } from './CommentsTab';
@@ -42,7 +44,7 @@ function resolveInitialTab(searchParams: URLSearchParams): TabId {
 
 export function SkillDetailPage() {
   const { slug } = useParams<{ slug: string }>();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuthStore();
 
@@ -60,6 +62,7 @@ export function SkillDetailPage() {
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
   const [isUpdatingComment, setIsUpdatingComment] = useState(false);
   const [isCollabRequesting, setIsCollabRequesting] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const commentsPagination = usePagination(COMMENTS_PAGE_SIZE);
   const { setTotalCount: setCommentsTotalCount } = commentsPagination;
@@ -116,16 +119,15 @@ export function SkillDetailPage() {
     loadComments(slug, commentsPagination.currentPage);
   }, [slug, commentsPagination.currentPage, loadComments]);
 
-  const handleSelectOverview = useCallback(() => {
-    setActiveTab('overview');
-  }, []);
+  useEffect(() => {
+    const isEditRequested = searchParams.get('edit') === 'true';
+    if (isEditRequested) {
+      setIsEditing(true);
+    }
+  }, [searchParams]);
 
-  const handleSelectVersions = useCallback(() => {
-    setActiveTab('versions');
-  }, []);
-
-  const handleSelectComments = useCallback(() => {
-    setActiveTab('comments');
+  const handleSelectTab = useCallback((tabId: string) => {
+    setActiveTab(tabId as TabId);
   }, []);
 
   const handleToggleLike = useCallback(async () => {
@@ -277,6 +279,39 @@ export function SkillDetailPage() {
     });
   }, [skill, openDialog, executeDeleteSkill]);
 
+  const clearEditQueryParam = useCallback(() => {
+    setSearchParams((previous) => {
+      const updated = new URLSearchParams(previous);
+      updated.delete('edit');
+      return updated;
+    }, { replace: true });
+  }, [setSearchParams]);
+
+  const handleStartEditing = useCallback(() => {
+    setIsEditing(true);
+  }, []);
+
+  const handleCancelEditing = useCallback(() => {
+    setIsEditing(false);
+    clearEditQueryParam();
+  }, [clearEditQueryParam]);
+
+  const handleSaveSuccess = useCallback(
+    (updatedSkill: Skill) => {
+      setSkill(updatedSkill);
+      setIsEditing(false);
+
+      const hasSlugChanged = updatedSkill.name !== slug;
+      if (hasSlugChanged) {
+        navigate(`/skills/${updatedSkill.name}`, { replace: true });
+        return;
+      }
+
+      clearEditQueryParam();
+    },
+    [slug, navigate, clearEditQueryParam]
+  );
+
   if (isLoading) {
     return <div className="skill-detail-loading">Loading skill...</div>;
   }
@@ -304,18 +339,6 @@ export function SkillDetailPage() {
   const isOwner = skill.myRole === 'owner';
   const hasActionError = actionError !== null;
 
-  const overviewTabClass = isOverviewActive
-    ? 'skill-detail-tab skill-detail-tab--active'
-    : 'skill-detail-tab';
-
-  const versionsTabClass = isVersionsActive
-    ? 'skill-detail-tab skill-detail-tab--active'
-    : 'skill-detail-tab';
-
-  const commentsTabClass = isCommentsActive
-    ? 'skill-detail-tab skill-detail-tab--active'
-    : 'skill-detail-tab';
-
   return (
     <div className="skill-detail">
       <div className="skill-detail-breadcrumb">
@@ -324,6 +347,16 @@ export function SkillDetailPage() {
         </Link>
         <ChevronRight size={12} className="skill-detail-breadcrumb-separator" />
         <span>{skill.displayName}</span>
+        {isOwner && (
+          <Button
+            variant="secondary"
+            size="small"
+            onClick={handleStartEditing}
+          >
+            <Pencil size={12} />
+            Edit
+          </Button>
+        )}
         {isOwner && (
           <Button
             variant="danger-outline"
@@ -336,38 +369,35 @@ export function SkillDetailPage() {
         )}
       </div>
 
-      <SkillDetailHeader
-        skill={skill}
-        isAuthenticated={isAuthenticated}
-        onToggleLike={handleToggleLike}
-        onRequestCollaboration={handleRequestCollaboration}
-        isCollabRequesting={isCollabRequesting}
-      />
+      {isEditing ? (
+        <SkillEditForm
+          skill={skill}
+          onSaveSuccess={handleSaveSuccess}
+          onCancel={handleCancelEditing}
+        />
+      ) : (
+        <SkillDetailHeader
+          skill={skill}
+          isAuthenticated={isAuthenticated}
+          onToggleLike={handleToggleLike}
+          onRequestCollaboration={handleRequestCollaboration}
+          isCollabRequesting={isCollabRequesting}
+        />
+      )}
 
       {hasActionError && (
         <div className="skill-detail-action-error">{actionError}</div>
       )}
 
-      <div className="skill-detail-tabs">
-        <button
-          className={overviewTabClass}
-          onClick={handleSelectOverview}
-        >
-          Overview
-        </button>
-        <button
-          className={versionsTabClass}
-          onClick={handleSelectVersions}
-        >
-          Versions ({versions.length})
-        </button>
-        <button
-          className={commentsTabClass}
-          onClick={handleSelectComments}
-        >
-          Comments ({skill.totalComments})
-        </button>
-      </div>
+      <TabBar
+        tabs={[
+          { id: 'overview', label: 'Overview' },
+          { id: 'versions', label: 'Versions', count: versions.length },
+          { id: 'comments', label: 'Comments', count: skill.totalComments },
+        ]}
+        activeTabId={activeTab}
+        onSelectTab={handleSelectTab}
+      />
 
       <div className="skill-detail-content">
         {isOverviewActive && (
