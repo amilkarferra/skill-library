@@ -6,22 +6,22 @@ import { EmptyState } from '../../shared/components/EmptyState';
 import './OverviewTab.css';
 
 interface OverviewTabProps {
-  readonly longDescription: string;
+  readonly markdownContent: string;
 }
 
 const REMARK_PLUGINS = [remarkGfm];
 const REHYPE_PLUGINS = [rehypeSanitize];
 
-export function OverviewTab({ longDescription }: OverviewTabProps) {
-  const safeDescription = useMemo(() => longDescription ?? '', [longDescription]);
-  const hasContent = safeDescription.trim().length > 0;
+export function OverviewTab({ markdownContent }: OverviewTabProps) {
+  const safeContent = useMemo(() => markdownContent ?? '', [markdownContent]);
+  const hasContent = safeContent.trim().length > 0;
 
   if (!hasContent) {
     return (
       <div className="overview-tab">
         <EmptyState
-          title="No description available"
-          description="The skill owner has not provided a detailed description yet."
+          title="No content available"
+          description="No skill file has been uploaded yet."
         />
       </div>
     );
@@ -31,7 +31,7 @@ export function OverviewTab({ longDescription }: OverviewTabProps) {
     <div className="overview-tab">
       <div className="overview-content">
         <Markdown remarkPlugins={REMARK_PLUGINS} rehypePlugins={REHYPE_PLUGINS}>
-          {safeDescription}
+          {safeContent}
         </Markdown>
       </div>
     </div>

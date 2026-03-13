@@ -1,16 +1,8 @@
-.panel-sidebar {
-  width: 200px;
-  padding: 18px 0;
-  background: var(--bg-sidebar);
-  border-right: 1px solid var(--border-main);
-  flex-shrink: 0;
-}
-
 .panel-sidebar-user {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 0 16px 16px;
+  padding: 0 0 16px;
   margin-bottom: 14px;
   border-bottom: 1px solid var(--border-row);
 }
@@ -28,7 +20,7 @@
 
 .panel-sidebar-title {
   display: block;
-  padding: 0 16px 10px;
+  padding: 0 0 10px;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.8px;
@@ -45,7 +37,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 16px;
+  padding: 7px 10px;
   font-size: 12px;
   color: var(--text-secondary);
   border-left: 2px solid transparent;

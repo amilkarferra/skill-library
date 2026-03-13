@@ -29,7 +29,7 @@ interface SkillDetailsFormProps {
 }
 
 const MAX_DISPLAY_NAME = 150;
-const MAX_SHORT_DESCRIPTION = 600;
+const MAX_SHORT_DESCRIPTION = 200;
 const MAX_TAGS = 10;
 
 export function SkillDetailsForm({
@@ -41,8 +41,8 @@ export function SkillDetailsForm({
   onSubmitSuccess,
 }: SkillDetailsFormProps) {
   const [displayName, setDisplayName] = useState(extraction.name);
-  const [shortDescription, setShortDescription] = useState(extraction.description);
-  const [longDescription, setLongDescription] = useState('');
+  const [shortDescription, setShortDescription] = useState('');
+  const [longDescription, setLongDescription] = useState(extraction.description);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [collaborationMode, setCollaborationMode] = useState<'closed' | 'open'>('closed');
@@ -52,7 +52,8 @@ export function SkillDetailsForm({
   const [isDisplayNameExtracted, setIsDisplayNameExtracted] = useState(
     extraction.name.length > 0
   );
-  const [isShortDescriptionExtracted, setIsShortDescExtracted] = useState(
+  const [isShortDescriptionExtracted, setIsShortDescExtracted] = useState(false);
+  const [isLongDescriptionExtracted, setIsLongDescExtracted] = useState(
     extraction.description.length > 0
   );
 
@@ -82,6 +83,7 @@ export function SkillDetailsForm({
 
   const handleLongDescriptionChange = useCallback((newValue: string) => {
     setLongDescription(newValue);
+    setIsLongDescExtracted(false);
   }, []);
 
   const handleCategorySelect = useCallback((categoryId: number) => {
@@ -134,8 +136,10 @@ export function SkillDetailsForm({
   const buttonText = isSubmitting ? 'Publishing...' : 'Publish skill';
   const isDisplayNameFieldExtracted = isDisplayNameExtracted && displayName.length > 0;
   const isShortDescriptionFieldExtracted = isShortDescriptionExtracted && shortDescription.length > 0;
+  const isLongDescriptionFieldExtracted = isLongDescriptionExtracted && longDescription.length > 0;
   const displayNameFieldClass = buildFieldClassName(isDisplayNameFieldExtracted);
   const shortDescriptionFieldClass = buildFieldClassName(isShortDescriptionFieldExtracted);
+  const longDescriptionFieldClass = buildFieldClassName(isLongDescriptionFieldExtracted);
   const hasSubmitError = submitError !== null;
   const hasSlugError = slugError !== null;
   const isCollaborationClosed = collaborationMode === 'closed';
@@ -252,17 +256,22 @@ export function SkillDetailsForm({
         </div>
       </div>
 
-      <div className="skill-details-field">
-        <label className="skill-details-label">
-          Long description
-          <span className="skill-details-optional">(optional, markdown)</span>
-        </label>
-        <MarkdownEditor
-          value={longDescription}
-          onChange={handleLongDescriptionChange}
-          placeholder="Describe your skill in detail (markdown supported)"
-          rows={6}
-        />
+      <div className={longDescriptionFieldClass}>
+        <div className="skill-details-field-wrapper">
+          <label className="skill-details-label">
+            Long description
+            <span className="skill-details-optional">(optional, markdown)</span>
+          </label>
+          <MarkdownEditor
+            value={longDescription}
+            onChange={handleLongDescriptionChange}
+            placeholder="Describe your skill in detail (markdown supported)"
+            rows={6}
+          />
+          {isLongDescriptionFieldExtracted && (
+            <div className="skill-details-extracted-badge">Extracted</div>
+          )}
+        </div>
       </div>
 
       <div className="skill-details-field">

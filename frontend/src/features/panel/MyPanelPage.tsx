@@ -8,6 +8,7 @@ import { MyLikesSection } from './MyLikesSection';
 import { RequestsSection } from './RequestsSection';
 import { ProposedVersionsSection } from './ProposedVersionsSection';
 import { SettingsPage } from '../settings/SettingsPage';
+import { SidebarLayout } from '../../shared/components/SidebarLayout';
 import './MyPanelPage.css';
 
 export function MyPanelPage() {
@@ -32,11 +33,10 @@ export function MyPanelPage() {
   }, [activeSection]);
 
   return (
-    <div className="my-panel-page">
-      <PanelSidebar activeSection={activeSection} />
+    <SidebarLayout sidebar={<PanelSidebar activeSection={activeSection} />}>
       <div className="my-panel-content">
         {sectionContent}
       </div>
-    </div>
+    </SidebarLayout>
   );
 }

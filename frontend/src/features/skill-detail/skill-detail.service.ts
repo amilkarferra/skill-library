@@ -4,6 +4,7 @@ import type { SkillVersion } from '../../shared/models/SkillVersion';
 import type { Comment } from '../../shared/models/Comment';
 import type { DownloadUrlResponse } from '../../shared/models/DownloadUrlResponse';
 import type { PaginatedResponse } from '../../shared/models/PaginatedResponse';
+import type { SkillContentResponse } from '../../shared/models/SkillContentResponse';
 
 export function fetchSkillBySlug(slug: string): Promise<Skill> {
   return get<Skill>(`/skills/${slug}`);
@@ -61,6 +62,10 @@ export function deleteComment(
 
 export function requestCollaboration(slug: string): Promise<void> {
   return post<void>(`/skills/${slug}/collaboration-requests`);
+}
+
+export function fetchSkillContent(slug: string): Promise<SkillContentResponse> {
+  return get<SkillContentResponse>(`/skills/${slug}/content`);
 }
 
 export function fetchSkillVersionDownloadUrl(

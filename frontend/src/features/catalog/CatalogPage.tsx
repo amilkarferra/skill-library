@@ -16,6 +16,7 @@ import {
   fetchCategories,
   fetchPopularTags,
 } from './catalog.service';
+import { SidebarLayout } from '../../shared/components/SidebarLayout';
 import './CatalogPage.css';
 
 const DEBOUNCE_DELAY_MS = 350;
@@ -198,17 +199,20 @@ export function CatalogPage() {
   const hasError = loadError !== null;
 
   return (
-    <div className="catalog-page">
-      <FilterSidebar
-        categories={categories}
-        popularTags={popularTags}
-        selectedCategory={selectedCategory}
-        selectedTags={selectedTags}
-        selectedSort={selectedSort}
-        onCategoryChange={handleCategoryChange}
-        onTagToggle={handleTagToggle}
-        onSortChange={handleSortChange}
-      />
+    <SidebarLayout
+      sidebar={
+        <FilterSidebar
+          categories={categories}
+          popularTags={popularTags}
+          selectedCategory={selectedCategory}
+          selectedTags={selectedTags}
+          selectedSort={selectedSort}
+          onCategoryChange={handleCategoryChange}
+          onTagToggle={handleTagToggle}
+          onSortChange={handleSortChange}
+        />
+      }
+    >
       <div className="catalog-content">
         <div className="catalog-header">
           <span className="catalog-count">
@@ -258,6 +262,6 @@ export function CatalogPage() {
           onPageChange={handlePageChange}
         />
       </div>
-    </div>
+    </SidebarLayout>
   );
 }

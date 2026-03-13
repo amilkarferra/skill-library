@@ -55,7 +55,7 @@ export function FilterSidebar({
   );
 
   return (
-    <aside className="filter-sidebar">
+    <div className="filter-sidebar">
       <div className="filter-section">
         <span className="filter-section-label">Categories</span>
         <button
@@ -112,7 +112,7 @@ export function FilterSidebar({
           })}
         </div>
       </div>
-    </aside>
+    </div>
   );
 }
 

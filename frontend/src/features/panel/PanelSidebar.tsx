@@ -56,7 +56,7 @@ export function PanelSidebar({ activeSection }: PanelSidebarProps) {
   }, [activeSection, pendingCollaborationRequests, pendingVersionProposals]);
 
   return (
-    <aside className="panel-sidebar">
+    <div className="panel-sidebar">
       <div className="panel-sidebar-user">
         <span className="panel-sidebar-user-name">{user?.displayName}</span>
         <span className="panel-sidebar-user-handle">@{user?.username}</span>
@@ -65,7 +65,7 @@ export function PanelSidebar({ activeSection }: PanelSidebarProps) {
       <nav className="panel-sidebar-nav">
         {renderedItems}
       </nav>
-    </aside>
+    </div>
   );
 }
 

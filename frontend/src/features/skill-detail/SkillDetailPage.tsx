@@ -15,6 +15,7 @@ import {
   fetchSkillBySlug,
   fetchSkillVersions,
   fetchSkillComments,
+  fetchSkillContent,
   toggleSkillLike,
   postComment,
   updateComment,
@@ -38,6 +39,7 @@ export function SkillDetailPage() {
   const { publishLikeUpdate } = useLikeStore();
   const { dialogState, openDialog, closeDialog } = useConfirmDialog();
   const [skill, setSkill] = useState<Skill | null>(null);
+  const [skillMarkdownContent, setSkillMarkdownContent] = useState('');
   const [versions, setVersions] = useState<SkillVersion[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
   const [activeTab, setActiveTab] = useState<TabId>('overview');
@@ -55,12 +57,14 @@ export function SkillDetailPage() {
     setIsLoading(true);
     setLoadError(null);
     try {
-      const [skillData, versionsData] = await Promise.all([
+      const [skillData, versionsData, contentData] = await Promise.all([
         fetchSkillBySlug(skillSlug),
         fetchSkillVersions(skillSlug),
+        fetchSkillContent(skillSlug),
       ]);
       setSkill(skillData);
       setVersions(versionsData);
+      setSkillMarkdownContent(contentData.markdownContent);
     } catch (error) {
       const errorMessage = error instanceof Error
         ? error.message
@@ -343,7 +347,7 @@ export function SkillDetailPage() {
 
           <div className="skill-detail-tab-content">
             {isOverviewActive && (
-              <OverviewTab longDescription={skill.longDescription} />
+              <OverviewTab markdownContent={skillMarkdownContent} />
             )}
             {isVersionsActive && (
               <VersionsTab versions={versions} slug={slug} />

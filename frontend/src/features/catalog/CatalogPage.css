@@ -1,18 +1,5 @@
-.catalog-page {
-  display: grid;
-  grid-template-columns: 216px 1fr;
-  min-height: calc(100vh - 60px);
-  background: var(--bg-container);
-  border: 1px solid var(--border-main);
-  box-shadow: var(--shadow-soft);
-  font-family: 'Segoe UI', sans-serif;
-}
-
 .catalog-content {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  background: var(--bg-container);
+  flex: 1;
 }
 
 .catalog-header {
