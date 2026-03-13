@@ -8,6 +8,8 @@ import { usePagination } from '../../shared/hooks/usePagination';
 import { Button } from '../../shared/components/Button';
 import { ConfirmDialog } from '../../shared/components/ConfirmDialog';
 import { TabBar } from '../../shared/components/TabBar';
+import { SidebarLayout } from '../../shared/components/SidebarLayout';
+import { NavigationSidebar } from '../../shared/components/NavigationSidebar';
 import { SkillDetailHeader } from './SkillDetailHeader';
 import { SkillEditForm } from './SkillEditForm';
 import { OverviewTab } from './OverviewTab';
@@ -316,138 +318,158 @@ export function SkillDetailPage() {
     [slug, navigate, clearEditQueryParam]
   );
 
-  if (isLoading) {
-    return <SkillDetailSkeleton />;
-  }
+  const hasSkillData = skill !== null;
 
-  const isRouteInvalid = slug === undefined;
-  if (isRouteInvalid) {
-    return <div className="skill-detail-error">Invalid route</div>;
-  }
+  const skillContextData = hasSkillData
+    ? {
+        ownerUsername: skill.ownerUsername,
+        currentVersion: skill.currentVersion,
+        totalDownloads: skill.totalDownloads,
+        totalLikes: skill.totalLikes,
+      }
+    : null;
 
-  const hasLoadError = loadError !== null;
-  if (hasLoadError) {
-    return <div className="skill-detail-error">{loadError}</div>;
-  }
+  const renderContent = () => {
+    if (isLoading) {
+      return <SkillDetailSkeleton />;
+    }
 
-  const hasNoSkill = skill === null;
-  if (hasNoSkill) {
-    return <div className="skill-detail-error">Skill not found</div>;
-  }
+    const isRouteInvalid = slug === undefined;
+    if (isRouteInvalid) {
+      return <div className="skill-detail-error">Invalid route</div>;
+    }
 
-  const isOverviewActive = activeTab === 'overview';
-  const isVersionsActive = activeTab === 'versions';
-  const isCommentsActive = activeTab === 'comments';
-  const isCollaboratorsActive = activeTab === 'collaborators';
+    const hasLoadError = loadError !== null;
+    if (hasLoadError) {
+      return <div className="skill-detail-error">{loadError}</div>;
+    }
 
-  const currentUserId = user?.id ?? null;
-  const isOwner = skill.myRole === 'owner';
-  const hasActionError = actionError !== null;
+    if (!hasSkillData) {
+      return <div className="skill-detail-error">Skill not found</div>;
+    }
+
+    const isOverviewActive = activeTab === 'overview';
+    const isVersionsActive = activeTab === 'versions';
+    const isCommentsActive = activeTab === 'comments';
+    const isCollaboratorsActive = activeTab === 'collaborators';
+
+    const currentUserId = user?.id ?? null;
+    const isOwner = skill.myRole === 'owner';
+    const hasActionError = actionError !== null;
+
+    return (
+      <div className="skill-detail">
+        <div className="skill-detail-breadcrumb">
+          <Link to="/" className="skill-detail-breadcrumb-link">
+            Skills
+          </Link>
+          <ChevronRight size={12} className="skill-detail-breadcrumb-separator" />
+          <span>{skill.displayName}</span>
+          {isOwner && (
+            <Button
+              variant="secondary"
+              size="small"
+              onClick={handleStartEditing}
+            >
+              <Pencil size={12} />
+              Edit
+            </Button>
+          )}
+          {isOwner && (
+            <Button
+              variant="danger-outline"
+              size="small"
+              onClick={handleRequestDeleteSkill}
+            >
+              <Trash2 size={12} />
+              Delete
+            </Button>
+          )}
+        </div>
+
+        {isEditing ? (
+          <SkillEditForm
+            skill={skill}
+            onSaveSuccess={handleSaveSuccess}
+            onCancel={handleCancelEditing}
+          />
+        ) : (
+          <SkillDetailHeader
+            skill={skill}
+            isAuthenticated={isAuthenticated}
+            onToggleLike={handleToggleLike}
+            onRequestCollaboration={handleRequestCollaboration}
+            isCollabRequesting={isCollabRequesting}
+            isCollabRequestSent={isCollabRequestSent}
+          />
+        )}
+
+        {hasActionError && (
+          <div className="skill-detail-action-error">{actionError}</div>
+        )}
+
+        <TabBar
+          tabs={[
+            { id: 'overview', label: 'Overview' },
+            { id: 'versions', label: 'Versions', count: versions.length },
+            { id: 'comments', label: 'Comments', count: skill.totalComments },
+            { id: 'collaborators', label: 'Collaborators', count: skill.collaboratorsCount },
+          ]}
+          activeTabId={activeTab}
+          onSelectTab={handleSelectTab}
+        />
+
+        <div className="skill-detail-content">
+          {isOverviewActive && (
+            <OverviewTab markdownContent={skillMarkdownContent} />
+          )}
+          {isVersionsActive && (
+            <VersionsTab versions={versions} slug={slug} />
+          )}
+          {isCommentsActive && (
+            <CommentsTab
+              comments={comments}
+              currentPage={commentsPagination.currentPage}
+              totalPages={commentsPagination.totalPages}
+              isAuthenticated={isAuthenticated}
+              isSubmitting={isSubmittingComment}
+              isUpdating={isUpdatingComment}
+              currentUserId={currentUserId}
+              skillOwnerId={skill.ownerId}
+              onPageChange={commentsPagination.goToPage}
+              onSubmitComment={handleSubmitComment}
+              onEditComment={handleEditComment}
+              onDeleteComment={handleDeleteComment}
+            />
+          )}
+          {isCollaboratorsActive && (
+            <CollaboratorsTab
+              slug={slug}
+              isOwner={isOwner}
+              skillOwnerId={skill.ownerId}
+            />
+          )}
+        </div>
+
+        {dialogState.isOpen && (
+          <ConfirmDialog
+            title={dialogState.title}
+            message={dialogState.message}
+            confirmLabel={dialogState.confirmLabel}
+            isDangerous={dialogState.isDangerous}
+            onConfirm={dialogState.onConfirm}
+            onCancel={closeDialog}
+          />
+        )}
+      </div>
+    );
+  };
 
   return (
-    <div className="skill-detail">
-      <div className="skill-detail-breadcrumb">
-        <Link to="/" className="skill-detail-breadcrumb-link">
-          Skills
-        </Link>
-        <ChevronRight size={12} className="skill-detail-breadcrumb-separator" />
-        <span>{skill.displayName}</span>
-        {isOwner && (
-          <Button
-            variant="secondary"
-            size="small"
-            onClick={handleStartEditing}
-          >
-            <Pencil size={12} />
-            Edit
-          </Button>
-        )}
-        {isOwner && (
-          <Button
-            variant="danger-outline"
-            size="small"
-            onClick={handleRequestDeleteSkill}
-          >
-            <Trash2 size={12} />
-            Delete
-          </Button>
-        )}
-      </div>
-
-      {isEditing ? (
-        <SkillEditForm
-          skill={skill}
-          onSaveSuccess={handleSaveSuccess}
-          onCancel={handleCancelEditing}
-        />
-      ) : (
-        <SkillDetailHeader
-          skill={skill}
-          isAuthenticated={isAuthenticated}
-          onToggleLike={handleToggleLike}
-          onRequestCollaboration={handleRequestCollaboration}
-          isCollabRequesting={isCollabRequesting}
-          isCollabRequestSent={isCollabRequestSent}
-        />
-      )}
-
-      {hasActionError && (
-        <div className="skill-detail-action-error">{actionError}</div>
-      )}
-
-      <TabBar
-        tabs={[
-          { id: 'overview', label: 'Overview' },
-          { id: 'versions', label: 'Versions', count: versions.length },
-          { id: 'comments', label: 'Comments', count: skill.totalComments },
-          { id: 'collaborators', label: 'Collaborators', count: skill.collaboratorsCount },
-        ]}
-        activeTabId={activeTab}
-        onSelectTab={handleSelectTab}
-      />
-
-      <div className="skill-detail-content">
-        {isOverviewActive && (
-          <OverviewTab markdownContent={skillMarkdownContent} />
-        )}
-        {isVersionsActive && (
-          <VersionsTab versions={versions} slug={slug} />
-        )}
-        {isCommentsActive && (
-          <CommentsTab
-            comments={comments}
-            currentPage={commentsPagination.currentPage}
-            totalPages={commentsPagination.totalPages}
-            isAuthenticated={isAuthenticated}
-            isSubmitting={isSubmittingComment}
-            isUpdating={isUpdatingComment}
-            currentUserId={currentUserId}
-            skillOwnerId={skill.ownerId}
-            onPageChange={commentsPagination.goToPage}
-            onSubmitComment={handleSubmitComment}
-            onEditComment={handleEditComment}
-            onDeleteComment={handleDeleteComment}
-          />
-        )}
-        {isCollaboratorsActive && (
-          <CollaboratorsTab
-            slug={slug}
-            isOwner={isOwner}
-            skillOwnerId={skill.ownerId}
-          />
-        )}
-      </div>
-
-      {dialogState.isOpen && (
-        <ConfirmDialog
-          title={dialogState.title}
-          message={dialogState.message}
-          confirmLabel={dialogState.confirmLabel}
-          isDangerous={dialogState.isDangerous}
-          onConfirm={dialogState.onConfirm}
-          onCancel={closeDialog}
-        />
-      )}
-    </div>
+    <SidebarLayout
+      sidebar={<NavigationSidebar skillContext={skillContextData} />}
+    >
+      {renderContent()}
+    </SidebarLayout>
   );
 }

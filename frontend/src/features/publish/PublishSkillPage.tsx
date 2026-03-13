@@ -7,6 +7,8 @@ import {
   fetchCategories,
   fetchPopularTags,
 } from './publish.service';
+import { SidebarLayout } from '../../shared/components/SidebarLayout';
+import { NavigationSidebar } from '../../shared/components/NavigationSidebar';
 import { PublishDropzone } from './PublishDropzone';
 import { ExtractingState } from './ExtractingState';
 import { SkillDetailsForm } from './SkillDetailsForm';
@@ -91,43 +93,45 @@ export function PublishSkillPage() {
     : 'Upload your skill file to get started';
 
   return (
-    <div className="publish-skill-page">
-      <div className="publish-skill-badge">Publish</div>
-      <h1 className="publish-skill-title">Publish a Skill</h1>
-      <p className="publish-skill-subtitle">{subtitleText}</p>
+    <SidebarLayout sidebar={<NavigationSidebar />}>
+      <div className="publish-skill-page">
+        <div className="publish-skill-badge">Publish</div>
+        <h1 className="publish-skill-title">Publish a Skill</h1>
+        <p className="publish-skill-subtitle">{subtitleText}</p>
 
-      {isUploadState && (
-        <PublishDropzone
-          onFileAccepted={handleFileAccepted}
-          isFadingOut={isDropzoneFadingOut}
-        />
-      )}
-
-      {isExtractingState && hasSelectedFile && (
-        <div className="publish-state-enter">
-          <ExtractingState
-            fileName={selectedFile.name}
-            fileSize={selectedFile.size}
+        {isUploadState && (
+          <PublishDropzone
+            onFileAccepted={handleFileAccepted}
+            isFadingOut={isDropzoneFadingOut}
           />
-        </div>
-      )}
+        )}
 
-      {isFormState && hasSelectedFile && (
-        <div className="publish-state-enter">
-          <SkillDetailsForm
-            file={selectedFile}
-            extraction={{
-              name: extractedName,
-              description: extractedDescription,
-              isFailed: isExtractionFailed,
-            }}
-            categories={categories}
-            availableTags={availableTags}
-            onChangeFile={handleChangeFile}
-            onSubmitSuccess={handleSubmitSuccess}
-          />
-        </div>
-      )}
-    </div>
+        {isExtractingState && hasSelectedFile && (
+          <div className="publish-state-enter">
+            <ExtractingState
+              fileName={selectedFile.name}
+              fileSize={selectedFile.size}
+            />
+          </div>
+        )}
+
+        {isFormState && hasSelectedFile && (
+          <div className="publish-state-enter">
+            <SkillDetailsForm
+              file={selectedFile}
+              extraction={{
+                name: extractedName,
+                description: extractedDescription,
+                isFailed: isExtractionFailed,
+              }}
+              categories={categories}
+              availableTags={availableTags}
+              onChangeFile={handleChangeFile}
+              onSubmitSuccess={handleSubmitSuccess}
+            />
+          </div>
+        )}
+      </div>
+    </SidebarLayout>
   );
 }
