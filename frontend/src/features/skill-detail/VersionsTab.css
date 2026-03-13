@@ -11,14 +11,23 @@
 
 .version-item {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  padding: 16px 0;
+  padding: 12px 16px;
   border-bottom: 1px solid var(--border-row);
+  transition: background 0.12s;
 }
 
-.version-item:last-child {
-  border-bottom: none;
+.version-item:hover {
+  background: var(--bg-row-hover);
+}
+
+.version-item--alt {
+  background: var(--bg-row-alt);
+}
+
+.version-item--alt:hover {
+  background: var(--bg-row-hover);
 }
 
 .version-info {
@@ -36,33 +45,37 @@
 }
 
 .version-number {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--text-primary);
 }
 
 .version-changelog {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.5;
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .version-meta {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .version-meta-value {
-  font-size: 12px;
-  color: var(--text-muted);
+  font-size: 11px;
+  color: var(--text-secondary);
 }
 
 .version-meta-item {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 4px;
+  color: var(--text-secondary);
 }
 
 .version-actions {

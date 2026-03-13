@@ -13,13 +13,17 @@ interface VersionsTabProps {
   readonly slug: string;
 }
 
+interface VersionItemProps {
+  readonly version: SkillVersion;
+  readonly slug: string;
+  readonly isAlternate: boolean;
+}
+
 function VersionItem({
   version,
   slug,
-}: {
-  readonly version: SkillVersion;
-  readonly slug: string;
-}) {
+  isAlternate,
+}: VersionItemProps) {
   const isPublished = version.status === 'published';
   const isNotPublished = !isPublished;
 
@@ -28,8 +32,12 @@ function VersionItem({
     window.open(downloadInfo.downloadUrl, '_blank');
   }, [slug, version.version]);
 
+  const itemClassName = isAlternate
+    ? 'version-item version-item--alt'
+    : 'version-item';
+
   return (
-    <div className="version-item">
+    <div className={itemClassName}>
       <div className="version-info">
         <div className="version-header">
           <span className="version-number">v{version.version}</span>
@@ -92,13 +100,17 @@ export function VersionsTab({
   return (
     <div className="versions-tab">
       <div className="versions-list">
-        {versions.map((version) => (
-          <VersionItem
-            key={version.id}
-            version={version}
-            slug={slug}
-          />
-        ))}
+        {versions.map((version, index) => {
+          const isAlternate = index % 2 !== 0;
+          return (
+            <VersionItem
+              key={version.id}
+              version={version}
+              slug={slug}
+              isAlternate={isAlternate}
+            />
+          );
+        })}
       </div>
     </div>
   );

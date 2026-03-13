@@ -1,6 +1,10 @@
 .overview-tab {
   display: flex;
   flex-direction: column;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 32px;
+  width: 100%;
 }
 
 .overview-content {

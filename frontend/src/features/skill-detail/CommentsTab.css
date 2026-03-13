@@ -1,6 +1,7 @@
 .comments-tab {
   display: flex;
   flex-direction: column;
+  padding: 16px;
 }
 
 .comments-list {
