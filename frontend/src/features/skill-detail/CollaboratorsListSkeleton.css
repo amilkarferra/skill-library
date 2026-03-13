@@ -1,0 +1,19 @@
+.collaborators-list-skeleton-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-row);
+}
+
+.collaborators-list-skeleton-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.collaborators-list-skeleton-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}

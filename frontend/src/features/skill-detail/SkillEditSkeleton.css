@@ -1,0 +1,31 @@
+.skill-edit-skeleton {
+  padding: 24px 32px;
+  background: var(--bg-container);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.skill-edit-skeleton-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.skill-edit-skeleton-two-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.skill-edit-skeleton-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.skill-edit-skeleton-actions {
+  display: flex;
+  gap: 12px;
+  padding-top: 8px;
+}

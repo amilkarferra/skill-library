@@ -13,6 +13,7 @@ import {
 } from './skill-detail.service';
 import type { Collaborator } from '../../shared/models/Collaborator';
 import type { User } from '../../shared/models/User';
+import { CollaboratorsListSkeleton } from './CollaboratorsListSkeleton';
 import './CollaboratorsTab.css';
 
 interface CollaboratorsTabProps {
@@ -90,7 +91,7 @@ export function CollaboratorsTab({ slug, isOwner, skillOwnerId }: CollaboratorsT
   ];
 
   if (isLoading) {
-    return <p className="collaborators-loading">Loading collaborators...</p>;
+    return <CollaboratorsListSkeleton />;
   }
 
   if (hasLoadError) {

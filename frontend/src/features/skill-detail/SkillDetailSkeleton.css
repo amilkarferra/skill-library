@@ -1,0 +1,96 @@
+.skill-detail-skeleton {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.skill-detail-skeleton-breadcrumb {
+  padding: 12px 32px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-container);
+  border-bottom: 1px solid var(--border-row);
+}
+
+.skill-detail-skeleton-header {
+  background: var(--bg-container);
+  padding: 28px 32px 24px;
+}
+
+.skill-detail-skeleton-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.skill-detail-skeleton-identity {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skill-detail-skeleton-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.skill-detail-skeleton-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.skill-detail-skeleton-stats {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.skill-detail-skeleton-stat-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-row);
+  min-width: 120px;
+}
+
+.skill-detail-skeleton-stat-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.skill-detail-skeleton-tags {
+  display: flex;
+  gap: 6px;
+}
+
+.skill-detail-skeleton-tabs {
+  padding: 0 32px;
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border-main);
+  background: var(--bg-container);
+}
+
+.skill-detail-skeleton-tab {
+  padding: 12px 20px;
+}
+
+.skill-detail-skeleton-content {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 32px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}

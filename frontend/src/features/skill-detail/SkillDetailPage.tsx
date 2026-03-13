@@ -14,6 +14,7 @@ import { OverviewTab } from './OverviewTab';
 import { VersionsTab } from './VersionsTab';
 import { CommentsTab } from './CommentsTab';
 import { CollaboratorsTab } from './CollaboratorsTab';
+import { SkillDetailSkeleton } from './SkillDetailSkeleton';
 import { del } from '../../shared/services/api.client';
 import {
   fetchSkillBySlug,
@@ -316,7 +317,7 @@ export function SkillDetailPage() {
   );
 
   if (isLoading) {
-    return <div className="skill-detail-loading">Loading skill...</div>;
+    return <SkillDetailSkeleton />;
   }
 
   const isRouteInvalid = slug === undefined;

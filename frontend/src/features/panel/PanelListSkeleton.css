@@ -1,0 +1,19 @@
+.panel-list-skeleton-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-row);
+}
+
+.panel-list-skeleton-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.panel-list-skeleton-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

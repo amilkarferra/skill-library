@@ -8,6 +8,7 @@ import { SectionHeader } from '../../shared/components/SectionHeader';
 import { useConfirmDialog } from '../../shared/hooks/useConfirmDialog';
 import { useNotificationsStore } from '../../shared/stores/useNotificationsStore';
 import { MySkillRow } from './MySkillRow';
+import { PanelTableSkeleton } from './PanelTableSkeleton';
 import { ProposedVersionsSection } from './ProposedVersionsSection';
 import { RequestsSection } from './RequestsSection';
 import { fetchMySkills } from './panel.service';
@@ -91,43 +92,35 @@ export function MySkillsSection() {
   }, [loadSkills, updateSkillActiveStatus]);
 
   const hasSkills = skills.length > 0;
+  const hasLoadError = loadError !== null;
   const headerSubtitle = buildHeaderSubtitle(skills);
-
-  if (isLoading) {
-    return (
-      <div className="my-skills-section">
-        <p className="my-skills-loading">Loading skills...</p>
-      </div>
-    );
-  }
-
-  if (loadError) {
-    return (
-      <div className="my-skills-section">
-        <AlertMessage variant="error">{loadError}</AlertMessage>
-      </div>
-    );
-  }
+  const isDataReady = !isLoading && !hasLoadError;
 
   return (
     <div className="my-skills-section">
       <div className="my-skills-header">
         <div className="my-skills-title-group">
           <h2 className="my-skills-title">My Skills</h2>
-          <span className="my-skills-subtitle">{headerSubtitle}</span>
+          {isDataReady && (
+            <span className="my-skills-subtitle">{headerSubtitle}</span>
+          )}
         </div>
         <Link to="/publish" className="button button--primary button--small">
           <Plus size={ICON_SIZE_SMALL} />
           New Skill
         </Link>
       </div>
-      {!hasSkills && (
+      {isLoading && <PanelTableSkeleton />}
+      {hasLoadError && (
+        <AlertMessage variant="error">{loadError}</AlertMessage>
+      )}
+      {isDataReady && !hasSkills && (
         <EmptyState
           title="No skills yet"
           description="You have not published any skills. Start by publishing your first one."
         />
       )}
-      {hasSkills && (
+      {isDataReady && hasSkills && (
         <>
           <div className="my-skills-table-header">
             <div className="my-skills-col-name">Skill</div>

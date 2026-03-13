@@ -8,6 +8,7 @@ import {
 } from './panel.service';
 import { useAuthStore } from '../../shared/stores/useAuthStore';
 import { useNotificationsStore } from '../../shared/stores/useNotificationsStore';
+import { PanelListSkeleton } from './PanelListSkeleton';
 import type { CollaborationRequest } from '../../shared/models/CollaborationRequest';
 import './RequestsSection.css';
 
@@ -83,35 +84,26 @@ export function RequestsSection() {
   const hasIncoming = incomingRequests.length > 0;
   const hasSent = sentRequests.length > 0;
   const hasAnyRequests = hasIncoming || hasSent;
-
-  if (isLoading) {
-    return (
-      <div className="requests-section">
-        <p className="requests-loading">Loading requests...</p>
-      </div>
-    );
-  }
-
-  if (loadError) {
-    return (
-      <div className="requests-section">
-        <p className="requests-error">{loadError}</p>
-      </div>
-    );
-  }
+  const hasLoadError = loadError !== null;
+  const hasActionError = actionError !== null;
+  const isDataReady = !isLoading && !hasLoadError;
 
   return (
     <div className="requests-section">
-      {actionError && (
+      {isLoading && <PanelListSkeleton />}
+      {hasLoadError && (
+        <p className="requests-error">{loadError}</p>
+      )}
+      {hasActionError && (
         <p className="requests-error">{actionError}</p>
       )}
-      {!hasAnyRequests && (
+      {isDataReady && !hasAnyRequests && (
         <EmptyState
           title="No requests"
           description="You have no collaboration requests at this time."
         />
       )}
-      {hasIncoming && (
+      {isDataReady && hasIncoming && (
         <div className="requests-group">
           <span className="requests-group-label label-uppercase">INCOMING</span>
           {incomingRequests.map((collaborationRequest) => (
@@ -124,7 +116,7 @@ export function RequestsSection() {
           ))}
         </div>
       )}
-      {hasSent && (
+      {isDataReady && hasSent && (
         <div className="requests-group">
           <span className="requests-group-label label-uppercase">SENT</span>
           {sentRequests.map((collaborationRequest) => (

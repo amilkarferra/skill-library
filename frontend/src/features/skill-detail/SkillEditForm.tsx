@@ -6,6 +6,7 @@ import { MarkdownEditor } from '../../shared/components/MarkdownEditor';
 import { CollaborationModeSelector } from '../../shared/components/CollaborationModeSelector';
 import { AlertMessage } from '../../shared/components/AlertMessage';
 import { Button } from '../../shared/components/Button';
+import { SkillEditSkeleton } from './SkillEditSkeleton';
 import { ApiError } from '../../shared/services/api.client';
 import {
   updateSkillMetadata,
@@ -159,9 +160,7 @@ export function SkillEditForm({
   }
 
   if (isLoadingFormData) {
-    return (
-      <div className="skill-edit-loading">Loading edit form...</div>
-    );
+    return <SkillEditSkeleton />;
   }
 
   const hasSubmitError = submitError !== null;

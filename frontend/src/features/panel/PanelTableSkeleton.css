@@ -1,0 +1,26 @@
+.panel-table-skeleton-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-row);
+  gap: 8px;
+}
+
+.panel-table-skeleton-col-name {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.panel-table-skeleton-col-center {
+  display: flex;
+  justify-content: center;
+}
+
+.panel-table-skeleton-col-right {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}

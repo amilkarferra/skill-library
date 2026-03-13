@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Users, Upload } from 'lucide-react';
 import { EmptyState } from '../../shared/components/EmptyState';
 import { CollabModeBadge } from '../../shared/components/CollabModeBadge';
+import { PanelListSkeleton } from './PanelListSkeleton';
 import { fetchMyCollaborations } from './panel.service';
 import type { SkillSummary } from '../../shared/models/SkillSummary';
 import './CollaborationsSection.css';
@@ -33,22 +34,8 @@ export function CollaborationsSection() {
   }, [loadCollaborations]);
 
   const hasSkills = skills.length > 0;
-
-  if (isLoading) {
-    return (
-      <div className="collaborations-section">
-        <p className="collaborations-loading">Loading collaborations...</p>
-      </div>
-    );
-  }
-
-  if (loadError) {
-    return (
-      <div className="collaborations-section">
-        <p className="collaborations-error">{loadError}</p>
-      </div>
-    );
-  }
+  const hasLoadError = loadError !== null;
+  const isDataReady = !isLoading && !hasLoadError;
 
   return (
     <div className="collaborations-section">
@@ -56,13 +43,17 @@ export function CollaborationsSection() {
         <h2 className="collaborations-title">Collaborations</h2>
         <Users size={16} className="collaborations-icon" />
       </div>
-      {!hasSkills && (
+      {isLoading && <PanelListSkeleton />}
+      {hasLoadError && (
+        <p className="collaborations-error">{loadError}</p>
+      )}
+      {isDataReady && !hasSkills && (
         <EmptyState
           title="No collaborations"
           description="You are not a collaborator on any skills yet."
         />
       )}
-      {hasSkills && (
+      {isDataReady && hasSkills && (
         <div className="collaborations-list">
           {skills.map((skill) => (
             <div key={skill.id} className="collaboration-item">

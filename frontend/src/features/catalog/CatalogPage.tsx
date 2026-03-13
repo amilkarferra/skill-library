@@ -11,6 +11,7 @@ import { SearchBar } from './SearchBar';
 import { FilterSidebar } from './FilterSidebar';
 import { SkillRow } from './SkillRow';
 import { SkillRowExpanded } from './SkillRowExpanded';
+import { SkillRowSkeletonList } from './SkillRowSkeleton';
 import {
   fetchSkills,
   fetchCategories,
@@ -227,7 +228,7 @@ export function CatalogPage() {
         )}
         <div className="catalog-list">
           {isLoading && (
-            <div className="catalog-loading">Loading skills...</div>
+            <SkillRowSkeletonList />
           )}
           {!isLoading && !hasSkills && (
             <EmptyState

@@ -1,5 +1,6 @@
 import { useEffect, useCallback, useState } from 'react';
 import { EmptyState } from '../../shared/components/EmptyState';
+import { PanelListSkeleton } from './PanelListSkeleton';
 import { ProposedVersionRow } from './ProposedVersionRow';
 import {
   fetchNotificationCount,
@@ -55,32 +56,22 @@ export function ProposedVersionsSection() {
   }, [loadVersions, refreshNotificationCounts]);
 
   const hasVersions = versions.length > 0;
-
-  if (isLoading) {
-    return (
-      <div className="proposed-versions-section">
-        <p className="proposed-versions-loading">Loading proposed versions...</p>
-      </div>
-    );
-  }
-
-  if (loadError) {
-    return (
-      <div className="proposed-versions-section">
-        <p className="proposed-versions-error">{loadError}</p>
-      </div>
-    );
-  }
+  const hasLoadError = loadError !== null;
+  const isDataReady = !isLoading && !hasLoadError;
 
   return (
     <div className="proposed-versions-section">
-      {!hasVersions && (
+      {isLoading && <PanelListSkeleton rowCount={2} />}
+      {hasLoadError && (
+        <p className="proposed-versions-error">{loadError}</p>
+      )}
+      {isDataReady && !hasVersions && (
         <EmptyState
           title="No pending proposals"
           description="There are no version proposals awaiting your review."
         />
       )}
-      {hasVersions && (
+      {isDataReady && hasVersions && (
         <div className="proposed-versions-list">
           {versions.map((version) => (
             <ProposedVersionRow

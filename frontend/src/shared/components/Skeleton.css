@@ -1,0 +1,49 @@
+@keyframes skeletonShimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+.skeleton {
+  display: block;
+  background: linear-gradient(
+    90deg,
+    var(--bg-row-alt) 25%,
+    var(--border-row) 50%,
+    var(--bg-row-alt) 75%
+  );
+  background-size: 800px 100%;
+  animation: skeletonShimmer 1.5s infinite ease-in-out;
+}
+
+.skeleton--text {
+  height: 12px;
+  width: 100%;
+}
+
+.skeleton--title {
+  height: 16px;
+  width: 40%;
+}
+
+.skeleton--badge {
+  height: 20px;
+  width: 60px;
+}
+
+.skeleton--button {
+  height: 30px;
+  width: 90px;
+}
+
+.skeleton--circle {
+  border-radius: 50%;
+}
+
+.skeleton--block {
+  height: 100%;
+  width: 100%;
+}
