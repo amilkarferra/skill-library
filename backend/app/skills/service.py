@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 
 from fastapi import HTTPException, status
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.auth.models.user import User
@@ -11,6 +12,7 @@ from app.skills.models.skill import Skill
 from app.skills.models.skill_tag import SkillTag
 from app.skills.models.tag import Tag
 from app.social.models.skill_like import SkillLike
+from app.skills.schemas.category_response import CategoryResponse
 from app.skills.schemas.skill_create_request import SkillCreateRequest
 from app.skills.schemas.skill_update_request import SkillUpdateRequest
 from app.skills.slug import generate_slug
@@ -223,6 +225,34 @@ def resolve_is_liked_by_user(
         SkillLike.user_id == current_user.id,
     ).first()
     return existing_like is not None
+
+
+def list_categories_with_skill_count(
+    database_session: Session,
+) -> list[CategoryResponse]:
+    active_skill_count = (
+        func.count(Skill.id)
+        .filter(Skill.is_active == True)
+        .label("skill_count")
+    )
+
+    rows = (
+        database_session.query(Category, active_skill_count)
+        .outerjoin(Skill, Skill.category_id == Category.id)
+        .group_by(Category.id)
+        .order_by(Category.name.asc())
+        .all()
+    )
+
+    return [
+        CategoryResponse(
+            id=category.id,
+            name=category.name,
+            slug=category.slug,
+            skill_count=skill_count,
+        )
+        for category, skill_count in rows
+    ]
 
 
 def _raise_if_category_missing(

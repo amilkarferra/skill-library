@@ -193,13 +193,7 @@ def restore_skill(
 def list_categories(
     database_session: Session = Depends(provide_database_session),
 ) -> list[CategoryResponse]:
-    categories = database_session.query(Category).order_by(
-        Category.name.asc()
-    ).all()
-    return [
-        CategoryResponse(id=category.id, name=category.name, slug=category.slug)
-        for category in categories
-    ]
+    return service.list_categories_with_skill_count(database_session)
 
 
 @router.get("/tags/popular", response_model=list[TagResponse])

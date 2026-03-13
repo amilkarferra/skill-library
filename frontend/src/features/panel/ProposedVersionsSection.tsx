@@ -65,9 +65,6 @@ export function ProposedVersionsSection() {
 
   return (
     <div className="proposed-versions-section">
-      <div className="proposed-versions-header">
-        <h2 className="proposed-versions-title">Proposed Versions</h2>
-      </div>
       {!hasVersions && (
         <EmptyState
           title="No pending proposals"

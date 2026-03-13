@@ -1,19 +1,5 @@
 .proposed-versions-section {
   background: var(--bg-container);
-  flex: 1;
-}
-
-.proposed-versions-header {
-  display: flex;
-  align-items: center;
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--border-row);
-}
-
-.proposed-versions-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-primary);
 }
 
 .proposed-versions-loading {

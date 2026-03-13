@@ -5,8 +5,6 @@ import { PanelSidebar } from './PanelSidebar';
 import { MySkillsSection } from './MySkillsSection';
 import { CollaborationsSection } from './CollaborationsSection';
 import { MyLikesSection } from './MyLikesSection';
-import { RequestsSection } from './RequestsSection';
-import { ProposedVersionsSection } from './ProposedVersionsSection';
 import { SettingsPage } from '../settings/SettingsPage';
 import { SidebarLayout } from '../../shared/components/SidebarLayout';
 import './MyPanelPage.css';
@@ -20,8 +18,6 @@ export function MyPanelPage() {
       skills: <MySkillsSection />,
       collaborations: <CollaborationsSection />,
       likes: <MyLikesSection />,
-      requests: <RequestsSection />,
-      versions: <ProposedVersionsSection />,
       settings: <SettingsPage />,
     };
 

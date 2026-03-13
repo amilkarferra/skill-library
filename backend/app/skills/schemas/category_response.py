@@ -5,3 +5,4 @@ class CategoryResponse(CamelCaseSchema):
     id: int
     name: str
     slug: str
+    skill_count: int

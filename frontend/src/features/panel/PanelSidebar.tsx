@@ -1,59 +1,66 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Users, Heart, GitPullRequest, FileCheck, Settings } from 'lucide-react';
+import { Box, Users, Heart, Settings } from 'lucide-react';
 import { useAuthStore } from '../../shared/stores/useAuthStore';
 import { useNotificationsStore } from '../../shared/stores/useNotificationsStore';
+import { CountBadge } from '../../shared/components/CountBadge';
 import './PanelSidebar.css';
 
 interface SidebarItem {
-  key: string;
-  label: string;
-  icon: typeof Box;
-  path: string;
+  readonly key: string;
+  readonly label: string;
+  readonly icon: typeof Box;
+  readonly path: string;
 }
 
 interface PanelSidebarProps {
-  activeSection: string;
+  readonly activeSection: string;
+}
+
+interface SidebarItemCountMap {
+  readonly [key: string]: number;
 }
 
 const SIDEBAR_ITEMS: SidebarItem[] = [
   { key: 'skills', label: 'My Skills', icon: Box, path: '/panel/skills' },
   { key: 'collaborations', label: 'Collaborations', icon: Users, path: '/panel/collaborations' },
   { key: 'likes', label: 'My Likes', icon: Heart, path: '/panel/likes' },
-  { key: 'requests', label: 'Requests', icon: GitPullRequest, path: '/panel/requests' },
-  { key: 'versions', label: 'Proposed Versions', icon: FileCheck, path: '/panel/versions' },
   { key: 'settings', label: 'Settings', icon: Settings, path: '/panel/settings' },
 ];
 
 export function PanelSidebar({ activeSection }: PanelSidebarProps) {
   const { user } = useAuthStore();
-  const { pendingCollaborationRequests, pendingVersionProposals } = useNotificationsStore();
+  const notificationStore = useNotificationsStore();
+
+  const sidebarCountMap = useMemo<SidebarItemCountMap>(() => ({
+    skills: notificationStore.mySkillsCount,
+    collaborations: notificationStore.collaborationsCount,
+    likes: notificationStore.likesCount,
+  }), [
+    notificationStore.mySkillsCount,
+    notificationStore.collaborationsCount,
+    notificationStore.likesCount,
+  ]);
+
   const renderedItems = useMemo(() => {
     return SIDEBAR_ITEMS.map((item) => {
       const isActive = item.key === activeSection;
-      const itemClass = isActive
+      const itemClassName = isActive
         ? 'panel-sidebar-item panel-sidebar-item--active'
         : 'panel-sidebar-item';
       const IconComponent = item.icon;
-      const itemCount = buildSidebarItemCount(
-        item.key,
-        pendingCollaborationRequests,
-        pendingVersionProposals
-      );
-      const hasItemCount = itemCount > 0;
-      const badgeClassName = buildSidebarBadgeClass(item.key);
-
+      const itemCount = sidebarCountMap[item.key] ?? 0;
       return (
-        <Link key={item.key} to={item.path} className={itemClass}>
+        <Link key={item.key} to={item.path} className={itemClassName}>
           <span className="panel-sidebar-item-content">
             <IconComponent size={15} className="panel-sidebar-item-icon" />
             <span className="panel-sidebar-item-label">{item.label}</span>
           </span>
-          {hasItemCount && <span className={badgeClassName}>{itemCount}</span>}
+          <CountBadge count={itemCount} />
         </Link>
       );
     });
-  }, [activeSection, pendingCollaborationRequests, pendingVersionProposals]);
+  }, [activeSection, sidebarCountMap]);
 
   return (
     <div className="panel-sidebar">
@@ -69,24 +76,3 @@ export function PanelSidebar({ activeSection }: PanelSidebarProps) {
   );
 }
 
-function buildSidebarItemCount(
-  itemKey: string,
-  pendingCollaborationRequests: number,
-  pendingVersionProposals: number
-): number {
-  if (itemKey === 'requests') {
-    return pendingCollaborationRequests;
-  }
-
-  if (itemKey === 'versions') {
-    return pendingVersionProposals;
-  }
-
-  return 0;
-}
-
-function buildSidebarBadgeClass(itemKey: string): string {
-  const baseClassName = 'panel-sidebar-count';
-  const isWarningCount = itemKey === 'requests' || itemKey === 'versions';
-  return isWarningCount ? `${baseClassName} ${baseClassName}--warning` : baseClassName;
-}

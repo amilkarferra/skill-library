@@ -1,13 +1,12 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Eye, Download, Upload, User, Box, Trash2 } from 'lucide-react';
+import { Eye, Download, Upload, User, Box, Calendar, UserPlus, Trash2 } from 'lucide-react';
 import { Button } from '../../shared/components/Button';
-import { CollabModeBadge } from '../../shared/components/CollabModeBadge';
 import { ConfirmDialog } from '../../shared/components/ConfirmDialog';
 import { TagList } from '../../shared/components/TagList';
-import { SkillQuickActions } from '../../shared/components/SkillQuickActions';
 import { useConfirmDialog } from '../../shared/hooks/useConfirmDialog';
 import { useSkillActions } from '../../shared/hooks/useSkillActions';
+import { formatDate } from '../../shared/formatters/format-date';
 import { del } from '../../shared/services/api.client';
 import type { Skill } from '../../shared/models/Skill';
 import './SkillRowExpanded.css';
@@ -24,12 +23,7 @@ export function SkillRowExpanded({
   onSkillDeleted,
 }: SkillRowExpandedProps) {
   const navigate = useNavigate();
-  const {
-    handleDownload,
-    handleToggleLike,
-    handleNavigateToComments,
-    downloadError,
-  } = useSkillActions(skill);
+  const { handleDownload, downloadError } = useSkillActions(skill);
   const [actionError, setActionError] = useState<string | null>(null);
   const { dialogState, openDialog, closeDialog } = useConfirmDialog();
   const hasCurrentVersion = skill.currentVersion !== null;
@@ -98,7 +92,6 @@ export function SkillRowExpanded({
             </span>
           )}
         </div>
-        <CollabModeBadge collaborationMode={skill.collaborationMode} />
       </div>
       <div className="skill-row-expanded-description-panel">
         <p className="skill-row-expanded-description">
@@ -115,15 +108,14 @@ export function SkillRowExpanded({
           <Box size={13} />
           {skill.categoryName}
         </span>
-        <SkillQuickActions
-          totalLikes={skill.totalLikes}
-          totalDownloads={skill.totalDownloads}
-          totalComments={skill.totalComments}
-          isLiked={skill.isLikedByMe}
-          onLikeToggle={handleToggleLike}
-          onDownload={handleDownload}
-          onCommentNavigate={handleNavigateToComments}
-        />
+        <span className="skill-row-expanded-meta-item">
+          <Calendar size={13} />
+          {formatDate(skill.createdAt)}
+        </span>
+        <span className="skill-row-expanded-meta-item">
+          <UserPlus size={13} />
+          {buildCollaborationModeLabel(skill.collaborationMode)}
+        </span>
       </div>
       {hasDownloadError && (
         <p className="skill-row-expanded-error">{downloadError}</p>
@@ -212,4 +204,9 @@ function buildRoleBadgeLabel(myRole: Skill['myRole']): string {
     return 'Collaborator';
   }
   return '';
+}
+
+function buildCollaborationModeLabel(collaborationMode: Skill['collaborationMode']): string {
+  const isOpenMode = collaborationMode === 'open';
+  return isOpenMode ? 'Open collaboration' : 'Closed collaboration';
 }

@@ -93,9 +93,6 @@ export function RequestsSection() {
 
   return (
     <div className="requests-section">
-      <div className="requests-header">
-        <h2 className="requests-title">Collaboration Requests</h2>
-      </div>
       {actionError && (
         <p className="requests-error">{actionError}</p>
       )}

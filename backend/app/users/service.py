@@ -83,10 +83,17 @@ def get_user_notification_count(
     )
     total = pending_collaboration_count + pending_version_count
 
+    my_skills_count = _count_owned_skills(database_session, user_id)
+    collaborations_count = _count_user_collaborations(database_session, user_id)
+    likes_count = _count_user_likes(database_session, user_id)
+
     return NotificationCountResponse(
         pending_collaboration_requests=pending_collaboration_count,
         pending_version_proposals=pending_version_count,
         total_pending=total,
+        my_skills_count=my_skills_count,
+        collaborations_count=collaborations_count,
+        likes_count=likes_count,
     )
 
 
@@ -96,7 +103,6 @@ def list_user_skills(
 ) -> list[Skill]:
     return database_session.query(Skill).filter(
         Skill.owner_id == user_id,
-        Skill.is_active == True,
     ).order_by(Skill.created_at.desc()).all()
 
 
@@ -188,6 +194,33 @@ def _count_pending_version_proposals(
     return database_session.query(SkillVersion).filter(
         SkillVersion.skill_id.in_(owned_skill_ids),
         SkillVersion.status == VersionStatus.PENDING_REVIEW,
+    ).count()
+
+
+def _count_owned_skills(
+    database_session: Session,
+    user_id: int,
+) -> int:
+    return database_session.query(Skill).filter(
+        Skill.owner_id == user_id,
+    ).count()
+
+
+def _count_user_collaborations(
+    database_session: Session,
+    user_id: int,
+) -> int:
+    return database_session.query(SkillCollaborator).filter(
+        SkillCollaborator.user_id == user_id,
+    ).count()
+
+
+def _count_user_likes(
+    database_session: Session,
+    user_id: int,
+) -> int:
+    return database_session.query(SkillLike).filter(
+        SkillLike.user_id == user_id,
     ).count()
 
 

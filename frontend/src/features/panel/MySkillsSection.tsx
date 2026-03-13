@@ -1,11 +1,15 @@
 import { useEffect, useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus } from 'lucide-react';
+import { Plus, Upload, UserPlus } from 'lucide-react';
 import { AlertMessage } from '../../shared/components/AlertMessage';
 import { ConfirmDialog } from '../../shared/components/ConfirmDialog';
 import { EmptyState } from '../../shared/components/EmptyState';
+import { SectionHeader } from '../../shared/components/SectionHeader';
 import { useConfirmDialog } from '../../shared/hooks/useConfirmDialog';
+import { useNotificationsStore } from '../../shared/stores/useNotificationsStore';
 import { MySkillRow } from './MySkillRow';
+import { ProposedVersionsSection } from './ProposedVersionsSection';
+import { RequestsSection } from './RequestsSection';
 import { fetchMySkills } from './panel.service';
 import { del, patch } from '../../shared/services/api.client';
 import type { SkillSummary } from '../../shared/models/SkillSummary';
@@ -13,12 +17,15 @@ import type { SkillSummary } from '../../shared/models/SkillSummary';
 import './MySkillsSection.css';
 
 const ICON_SIZE_SMALL = 14;
+const SECTION_ICON_SIZE = 13;
 
 export function MySkillsSection() {
   const [skills, setSkills] = useState<SkillSummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const { dialogState, openDialog, closeDialog } = useConfirmDialog();
+  const { pendingVersionProposals, pendingCollaborationRequests } =
+    useNotificationsStore();
 
   const loadSkills = useCallback(async () => {
     setIsLoading(true);
@@ -84,6 +91,7 @@ export function MySkillsSection() {
   }, [loadSkills, updateSkillActiveStatus]);
 
   const hasSkills = skills.length > 0;
+  const headerSubtitle = buildHeaderSubtitle(skills);
 
   if (isLoading) {
     return (
@@ -104,7 +112,10 @@ export function MySkillsSection() {
   return (
     <div className="my-skills-section">
       <div className="my-skills-header">
-        <h2 className="my-skills-title">My Skills</h2>
+        <div className="my-skills-title-group">
+          <h2 className="my-skills-title">My Skills</h2>
+          <span className="my-skills-subtitle">{headerSubtitle}</span>
+        </div>
         <Link to="/publish" className="button button--primary button--small">
           <Plus size={ICON_SIZE_SMALL} />
           Publish New
@@ -124,8 +135,12 @@ export function MySkillsSection() {
                 <th className="my-skills-th">NAME</th>
                 <th className="my-skills-th">STATUS</th>
                 <th className="my-skills-th">VERSION</th>
-                <th className="my-skills-th my-skills-th--center">LIKES / DOWNLOADS</th>
-                <th className="my-skills-th my-skills-th--center">COLLAB MODE</th>
+                <th className="my-skills-th my-skills-th--center">
+                  LIKES / DOWNLOADS
+                </th>
+                <th className="my-skills-th my-skills-th--center">
+                  COLLAB MODE
+                </th>
                 <th className="my-skills-th">ACTIONS</th>
               </tr>
             </thead>
@@ -142,6 +157,19 @@ export function MySkillsSection() {
           </table>
         </div>
       )}
+      <SectionHeader
+        icon={<Upload size={SECTION_ICON_SIZE} />}
+        title="Proposed Versions"
+        count={pendingVersionProposals}
+      />
+      <ProposedVersionsSection />
+      <SectionHeader
+        icon={<UserPlus size={SECTION_ICON_SIZE} />}
+        title="Collaboration Requests"
+        count={pendingCollaborationRequests}
+        badgeVariant="default"
+      />
+      <RequestsSection />
       {dialogState.isOpen && (
         <ConfirmDialog
           title={dialogState.title}
@@ -154,4 +182,15 @@ export function MySkillsSection() {
       )}
     </div>
   );
+}
+
+function buildHeaderSubtitle(skills: SkillSummary[]): string {
+  const totalCount = skills.length;
+  const inactiveCount = skills.filter((skill) => !skill.isActive).length;
+  const hasInactiveSkills = inactiveCount > 0;
+
+  const totalLabel = `${totalCount} skills`;
+  return hasInactiveSkills
+    ? `${totalLabel}, ${inactiveCount} inactive`
+    : totalLabel;
 }

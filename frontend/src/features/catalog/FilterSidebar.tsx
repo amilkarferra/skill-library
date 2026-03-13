@@ -63,6 +63,7 @@ export function FilterSidebar({
           onClick={() => handleCategoryClick('')}
         >
           All
+          <span className="filter-item-count">{computeTotalSkillCount(categories)}</span>
         </button>
         {categories.map((category) => {
           const isActive = category.slug === selectedCategory;
@@ -73,6 +74,7 @@ export function FilterSidebar({
               onClick={() => handleCategoryClick(category.slug)}
             >
               {category.name}
+              <span className="filter-item-count">{category.skillCount}</span>
             </button>
           );
         })}
@@ -124,4 +126,8 @@ function buildFilterItemClass(isActive: boolean): string {
 function buildFilterTagClass(isSelected: boolean): string {
   const base = 'filter-tag';
   return isSelected ? `${base} filter-tag--selected` : base;
+}
+
+function computeTotalSkillCount(categories: Category[]): number {
+  return categories.reduce((sum, category) => sum + category.skillCount, 0);
 }

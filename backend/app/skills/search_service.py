@@ -164,6 +164,7 @@ def _build_skill_response(
         total_downloads=skill.total_downloads,
         total_comments=skill.total_comments,
         tags=tag_names,
+        collaboration_mode=skill.collaboration_mode,
         is_active=skill.is_active,
         is_liked_by_me=is_liked_by_me,
         my_role=my_role,
