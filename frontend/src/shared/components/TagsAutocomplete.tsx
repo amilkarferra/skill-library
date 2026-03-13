@@ -70,6 +70,7 @@ function SuggestionItem({ suggestion, onSelect }: SuggestionItemProps) {
 interface SimilarityPromptProps {
   readonly inputValue: string;
   readonly matchedTagName: string;
+  readonly className: string;
   readonly onUseExisting: () => void;
   readonly onCreateNew: () => void;
 }
@@ -77,11 +78,12 @@ interface SimilarityPromptProps {
 function SimilarityPrompt({
   inputValue,
   matchedTagName,
+  className,
   onUseExisting,
   onCreateNew,
 }: SimilarityPromptProps) {
   return (
-    <div className="tags-autocomplete-similarity">
+    <div className={className}>
       <span className="tags-autocomplete-similarity-text">
         Did you mean <strong>{matchedTagName}</strong> instead
         of <strong>{inputValue}</strong>?
@@ -117,6 +119,7 @@ export function TagsAutocomplete({
   const [isFocused, setIsFocused] = useState(false);
   const [similarityConfirmation, setSimilarityConfirmation] =
     useState<SimilarityConfirmation | null>(null);
+  const [shouldOpenUpward, setShouldOpenUpward] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -224,10 +227,25 @@ export function TagsAutocomplete({
     [selectedTags, onTagsChange]
   );
 
+  const DROPDOWN_HEIGHT_PX = 160;
+  const VIEWPORT_BOTTOM_MARGIN_PX = 20;
+
+  const calculateDropdownDirection = useCallback(() => {
+    const hasNoContainer = containerRef.current === null;
+    if (hasNoContainer) return;
+
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const spaceBelow =
+      window.innerHeight - containerRect.bottom - VIEWPORT_BOTTOM_MARGIN_PX;
+    const hasInsufficientSpaceBelow = spaceBelow < DROPDOWN_HEIGHT_PX;
+    setShouldOpenUpward(hasInsufficientSpaceBelow);
+  }, []);
+
   const handleContainerFocus = useCallback(() => {
     setIsFocused(true);
+    calculateDropdownDirection();
     setIsDropdownOpen(true);
-  }, []);
+  }, [calculateDropdownDirection]);
 
   const handleContainerBlur = useCallback(() => {
     setIsFocused(false);
@@ -298,9 +316,19 @@ export function TagsAutocomplete({
     ? 'tags-autocomplete-container tags-autocomplete-container--focused'
     : 'tags-autocomplete-container';
 
-  const placeholderText = isMaxTagsReached ? '' : 'Type and press Enter or comma to add tags...';
+  const placeholderText = isMaxTagsReached
+    ? ''
+    : 'Type and press Enter or comma to add tags...';
   const hasSuggestions = isDropdownOpen && filteredSuggestions.length > 0;
   const hasSimilarityConfirmation = similarityConfirmation !== null;
+
+  const dropdownClassName = shouldOpenUpward
+    ? 'tags-autocomplete-dropdown tags-autocomplete-dropdown--upward'
+    : 'tags-autocomplete-dropdown';
+
+  const similarityClassName = shouldOpenUpward
+    ? 'tags-autocomplete-similarity tags-autocomplete-similarity--upward'
+    : 'tags-autocomplete-similarity';
 
   return (
     <div className="tags-autocomplete-wrapper" ref={containerRef}>
@@ -333,7 +361,7 @@ export function TagsAutocomplete({
       </div>
 
       {hasSuggestions && (
-        <div className="tags-autocomplete-dropdown">
+        <div className={dropdownClassName}>
           {filteredSuggestions.map((suggestion) => (
             <SuggestionItem
               key={suggestion.name}
@@ -348,6 +376,7 @@ export function TagsAutocomplete({
         <SimilarityPrompt
           inputValue={similarityConfirmation.inputValue}
           matchedTagName={similarityConfirmation.matchedTagName}
+          className={similarityClassName}
           onUseExisting={handleUseExistingTag}
           onCreateNew={handleCreateNewTag}
         />
