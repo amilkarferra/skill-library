@@ -1,0 +1,83 @@
+.skill-edit-form {
+  padding: 24px 32px;
+  background: var(--bg-container);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.skill-edit-form-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.skill-edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.skill-edit-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.skill-edit-required {
+  color: var(--danger);
+  margin-left: 2px;
+}
+
+.skill-edit-optional {
+  color: var(--text-muted);
+  font-weight: 400;
+  margin-left: 4px;
+}
+
+.skill-edit-input {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid var(--border-main);
+  background: var(--bg-container);
+  color: var(--text-primary);
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.skill-edit-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.skill-edit-char-count {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.skill-edit-slug-error {
+  font-size: 12px;
+  color: var(--danger);
+}
+
+.skill-edit-two-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.skill-edit-actions {
+  display: flex;
+  gap: 12px;
+  padding-top: 8px;
+}
+
+.skill-edit-loading {
+  padding: 24px 32px;
+  font-size: 14px;
+  color: var(--text-muted);
+  background: var(--bg-container);
+}
