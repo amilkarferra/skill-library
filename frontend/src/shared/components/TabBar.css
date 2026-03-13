@@ -1,0 +1,29 @@
+.tab-bar {
+  display: flex;
+  padding: 0 32px;
+  background: var(--bg-container);
+  border-bottom: 1px solid var(--border-main);
+}
+
+.tab-bar-button {
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  cursor: pointer;
+}
+
+.tab-bar-button:hover {
+  color: var(--text-primary);
+}
+
+.tab-bar-button--active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
