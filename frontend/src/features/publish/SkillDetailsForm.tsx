@@ -202,11 +202,6 @@ export function SkillDetailsForm({
         <div className="skill-details-char-count">
           {displayName.length} / {MAX_DISPLAY_NAME}
         </div>
-        {slugPreview !== null && (
-          <div className="skill-details-slug-preview">
-            skill-library.com/skills/<strong>{slugPreview.slug}</strong>
-          </div>
-        )}
         {hasSlugError && (
           <div className="skill-details-slug-error">
             <span>A skill with this name already exists.</span>
