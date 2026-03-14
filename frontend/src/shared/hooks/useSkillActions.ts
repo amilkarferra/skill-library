@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../features/auth/useAuth';
 import { useAuthStore } from '../stores/useAuthStore';
 import { useLikeStore } from '../stores/useLikeStore';
 import { useDownloadStore } from '../stores/useDownloadStore';
@@ -10,7 +11,7 @@ import {
 import type { SkillActionTarget } from '../models/SkillActionTarget';
 
 interface SkillActionsResult {
-  readonly handleToggleLike: (() => void) | null;
+  readonly handleToggleLike: () => void;
   readonly handleDownload: (() => void) | null;
   readonly handleNavigateToComments: () => void;
   readonly isLikeInProgress: boolean;
@@ -21,6 +22,7 @@ interface SkillActionsResult {
 export function useSkillActions(skill: SkillActionTarget): SkillActionsResult {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
+  const { signIn } = useAuth();
   const { publishLikeUpdate } = useLikeStore();
   const { publishDownloadUpdate } = useDownloadStore();
   const [isLikeInProgress, setIsLikeInProgress] = useState(false);
@@ -30,6 +32,11 @@ export function useSkillActions(skill: SkillActionTarget): SkillActionsResult {
   const hasCurrentVersion = skill.currentVersion !== null;
 
   const handleToggleLike = useCallback(async () => {
+    if (!isAuthenticated) {
+      await signIn();
+      return;
+    }
+
     const isCurrentlyLiked = skill.isLikedByMe === true;
     setIsLikeInProgress(true);
 
@@ -52,6 +59,8 @@ export function useSkillActions(skill: SkillActionTarget): SkillActionsResult {
     skill.name,
     skill.isLikedByMe,
     skill.totalLikes,
+    isAuthenticated,
+    signIn,
     publishLikeUpdate,
   ]);
 
@@ -88,11 +97,10 @@ export function useSkillActions(skill: SkillActionTarget): SkillActionsResult {
     navigate(`/skills/${skill.name}?tab=comments`);
   }, [navigate, skill.name]);
 
-  const likeHandler = isAuthenticated ? handleToggleLike : null;
   const downloadHandler = hasCurrentVersion ? handleDownload : null;
 
   return {
-    handleToggleLike: likeHandler,
+    handleToggleLike: handleToggleLike,
     handleDownload: downloadHandler,
     handleNavigateToComments,
     isLikeInProgress,
