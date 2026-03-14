@@ -1,3 +1,8 @@
+import {
+  normalizeForComparison,
+  computeLevenshteinDistance,
+} from '../logic/string-similarity';
+
 type SimilarityAction = 'use-existing' | 'confirm-similar' | 'create-new';
 
 interface SimilarityResult {
@@ -5,46 +10,9 @@ interface SimilarityResult {
   readonly matchedTagName: string | null;
 }
 
-const SEPARATOR_PATTERN = /[-_\s]/g;
 const MIN_LENGTH_FOR_DISTANCE_ONE = 4;
 const MIN_LENGTH_FOR_DISTANCE_TWO = 7;
 const MAX_SUBSTRING_LENGTH_DIFFERENCE = 3;
-
-function normalizeForComparison(value: string): string {
-  return value.toLowerCase().trim().replace(SEPARATOR_PATTERN, '');
-}
-
-function computeLevenshteinDistance(first: string, second: string): number {
-  const firstLength = first.length;
-  const secondLength = second.length;
-
-  const distanceMatrix: number[][] = Array.from(
-    { length: firstLength + 1 },
-    (_, rowIndex) => {
-      const row = Array.from(
-        { length: secondLength + 1 },
-        (_, columnIndex) => columnIndex
-      );
-      row[0] = rowIndex;
-      return row;
-    }
-  );
-
-  for (let row = 1; row <= firstLength; row++) {
-    for (let column = 1; column <= secondLength; column++) {
-      const isCharacterMatch = first[row - 1] === second[column - 1];
-      const substitutionCost = isCharacterMatch ? 0 : 1;
-
-      distanceMatrix[row][column] = Math.min(
-        distanceMatrix[row - 1][column] + 1,
-        distanceMatrix[row][column - 1] + 1,
-        distanceMatrix[row - 1][column - 1] + substitutionCost
-      );
-    }
-  }
-
-  return distanceMatrix[firstLength][secondLength];
-}
 
 function computeDistanceThreshold(tagLength: number): number {
   const isLongEnoughForDistanceTwo = tagLength >= MIN_LENGTH_FOR_DISTANCE_TWO;

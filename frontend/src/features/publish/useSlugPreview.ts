@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import type { SlugPreview } from '../../shared/models/SlugPreview';
 import type { SimilarSkill } from '../../shared/models/SimilarSkill';
 import { fetchSlugPreview, fetchSimilarSkills } from './publish.service';
+import { sortByRelevance } from './similar-skills.logic';
 
 const SLUG_PREVIEW_DEBOUNCE_MS = 500;
 const RESET_DEBOUNCE_MS = 0;
@@ -59,8 +60,9 @@ async function loadPreviewAndSimilarSkills(
 
     const isSlugTaken = !preview.isAvailable;
     if (isSlugTaken) {
-      const skills = await fetchSimilarSkills(name);
-      setSimilarSkills(skills);
+      const rawSkills = await fetchSimilarSkills(name);
+      const rankedSkills = sortByRelevance(rawSkills, name);
+      setSimilarSkills(rankedSkills);
     } else {
       setSimilarSkills([]);
     }
