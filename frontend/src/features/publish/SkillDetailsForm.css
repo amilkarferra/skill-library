@@ -181,10 +181,31 @@ textarea.skill-details-input {
   margin-top: 2px;
 }
 
+.skill-details-slug-preview {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  font-family: monospace;
+}
+
+.skill-details-slug-preview strong {
+  color: var(--text-secondary);
+}
+
 .skill-details-slug-error {
   font-size: 11px;
   color: var(--danger);
   margin-top: 4px;
+}
+
+.skill-details-slug-error-link {
+  color: var(--accent);
+  text-decoration: underline;
+  margin: 0 4px;
+}
+
+.skill-details-slug-error-link:hover {
+  color: var(--accent-hover);
 }
 
 .skill-details-actions {

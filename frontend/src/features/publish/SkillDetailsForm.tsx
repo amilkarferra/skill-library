@@ -2,7 +2,10 @@ import type { FormEvent } from 'react';
 import { useState, useCallback, useMemo } from 'react';
 import type { Category } from '../../shared/models/Category';
 import type { Tag } from '../../shared/models/Tag';
+import type { SlugPreview } from '../../shared/models/SlugPreview';
 import { createSkill } from './publish.service';
+import { useSlugPreview } from './useSlugPreview';
+import { SimilarSkillsWarning } from './SimilarSkillsWarning';
 import { FileBar } from './FileBar';
 import { CatalogPreviewCard } from './CatalogPreviewCard';
 import { CategoryChips } from '../../shared/components/CategoryChips';
@@ -58,6 +61,8 @@ export function SkillDetailsForm({
     extraction.description.length > 0
   );
 
+  const { slugPreview, similarSkills, clearSlugState } = useSlugPreview(displayName);
+
   const categoryName = useMemo(() => {
     const matchesSelectedId = (category: Category): boolean =>
       category.id === selectedCategoryId;
@@ -71,7 +76,8 @@ export function SkillDetailsForm({
       setDisplayName(truncatedValue);
       setIsDisplayNameExtracted(false);
       setSlugError(null);
-    }, []
+      clearSlugState();
+    }, [clearSlugState]
   );
 
   const handleShortDescriptionChange = useCallback(
@@ -122,13 +128,13 @@ export function SkillDetailsForm({
         const skill = await createSkill(formData);
         onSubmitSuccess(skill.name);
       } catch (error) {
-        handlePublishError(error, setSlugError, setSubmitError);
+        handlePublishError(error, slugPreview, setSlugError, setSubmitError);
       } finally {
         setIsSubmitting(false);
       }
     },
     [file, displayName, shortDescription, longDescription, selectedCategoryId,
-      selectedTags, collaborationMode, onSubmitSuccess]
+      selectedTags, collaborationMode, onSubmitSuccess, slugPreview]
   );
 
   const hasMissingCategory = selectedCategoryId === null;
@@ -196,12 +202,28 @@ export function SkillDetailsForm({
         <div className="skill-details-char-count">
           {displayName.length} / {MAX_DISPLAY_NAME}
         </div>
+        {slugPreview !== null && (
+          <div className="skill-details-slug-preview">
+            skill-library.com/skills/<strong>{slugPreview.slug}</strong>
+          </div>
+        )}
         {hasSlugError && (
           <div className="skill-details-slug-error">
-            {slugError}
+            <span>A skill with this name already exists.</span>
+            <a
+              className="skill-details-slug-error-link"
+              href={`/skills/${slugError}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View existing skill
+            </a>
+            <span> or change the display name.</span>
           </div>
         )}
       </div>
+
+      <SimilarSkillsWarning skills={similarSkills} />
 
       <div className={shortDescriptionFieldClass}>
         <div className="skill-details-field-wrapper">
@@ -303,32 +325,29 @@ function buildFieldClassName(isExtracted: boolean): string {
 }
 
 const CONFLICT_STATUS_CODE = 409;
-const DUPLICATE_NAME_MESSAGE =
-  'A skill with this name already exists. Please choose a different name.';
-const FALLBACK_API_ERROR_MESSAGE = 'Failed to publish skill. Please try again.';
-const FALLBACK_UNKNOWN_ERROR_MESSAGE = 'An unexpected error occurred.';
+const GENERIC_API_ERROR_MESSAGE = 'Failed to publish skill. Please try again.';
+const GENERIC_UNKNOWN_ERROR_MESSAGE = 'An unexpected error occurred.';
 
 function handlePublishError(
   error: unknown,
-  setSlugError: (message: string | null) => void,
+  slugPreview: SlugPreview | null,
+  setSlugError: (slug: string | null) => void,
   setSubmitError: (message: string | null) => void,
 ): void {
   const isApiError = error instanceof ApiError;
   if (!isApiError) {
     const isStandardError = error instanceof Error;
-    const message = isStandardError
-      ? error.message
-      : FALLBACK_UNKNOWN_ERROR_MESSAGE;
+    const message = isStandardError ? error.message : GENERIC_UNKNOWN_ERROR_MESSAGE;
     setSubmitError(message);
     return;
   }
 
   const isConflict = error.statusCode === CONFLICT_STATUS_CODE;
   if (isConflict) {
-    setSlugError(DUPLICATE_NAME_MESSAGE);
+    setSlugError(slugPreview?.slug ?? 'unknown');
     return;
   }
 
-  const message = error.message || FALLBACK_API_ERROR_MESSAGE;
+  const message = error.message || GENERIC_API_ERROR_MESSAGE;
   setSubmitError(message);
 }
