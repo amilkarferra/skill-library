@@ -17,6 +17,7 @@ import type { SkillSummary } from '../../shared/models/SkillSummary';
 import './MySkillsSection.css';
 
 const SECTION_ICON_SIZE = 13;
+const CONFLICT_STATUS_CODE = 409;
 
 export function MySkillsSection() {
   const [skills, setSkills] = useState<SkillSummary[]>([]);
@@ -80,8 +81,6 @@ export function MySkillsSection() {
       onConfirm: () => { void executeDelete(skill); },
     });
   }, [openDialog, executeDelete]);
-
-  const CONFLICT_STATUS_CODE = 409;
 
   const handleRestore = useCallback(async (skill: SkillSummary) => {
     setRestoreError(null);
