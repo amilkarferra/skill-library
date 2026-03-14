@@ -134,6 +134,7 @@ def list_skill_versions(
         .filter(
             SkillVersion.skill_id == skill_id,
             SkillVersion.is_active == True,
+            SkillVersion.status == VersionStatus.PUBLISHED,
         )
         .order_by(SkillVersion.created_at.desc())
         .all()
