@@ -1,6 +1,8 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Search, Heart, Box, Download } from 'lucide-react';
 import { Button } from './Button';
+import { QuickPublishDropzone } from './QuickPublishDropzone';
+import { useAuthStore } from '../stores/useAuthStore';
 import './NavigationSidebar.css';
 
 interface NavigationSidebarProps {
@@ -22,10 +24,13 @@ export function NavigationSidebar({
   skillContext,
 }: NavigationSidebarProps) {
   const location = useLocation();
+  const { isAuthenticated } = useAuthStore();
   const isExplorerActive = location.pathname === '/';
   const isMySkillsActive = location.pathname === '/panel/skills';
   const isMyLikesActive = location.pathname === '/panel/likes';
+  const isPublishActive = location.pathname === '/publish';
   const hasSkillContext = skillContext !== undefined && skillContext !== null;
+  const shouldShowQuickPublish = isAuthenticated && !isPublishActive;
 
   return (
     <nav className="navigation-sidebar">
@@ -84,6 +89,13 @@ export function NavigationSidebar({
               </Button>
             </div>
           )}
+        </>
+      )}
+
+      {shouldShowQuickPublish && (
+        <>
+          <div className="navigation-sidebar-divider" />
+          <QuickPublishDropzone />
         </>
       )}
     </nav>

@@ -231,10 +231,11 @@ export function TagsAutocomplete({
   const VIEWPORT_BOTTOM_MARGIN_PX = 20;
 
   const calculateDropdownDirection = useCallback(() => {
-    const hasNoContainer = containerRef.current === null;
+    const containerElement = containerRef.current;
+    const hasNoContainer = containerElement === null;
     if (hasNoContainer) return;
 
-    const containerRect = containerRef.current.getBoundingClientRect();
+    const containerRect = containerElement.getBoundingClientRect();
     const spaceBelow =
       window.innerHeight - containerRect.bottom - VIEWPORT_BOTTOM_MARGIN_PX;
     const hasInsufficientSpaceBelow = spaceBelow < DROPDOWN_HEIGHT_PX;

@@ -1,0 +1,56 @@
+.quick-publish-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 16px 8px;
+  border: 1px dashed var(--border-main);
+  background: var(--bg-container);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.quick-publish-dropzone:hover {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+}
+
+.quick-publish-dropzone--drag-over {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+}
+
+.quick-publish-hidden-input {
+  display: none;
+}
+
+.quick-publish-icon {
+  color: var(--text-muted);
+  transition: color 0.15s;
+}
+
+.quick-publish-dropzone:hover .quick-publish-icon,
+.quick-publish-dropzone--drag-over .quick-publish-icon {
+  color: var(--accent);
+}
+
+.quick-publish-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.3px;
+}
+
+.quick-publish-hint {
+  font-size: 9px;
+  color: var(--text-muted);
+}
+
+.quick-publish-error {
+  font-size: 9px;
+  color: var(--danger);
+  font-weight: 500;
+  text-align: center;
+  margin-top: 2px;
+}

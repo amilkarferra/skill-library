@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import type { Category } from '../../shared/models/Category';
 import type { Tag } from '../../shared/models/Tag';
 import {
@@ -18,8 +18,14 @@ type PublishState = 'upload' | 'extracting' | 'form';
 
 const FADE_OUT_DELAY_MS = 400;
 
+interface QuickPublishLocationState {
+  readonly quickPublishFile?: File;
+}
+
 export function PublishSkillPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const hasProcessedQuickPublish = useRef(false);
 
   const [publishState, setPublishState] = useState<PublishState>('upload');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -59,6 +65,18 @@ export function PublishSkillPage() {
     }
     setPublishState('form');
   }, []);
+
+  useEffect(() => {
+    const locationState = location.state as QuickPublishLocationState | null;
+    const quickFile = locationState?.quickPublishFile;
+    const hasQuickPublishFile = quickFile !== undefined && !hasProcessedQuickPublish.current;
+    if (hasQuickPublishFile) {
+      hasProcessedQuickPublish.current = true;
+      setSelectedFile(quickFile);
+      setPublishState('extracting');
+      extractAndApplyFrontmatter(quickFile);
+    }
+  }, [location.state, extractAndApplyFrontmatter]);
 
   const handleFileAccepted = useCallback(
     async (file: File) => {

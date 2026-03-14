@@ -2,6 +2,8 @@ import { useCallback } from 'react';
 import type { Category } from '../../shared/models/Category';
 import type { Tag } from '../../shared/models/Tag';
 import type { SkillFilters } from '../../shared/models/SkillFilters';
+import { QuickPublishDropzone } from '../../shared/components/QuickPublishDropzone';
+import { useAuthStore } from '../../shared/stores/useAuthStore';
 import './FilterSidebar.css';
 
 interface FilterSidebarProps {
@@ -32,6 +34,8 @@ export function FilterSidebar({
   onTagToggle,
   onSortChange,
 }: FilterSidebarProps) {
+  const { isAuthenticated } = useAuthStore();
+
   const handleCategoryClick = useCallback(
     (slug: string) => {
       const isSameCategory = slug === selectedCategory;
@@ -113,6 +117,12 @@ export function FilterSidebar({
           })}
         </div>
       </div>
+
+      {isAuthenticated && (
+        <div className="filter-section">
+          <QuickPublishDropzone />
+        </div>
+      )}
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { Box, Users, Heart, Settings } from 'lucide-react';
 import { useAuthStore } from '../../shared/stores/useAuthStore';
 import { useNotificationsStore } from '../../shared/stores/useNotificationsStore';
 import { CountBadge } from '../../shared/components/CountBadge';
+import { QuickPublishDropzone } from '../../shared/components/QuickPublishDropzone';
 import './PanelSidebar.css';
 
 interface SidebarItem {
@@ -88,6 +89,9 @@ export function PanelSidebar({ activeSection }: PanelSidebarProps) {
           </span>
         </Link>
       </nav>
+      <div className="panel-sidebar-quick-publish">
+        <QuickPublishDropzone />
+      </div>
     </div>
   );
 }
