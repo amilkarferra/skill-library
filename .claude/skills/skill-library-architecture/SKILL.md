@@ -31,6 +31,7 @@ Al finalizar el trabajo del skill, cerrar con: `[/SLA]`
 - **Icons**: Lucide React 0.577.0
 - **Styling**: CSS custom properties (no Tailwind)
 - **Linting**: ESLint 9.39.1
+- **Testing**: Vitest 4.x, @testing-library/react, @testing-library/user-event, jsdom
 
 ## Project Structure
 
@@ -50,8 +51,8 @@ Read `references/project-structure.md` for the full directory tree of both backe
 ### Frontend
 - **Feature-First Organization**: Each feature in `src/features/` is self-contained
 - **Service Layer**: API calls separated from components (`*.service.ts`)
-- **State Management**: Zustand stores (`useAuthStore`, `useCatalogStore`, `useNotificationsStore`, `useLikeStore`)
-- **Shared UI Components** (AD-07): `Button`, `AlertMessage`, `FormField`, `FormLabel`, `TextInput`, `TextArea`
+- **State Management**: Zustand stores (`useAuthStore`, `useCatalogStore`, `useNotificationsStore`, `useLikeStore`, `useDownloadStore`)
+- **Shared UI Components** (AD-07): `Button`, `AlertMessage`, `FormField`, `FormLabel`, `TextInput`, `TextArea`, `TabBar`, `Pagination`, `ConfirmDialog`, `EmptyState`, `CountBadge`, `StatusBadge`, `VersionStatusBadge`, `CollabModeBadge`
 - **Custom Hooks**: `useApi`, `usePagination`, `useDebounce`, `useConfirmDialog`, `useSkillActions`
 - **Typed Models**: Each interface in its own file under `shared/models/`
 - **API Client**: Centralized HTTP client with auth token interceptor
@@ -76,7 +77,7 @@ Feature Pages (CatalogPage, PublishSkillPage, etc.)
       -> Auth Layer (MSAL token acquisition)
   -> Shared Hooks (useApi, usePagination)
   -> Shared Models (TypeScript interfaces)
-  -> Shared Components (Button, AlertMessage, FormField, TextInput, TextArea, Navbar, Pagination, EmptyState)
+  -> Shared Components (Button, AlertMessage, FormField, TextInput, TextArea, TabBar, Pagination, ConfirmDialog, EmptyState, CountBadge, Navbar)
 ```
 
 ### Cross-Module Dependencies
@@ -136,9 +137,11 @@ uvicorn main:app --reload
 
 ### Frontend
 ```bash
-npm run dev      # Dev server with HMR
-npm run build    # TypeScript + Vite production build
-npm run lint     # ESLint
+npm run dev        # Dev server with HMR
+npm run build      # TypeScript + Vite production build
+npm run lint       # ESLint
+npm run test       # Run all unit tests (Vitest)
+npm run test:watch # Run tests in watch mode
 ```
 
 ## Deployment

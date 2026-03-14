@@ -3,6 +3,7 @@ import { useCatalogStore } from '../useCatalogStore';
 const REACT_TAG = 'React';
 const ANGULAR_TAG = 'Angular';
 const TYPESCRIPT_TAG = 'TypeScript';
+const MOST_DOWNLOADS_SORT = 'most_downloads' as const;
 
 describe('useCatalogStore', () => {
   beforeEach(() => {
@@ -56,13 +57,13 @@ describe('useCatalogStore', () => {
   });
 
   describe('setSelectedSort', () => {
-    it('should update sort to downloads', () => {
-      useCatalogStore.getState().setSelectedSort('downloads');
-      expect(useCatalogStore.getState().selectedSort).toBe('downloads');
+    it('should update sort to most_downloads', () => {
+      useCatalogStore.getState().setSelectedSort(MOST_DOWNLOADS_SORT);
+      expect(useCatalogStore.getState().selectedSort).toBe(MOST_DOWNLOADS_SORT);
     });
 
     it('should update sort to newest', () => {
-      useCatalogStore.setState({ selectedSort: 'downloads' });
+      useCatalogStore.setState({ selectedSort: MOST_DOWNLOADS_SORT });
       useCatalogStore.getState().setSelectedSort('newest');
       expect(useCatalogStore.getState().selectedSort).toBe('newest');
     });
@@ -71,8 +72,8 @@ describe('useCatalogStore', () => {
   describe('setCategories', () => {
     it('should update categories list', () => {
       const categories = [
-        { id: 1, name: 'Development' },
-        { id: 2, name: 'DevOps' },
+        { id: 1, name: 'Development', slug: 'development', skillCount: 5 },
+        { id: 2, name: 'DevOps', slug: 'devops', skillCount: 3 },
       ];
       useCatalogStore.getState().setCategories(categories);
       expect(useCatalogStore.getState().categories).toEqual(categories);
