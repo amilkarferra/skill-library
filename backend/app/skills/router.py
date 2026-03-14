@@ -26,6 +26,8 @@ from app.skills.schemas.frontmatter_response import FrontmatterResponse
 from app.skills.schemas.tag_response import TagResponse
 from app.skills import search_service
 from app.skills import service
+from app.skills.schemas.slug_preview_response import SlugPreviewResponse
+from app.skills.slug import generate_slug as generate_slug_from_name
 from app.versions import blob_service
 from app.skills.schemas.skill_content_response import SkillContentResponse
 from app.downloads import service as download_service
@@ -59,6 +61,16 @@ def list_skills(
         page_size=page_size,
     )
     return search_service.search_skills(database_session, params, current_user)
+
+
+@router.get("/skills/slug-preview", response_model=SlugPreviewResponse)
+def preview_slug(
+    display_name: str = Query(..., alias="displayName"),
+    database_session: Session = Depends(provide_database_session),
+) -> SlugPreviewResponse:
+    slug = generate_slug_from_name(display_name)
+    is_taken = service.is_slug_taken_by_active_skill(database_session, slug)
+    return SlugPreviewResponse(slug=slug, is_available=not is_taken)
 
 
 @router.get("/skills/{slug}", response_model=SkillDetailResponse)

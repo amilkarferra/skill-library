@@ -176,7 +176,7 @@ def _find_or_create_tag(database_session: Session, name: str) -> Tag:
     return tag
 
 
-def _is_slug_taken_by_active_skill(database_session: Session, slug: str) -> bool:
+def is_slug_taken_by_active_skill(database_session: Session, slug: str) -> bool:
     existing = database_session.query(Skill).filter(
         Skill.name == slug,
         Skill.is_active == True,
@@ -185,7 +185,7 @@ def _is_slug_taken_by_active_skill(database_session: Session, slug: str) -> bool
 
 
 def _raise_if_slug_taken(database_session: Session, slug: str) -> None:
-    is_slug_taken = _is_slug_taken_by_active_skill(database_session, slug)
+    is_slug_taken = is_slug_taken_by_active_skill(database_session, slug)
     if is_slug_taken:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
@@ -198,7 +198,7 @@ def _commit_or_raise_on_slug_collision(database_session: Session, slug: str) -> 
         database_session.commit()
     except IntegrityError:
         database_session.rollback()
-        is_slug_collision = _is_slug_taken_by_active_skill(database_session, slug)
+        is_slug_collision = is_slug_taken_by_active_skill(database_session, slug)
         if is_slug_collision:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
