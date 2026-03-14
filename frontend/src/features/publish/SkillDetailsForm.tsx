@@ -221,9 +221,8 @@ export function SkillDetailsForm({
             <span> or change the display name.</span>
           </div>
         )}
+        <SimilarSkillsWarning skills={similarSkills} />
       </div>
-
-      <SimilarSkillsWarning skills={similarSkills} />
 
       <div className={shortDescriptionFieldClass}>
         <div className="skill-details-field-wrapper">
