@@ -27,7 +27,7 @@ Full-stack app with a Python FastAPI backend and React 19 + TypeScript frontend 
 Modular by domain. Each module has `models.py` (SQLAlchemy), `schemas.py` (Pydantic), `service.py`, and `router.py`.
 
 - **`auth/`** — Azure AD OAuth + JWT. Token validation, user auto-creation. `POST /auth/callback`
-- **`skills/`** — Core skill CRUD and search. Soft delete. `/skills`, `/categories`, `/tags/popular`
+- **`skills/`** — Core skill CRUD and search. Soft delete. `/skills`, `/categories`, `/tags/popular`, `/skills/slug-preview`, `/skills/similar`
 - **`versions/`** — Semver versioning with review workflow. `/skills/{slug}/versions`
 - **`downloads/`** — Azure Blob Storage SAS URL generation for `.zip` and `.md` files
 - **`social/`** — Likes and comments with soft delete. Separate routers for each
@@ -46,7 +46,7 @@ Feature-based organization. Each feature has its own `*.service.ts` for API call
 - **`features/auth/`** — MSAL login, 30-min JWT with MSAL token refresh, `useAuth` hook
 - **`features/catalog/`** — Skill search/filter with sidebar (categories, tags, sort), paginated list
 - **`features/skill-detail/`** — Tabs: Overview (markdown), Versions, Comments. Sidebar: download, like, collaboration
-- **`features/publish/`** — Create skills and propose versions. Multipart/form-data file upload
+- **`features/publish/`** — Create skills and propose versions. Multipart/form-data file upload. Duplicate detection with similar skills warning and slug preview
 - **`features/panel/`** — User dashboard: owned skills, collaborations, likes, requests, proposed versions
 - **`features/settings/`** — Profile editing, account deactivation
 - **`shared/`** — API client with token interceptor, reusable components, hooks, formatters, TypeScript models
@@ -83,6 +83,19 @@ Before writing, reviewing, refactoring, planning, or modifying ANY code, you MUS
 - If multiple languages are involved, invoke ALL corresponding skills
 - Planning and reviewing code also requires skill invocation
 - NO EXCEPTIONS. Skipping a mandatory skill is a blocking error
+
+## Commit and Merge (OBLIGATORIO)
+
+Before ANY `git commit` or `git merge`, you MUST invoke `/commit-conversation`. This skill handles:
+- Identifying which files belong to the current conversation (even after context compaction)
+- Code review (basic safety + expert skill review) of all changes before committing/merging
+- Documentation consistency checks
+- Selective staging (never `git add .`)
+
+**Rules:**
+- NO direct `git commit` or `git merge` without invoking the skill first
+- This applies to ALL agents: main agent, subagents, parallel agents
+- NO EXCEPTIONS
 
 ## Conventions
 

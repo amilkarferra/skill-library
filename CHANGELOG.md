@@ -9,6 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Duplicate skill detection** — publish form detects when a skill with the same or similar name already exists; shows warning with links to similar skills and contextual actions (Propose version for Open mode, Request collaboration for Closed mode)
+- **Slug preview endpoint** — `GET /skills/slug-preview?displayName=X` returns generated slug and availability check
+- **Similar skills endpoint** — `GET /skills/similar?displayName=X` finds active skills with matching slug words, scored by multi-word matching
+- **`SimilarSkillsWarning` component** — displays similar skills with navigation links and collaboration mode-aware action buttons
+- **`useSlugPreview` hook** — debounced slug preview and similar skills fetching with Levenshtein-based relevance sorting
+- **`string-similarity.ts` shared logic** — extracted `normalizeForComparison` and `computeLevenshteinDistance` from TagsAutocomplete for cross-feature reuse
+- **Restore slug validation** — restoring a soft-deleted skill now validates the slug is not taken by another active skill (409 with clear message)
+
+### Changed
+
+- **Partial unique index on `skills.name`** — replaced absolute unique constraint with filtered index (`WHERE is_active = 1`) so soft-deleted skills free their slug for reuse (Alembic migration)
+- **`_raise_if_slug_taken` checks only active skills** — slug uniqueness validation now excludes soft-deleted skills
+- **Race condition handling** — `create_skill` and `update_skill_metadata` catch `IntegrityError` on commit, verify if it's a slug collision, and return 409 or re-raise
+- **`TagsAutocomplete.logic.ts`** — Levenshtein and normalization functions extracted to `shared/logic/string-similarity.ts`
+- **Rich 409 error in publish form** — slug conflict now shows link to existing skill instead of generic message
+
 - **Collaborators tab on skill detail page** — new `CollaboratorsTab` component with full collaborator management: list collaborators with join dates, owner-only remove with confirmation dialog, and owner-only invite via user search
 - **Collaborators count in skill API responses** — `collaboratorsCount` field added to both `SkillResponse` (search/list) and `SkillDetailResponse` (single skill) via SQL COUNT on `skill_collaborators` table
 - **Collaborators count in SkillRowExpanded metadata** — shows "N collaborators" with Users icon when count > 0

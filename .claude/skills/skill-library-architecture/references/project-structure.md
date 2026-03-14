@@ -27,8 +27,9 @@ backend/
 │   │
 │   ├── skills/
 │   │   ├── router.py                    # CRUD /skills, /categories, /tags/popular
-│   │   ├── service.py                   # Skill CRUD logic
+│   │   ├── service.py                   # Skill CRUD logic, slug uniqueness
 │   │   ├── search_service.py            # Search, filter, sort, pagination
+│   │   ├── similarity_service.py        # Similar skills detection (multi-word scoring)
 │   │   ├── slug.py                      # URL slug generation
 │   │   ├── models/
 │   │   │   ├── skill.py                 # Skill ORM
@@ -151,6 +152,9 @@ frontend/
 │   │   │   ├── FileBar.tsx
 │   │   │   ├── ExtractingState.tsx
 │   │   │   ├── CatalogPreviewCard.tsx
+│   │   │   ├── SimilarSkillsWarning.tsx   # Warning with contextual actions
+│   │   │   ├── useSlugPreview.ts          # Debounced slug + similar skills hook
+│   │   │   ├── similar-skills.logic.ts    # Levenshtein ranking for similar skills
 │   │   │   └── publish.service.ts
 │   │   │
 │   │   ├── panel/
@@ -235,7 +239,12 @@ frontend/
 │       │   ├── AuthState.ts
 │       │   ├── AuthCallbackResponse.ts
 │       │   ├── PaginationState.ts
+│       │   ├── SlugPreview.ts
+│       │   ├── SimilarSkill.ts
 │       │   └── NotificationCount.ts
+│       │
+│       ├── logic/
+│       │   └── string-similarity.ts       # Levenshtein distance, normalization (shared)
 │       │
 │       ├── services/
 │       │   ├── api.client.ts            # HTTP client with token interceptor
