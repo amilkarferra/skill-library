@@ -6,10 +6,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Frontend (`/frontend`)
 ```bash
-npm run dev       # Start Vite dev server
-npm run build     # TypeScript + Vite production build
-npm run lint      # ESLint on .ts/.tsx files
-npm run preview   # Preview production build
+npm run dev        # Start Vite dev server
+npm run build      # TypeScript + Vite production build
+npm run lint       # ESLint on .ts/.tsx files
+npm run preview    # Preview production build
+npm run test       # Run all unit tests (Vitest)
+npm run test:watch # Run tests in watch mode
 ```
 
 ### Backend (`/backend`)
@@ -52,6 +54,8 @@ Feature-based organization. Each feature has its own `*.service.ts` for API call
 - **`shared/`** — API client with token interceptor, reusable components, hooks, formatters, TypeScript models
 
 **Stack**: React 19, React Router v7, @azure/msal-react, Zustand, lucide-react, Vite 7, TypeScript 5.9 (strict)
+
+**Testing**: Vitest 4.x, @testing-library/react, jsdom. Tests co-located in `__tests__/` folders. Coverage: formatters, validators, logic, stores, hooks, shared components.
 
 **State management**: Zustand stores — `useAuthStore`, `useCatalogStore`, `useNotificationsStore`, `useLikeStore`
 

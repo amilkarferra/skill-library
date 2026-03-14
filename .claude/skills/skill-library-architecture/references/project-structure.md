@@ -100,7 +100,7 @@ backend/
 frontend/
 ├── package.json
 ├── tsconfig.app.json
-├── vite.config.ts
+├── vite.config.ts                       # Includes Vitest test config
 ├── eslint.config.js
 ├── .env.production                      # Production env vars (Azure API URL, redirect URI)
 ├── public/
@@ -113,6 +113,7 @@ frontend/
 │   ├── main.tsx                         # React root
 │   ├── App.tsx                          # MsalProvider + RouterProvider
 │   ├── router.tsx                       # Route definitions
+│   ├── test-setup.ts                    # Vitest setup (jest-dom matchers)
 │   │
 │   ├── features/
 │   │   ├── auth/
@@ -155,7 +156,8 @@ frontend/
 │   │   │   ├── SimilarSkillsWarning.tsx   # Warning with contextual actions
 │   │   │   ├── useSlugPreview.ts          # Debounced slug + similar skills hook
 │   │   │   ├── similar-skills.logic.ts    # Levenshtein ranking for similar skills
-│   │   │   └── publish.service.ts
+│   │   │   ├── publish.service.ts
+│   │   │   └── __tests__/               # publish-validation, similar-skills.logic
 │   │   │
 │   │   ├── panel/
 │   │   │   ├── MyPanelPage.tsx          # Dashboard
@@ -214,7 +216,8 @@ frontend/
 │       │   ├── Skeleton.tsx
 │       │   ├── RoleBadge.tsx
 │       │   ├── SessionExpiredBanner.tsx
-│       │   └── QuickPublishDropzone.tsx
+│       │   ├── QuickPublishDropzone.tsx
+│       │   └── __tests__/               # 12 component tests + TagsAutocomplete.logic
 │       │
 │       ├── models/                      # 1 interface per file
 │       │   ├── User.ts
@@ -244,7 +247,8 @@ frontend/
 │       │   └── NotificationCount.ts
 │       │
 │       ├── logic/
-│       │   └── string-similarity.ts       # Levenshtein distance, normalization (shared)
+│       │   ├── string-similarity.ts       # Levenshtein distance, normalization (shared)
+│       │   └── __tests__/               # string-similarity tests
 │       │
 │       ├── services/
 │       │   ├── api.client.ts            # HTTP client with token interceptor
@@ -252,18 +256,28 @@ frontend/
 │       │   ├── token.refresh.ts         # Token refresh coordinator with mutex
 │       │   └── token.storage.ts
 │       │
+│       ├── stores/
+│       │   ├── useAuthStore.ts            # User, isAuthenticated, session state
+│       │   ├── useCatalogStore.ts         # Search, filters, tags, sort, categories
+│       │   ├── useNotificationsStore.ts   # Pending counts for panel sidebar
+│       │   ├── useLikeStore.ts            # Cross-component like sync
+│       │   ├── useDownloadStore.ts        # Cross-component download sync
+│       │   └── __tests__/               # useAuthStore, useCatalogStore
+│       │
 │       ├── hooks/
 │       │   ├── useApi.ts
 │       │   ├── useDebounce.ts
 │       │   ├── usePagination.ts
 │       │   ├── useConfirmDialog.ts
-│       │   └── useSkillActions.ts
+│       │   ├── useSkillActions.ts
+│       │   └── __tests__/               # useApi, useDebounce, usePagination, useConfirmDialog
 │       │
 │       ├── formatters/
 │       │   ├── format-file-size.ts
 │       │   ├── format-date.ts
 │       │   ├── format-relative-date.ts
-│       │   └── format-collaborators-label.ts
+│       │   ├── format-collaborators-label.ts
+│       │   └── __tests__/               # All formatter tests
 │       │
 │       └── styles/
 │           ├── variables.css            # Design tokens
