@@ -45,3 +45,16 @@
   display: flex;
   align-items: center;
 }
+
+.skill-quick-action-spinner {
+  width: 11px;
+  height: 11px;
+  border: 1.5px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: quickActionSpin 0.8s linear infinite;
+}
+
+@keyframes quickActionSpin {
+  to { transform: rotate(360deg); }
+}

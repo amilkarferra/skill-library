@@ -1,14 +1,24 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../features/auth/useAuth';
 import { useAuthStore } from '../stores/useAuthStore';
 import { useLikeStore } from '../stores/useLikeStore';
 import { useDownloadStore } from '../stores/useDownloadStore';
+import { useConfirmDialog } from './useConfirmDialog';
 import {
   toggleSkillLike,
   fetchSkillVersionDownloadUrl,
 } from '../services/skill-actions.service';
 import type { SkillActionTarget } from '../models/SkillActionTarget';
+
+interface LoginDialogState {
+  readonly isOpen: boolean;
+  readonly title: string;
+  readonly message: string;
+  readonly confirmLabel: string;
+  readonly isDangerous: boolean;
+  readonly onConfirm: () => void;
+}
 
 interface SkillActionsResult {
   readonly handleToggleLike: () => void;
@@ -17,26 +27,29 @@ interface SkillActionsResult {
   readonly isLikeInProgress: boolean;
   readonly isDownloadInProgress: boolean;
   readonly downloadError: string | null;
+  readonly loginDialogState: LoginDialogState;
+  readonly closeLoginDialog: () => void;
 }
 
 export function useSkillActions(skill: SkillActionTarget): SkillActionsResult {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
   const { signIn } = useAuth();
-  const { publishLikeUpdate } = useLikeStore();
-  const { publishDownloadUpdate } = useDownloadStore();
+  const publishLikeUpdate = useLikeStore((s) => s.publishLikeUpdate);
+  const publishDownloadUpdate = useDownloadStore((s) => s.publishDownloadUpdate);
+  const {
+    dialogState: loginDialogState,
+    openDialog: openLoginDialog,
+    closeDialog: closeLoginDialog,
+  } = useConfirmDialog();
   const [isLikeInProgress, setIsLikeInProgress] = useState(false);
   const [isDownloadInProgress, setIsDownloadInProgress] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
+  const [shouldLikeAfterLogin, setShouldLikeAfterLogin] = useState(false);
 
   const hasCurrentVersion = skill.currentVersion !== null;
 
-  const handleToggleLike = useCallback(async () => {
-    if (!isAuthenticated) {
-      await signIn();
-      return;
-    }
-
+  const executeLikeToggle = useCallback(async () => {
     const isCurrentlyLiked = skill.isLikedByMe === true;
     setIsLikeInProgress(true);
 
@@ -54,15 +67,35 @@ export function useSkillActions(skill: SkillActionTarget): SkillActionsResult {
     } finally {
       setIsLikeInProgress(false);
     }
-  }, [
-    skill.id,
-    skill.name,
-    skill.isLikedByMe,
-    skill.totalLikes,
-    isAuthenticated,
-    signIn,
-    publishLikeUpdate,
-  ]);
+  }, [skill.id, skill.name, skill.isLikedByMe, skill.totalLikes, publishLikeUpdate]);
+
+  useEffect(() => {
+    if (!shouldLikeAfterLogin || !isAuthenticated) return;
+    setShouldLikeAfterLogin(false);
+    void executeLikeToggle();
+  }, [shouldLikeAfterLogin, isAuthenticated, executeLikeToggle]);
+
+  const promptLoginForLike = useCallback(() => {
+    openLoginDialog({
+      title: 'Sign in required',
+      message: 'You need to sign in to like skills. Would you like to sign in now?',
+      confirmLabel: 'Sign in',
+      isDangerous: false,
+      onConfirm: () => {
+        closeLoginDialog();
+        setShouldLikeAfterLogin(true);
+        void signIn();
+      },
+    });
+  }, [openLoginDialog, closeLoginDialog, signIn]);
+
+  const handleToggleLike = useCallback(async () => {
+    if (!isAuthenticated) {
+      promptLoginForLike();
+      return;
+    }
+    await executeLikeToggle();
+  }, [isAuthenticated, promptLoginForLike, executeLikeToggle]);
 
   const handleDownload = useCallback(async () => {
     const currentVersion = skill.currentVersion;
@@ -77,7 +110,7 @@ export function useSkillActions(skill: SkillActionTarget): SkillActionsResult {
         skill.name,
         currentVersion
       );
-      window.open(downloadInfo.downloadUrl, '_blank');
+      triggerBrowserDownload(downloadInfo.downloadUrl);
 
       const updatedTotalDownloads = skill.totalDownloads + 1;
       publishDownloadUpdate({
@@ -106,5 +139,16 @@ export function useSkillActions(skill: SkillActionTarget): SkillActionsResult {
     isLikeInProgress,
     isDownloadInProgress,
     downloadError,
+    loginDialogState,
+    closeLoginDialog,
   };
+}
+
+function triggerBrowserDownload(url: string): void {
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = '';
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
 }

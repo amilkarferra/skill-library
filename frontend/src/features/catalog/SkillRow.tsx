@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { ChevronRight, ChevronDown, User, Box } from 'lucide-react';
 import type { Skill } from '../../shared/models/Skill';
+import { ConfirmDialog } from '../../shared/components/ConfirmDialog';
 import { SkillInitialTile } from '../../shared/components/SkillInitialTile';
 import { SkillQuickActions } from '../../shared/components/SkillQuickActions';
 import { RoleBadge } from '../../shared/components/RoleBadge';
@@ -24,6 +25,9 @@ export function SkillRow({
     handleToggleLike,
     handleDownload,
     handleNavigateToComments,
+    isDownloadInProgress,
+    loginDialogState,
+    closeLoginDialog,
   } = useSkillActions(skill);
 
   const handleRowClick = useCallback(() => {
@@ -71,6 +75,7 @@ export function SkillRow({
         totalDownloads={skill.totalDownloads}
         totalComments={skill.totalComments}
         isLiked={skill.isLikedByMe}
+        isDownloadLoading={isDownloadInProgress}
         onLikeToggle={handleToggleLike}
         onDownload={handleDownload}
         onCommentNavigate={handleNavigateToComments}
@@ -78,6 +83,17 @@ export function SkillRow({
       <div className="skill-row-chevron">
         {isExpanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
       </div>
+
+      {loginDialogState.isOpen && (
+        <ConfirmDialog
+          title={loginDialogState.title}
+          message={loginDialogState.message}
+          confirmLabel={loginDialogState.confirmLabel}
+          isDangerous={loginDialogState.isDangerous}
+          onConfirm={loginDialogState.onConfirm}
+          onCancel={closeLoginDialog}
+        />
+      )}
     </div>
   );
 }

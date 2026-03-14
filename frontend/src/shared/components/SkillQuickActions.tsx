@@ -11,6 +11,7 @@ interface SkillQuickActionsProps {
   readonly totalComments?: number;
   readonly isLiked?: boolean;
   readonly onLikeToggle?: (() => void) | null;
+  readonly isDownloadLoading?: boolean;
   readonly onDownload?: (() => void) | null;
   readonly onCommentNavigate?: (() => void) | null;
   readonly size?: ActionSize;
@@ -26,6 +27,7 @@ export function SkillQuickActions({
   totalDownloads,
   totalComments,
   isLiked,
+  isDownloadLoading = false,
   onLikeToggle,
   onDownload,
   onCommentNavigate,
@@ -87,14 +89,19 @@ export function SkillQuickActions({
     </span>
   );
 
+  const downloadIcon = isDownloadLoading
+    ? <span className="skill-quick-action-spinner" />
+    : <Download size={iconSize} />;
+
   const downloadElement = isDownloadInteractive ? (
     <button
       className={downloadClassName}
       onClick={handleDownloadClick}
+      disabled={isDownloadLoading}
       type="button"
     >
       <span className="skill-quick-action-icon">
-        <Download size={iconSize} />
+        {downloadIcon}
       </span>
       {totalDownloads}
     </button>
