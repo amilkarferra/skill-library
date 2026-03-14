@@ -1,14 +1,14 @@
-.requests-section {
+.section {
   background: var(--bg-container);
 }
 
-.requests-loading {
+.loading {
   padding: 32px 20px;
   font-size: 13px;
   color: var(--text-muted);
 }
 
-.requests-error {
+.error {
   padding: 16px 20px;
   font-size: 13px;
   color: var(--danger);
@@ -16,11 +16,11 @@
   border-bottom: 1px solid var(--danger-border);
 }
 
-.requests-group {
+.group {
   padding: 0;
 }
 
-.requests-group-label {
+.groupLabel {
   display: block;
   padding: 10px 20px;
   font-size: 10px;

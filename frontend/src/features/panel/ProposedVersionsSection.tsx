@@ -9,7 +9,7 @@ import {
 } from './panel.service';
 import { useNotificationsStore } from '../../shared/stores/useNotificationsStore';
 import type { VersionWithSlug } from '../../shared/models/VersionWithSlug';
-import './ProposedVersionsSection.css';
+import styles from './ProposedVersionsSection.module.css';
 
 export function ProposedVersionsSection() {
   const { setNotificationCounts } = useNotificationsStore();
@@ -60,10 +60,10 @@ export function ProposedVersionsSection() {
   const isDataReady = !isLoading && !hasLoadError;
 
   return (
-    <div className="proposed-versions-section">
+    <div className={styles.section}>
       {isLoading && <PanelListSkeleton rowCount={2} />}
       {hasLoadError && (
-        <p className="proposed-versions-error">{loadError}</p>
+        <p className={styles.error}>{loadError}</p>
       )}
       {isDataReady && !hasVersions && (
         <EmptyState
@@ -72,7 +72,7 @@ export function ProposedVersionsSection() {
         />
       )}
       {isDataReady && hasVersions && (
-        <div className="proposed-versions-list">
+        <div className={styles.list}>
           {versions.map((version) => (
             <ProposedVersionRow
               key={version.id}

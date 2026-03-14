@@ -1,4 +1,4 @@
-.notification-banner {
+.banner {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -12,7 +12,7 @@
   z-index: 99;
 }
 
-.notification-banner-left {
+.left {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -20,7 +20,7 @@
   color: var(--text-secondary);
 }
 
-.notification-banner-dot {
+.dot {
   width: 8px;
   height: 8px;
   background: var(--alert-dot);
@@ -28,22 +28,22 @@
   border-radius: 50%;
 }
 
-.notification-banner-count {
+.count {
   font-weight: 700;
   color: var(--text-primary);
 }
 
-.notification-banner-text {
+.text {
   font-size: 12px;
   color: var(--text-secondary);
 }
 
-.notification-banner-right {
+.right {
   display: flex;
   align-items: center;
 }
 
-.notification-banner-link {
+.link {
   font-size: 11px;
   font-weight: 600;
   color: var(--accent);
@@ -53,11 +53,11 @@
   text-decoration: none;
 }
 
-.notification-banner-link:hover {
+.link:hover {
   color: var(--accent-hover);
 }
 
-.notification-banner-dismiss {
+.dismiss {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -69,6 +69,6 @@
   margin-left: 12px;
 }
 
-.notification-banner-dismiss:hover {
+.dismiss:hover {
   color: var(--text-primary);
 }

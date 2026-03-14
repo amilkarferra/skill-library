@@ -1,4 +1,4 @@
-.my-skill-row {
+.row {
   display: flex;
   align-items: center;
   padding: 10px 16px;
@@ -7,22 +7,22 @@
   transition: background 0.12s;
 }
 
-.my-skill-row:hover {
+.row:hover {
   background: var(--bg-row-hover);
 }
 
-.my-skill-row--inactive {
+.rowInactive {
   opacity: 0.6;
 }
 
-.my-skill-row-name-block {
+.nameBlock {
   display: flex;
   flex-direction: column;
   gap: 3px;
   overflow: hidden;
 }
 
-.my-skill-row-name {
+.name {
   font-weight: 600;
   color: var(--text-primary);
   white-space: nowrap;
@@ -30,7 +30,7 @@
   text-overflow: ellipsis;
 }
 
-.my-skill-row-description {
+.description {
   font-size: 11px;
   color: var(--text-muted);
   white-space: nowrap;
@@ -38,19 +38,19 @@
   text-overflow: ellipsis;
 }
 
-.my-skill-row-version {
+.version {
   font-size: 11px;
   color: var(--text-muted);
 }
 
-.my-skill-row-actions {
+.actions {
   display: flex;
   align-items: center;
   gap: 4px;
   justify-content: flex-end;
 }
 
-.my-skill-row-action {
+.action {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -64,18 +64,18 @@
   transition: color 0.12s, border-color 0.12s, background 0.12s;
 }
 
-.my-skill-row-action:hover {
+.action:hover {
   color: var(--text-primary);
   border-color: var(--border-main);
 }
 
-.my-skill-row-action--danger:hover {
+.actionDanger:hover {
   color: var(--danger);
   border-color: var(--danger-border);
   background: var(--danger-hover-bg);
 }
 
-.my-skill-row-action--restore {
+.actionRestore {
   width: auto;
   padding: 4px 8px;
   gap: 4px;
@@ -84,6 +84,6 @@
   border-color: var(--restore-border);
 }
 
-.my-skill-row-action--restore:hover {
+.actionRestore:hover {
   background: var(--restore-hover-bg);
 }

@@ -1,19 +1,19 @@
-.filter-sidebar {
+.sidebar {
   overflow-y: auto;
 }
 
-.filter-section-header {
+.sectionHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 8px;
 }
 
-.filter-section-header .filter-section-label {
+.sectionHeader .sectionLabel {
   margin-bottom: 0;
 }
 
-.filter-clear-button {
+.clearButton {
   border: 1px solid var(--border-accent);
   background: var(--accent-bg);
   color: var(--accent);
@@ -25,7 +25,7 @@
   transition: background 0.12s, color 0.12s;
 }
 
-.filter-clear-button:disabled {
+.clearButton:disabled {
   border-color: var(--border-main);
   background: none;
   color: var(--text-muted);
@@ -33,16 +33,16 @@
   opacity: 0.5;
 }
 
-.filter-clear-button:not(:disabled):hover {
+.clearButton:not(:disabled):hover {
   background: var(--accent);
   color: #fff;
 }
 
-.filter-section {
+.section {
   margin-bottom: 22px;
 }
 
-.filter-section-label {
+.sectionLabel {
   display: block;
   padding: 0;
   margin-bottom: 8px;
@@ -54,7 +54,7 @@
   font-family: 'Segoe UI', sans-serif;
 }
 
-.filter-item {
+.item {
   display: flex;
   align-items: center;
   width: 100%;
@@ -71,34 +71,34 @@
   transition: background 0.12s, color 0.12s, border-color 0.12s;
 }
 
-.filter-item:hover {
+.item:hover {
   background: var(--bg-row-hover);
 }
 
-.filter-item--active {
+.itemActive {
   color: var(--accent);
   font-weight: 600;
   background: var(--bg-container);
   border-left-color: var(--accent);
 }
 
-.filter-item-count {
+.itemCount {
   margin-left: auto;
   font-size: 10px;
   color: var(--text-muted);
 }
 
-.filter-item--active .filter-item-count {
+.itemActive .itemCount {
   color: var(--accent);
 }
 
-.filter-tags {
+.tags {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
 }
 
-.filter-tag {
+.tag {
   display: inline-block;
   padding: 3px 9px;
   border: 1px solid var(--border-main);
@@ -111,12 +111,12 @@
   transition: all 0.12s;
 }
 
-.filter-tag:hover {
+.tag:hover {
   border-color: var(--accent);
   color: var(--accent);
 }
 
-.filter-tag--selected {
+.tagSelected {
   background: var(--accent-bg);
   border-color: var(--border-accent);
   color: var(--accent);

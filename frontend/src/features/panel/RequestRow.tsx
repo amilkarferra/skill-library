@@ -4,7 +4,7 @@ import { Check, X, Clock, Users, GitPullRequest } from 'lucide-react';
 import { Button } from '../../shared/components/Button';
 import { formatRelativeDate } from '../../shared/formatters/format-relative-date';
 import type { CollaborationRequest } from '../../shared/models/CollaborationRequest';
-import './RequestRow.css';
+import styles from './RequestRow.module.css';
 
 type RequestAction = 'accept' | 'reject' | 'cancel';
 
@@ -20,9 +20,9 @@ export function RequestRow({
   onAction,
 }: RequestRowProps) {
   const isPending = request.status === 'pending';
-  const rowClass = isIncoming
-    ? 'request-row request-row--incoming'
-    : 'request-row request-row--sent';
+  const rowClassName = isIncoming
+    ? `${styles.row} ${styles.rowIncoming}`
+    : `${styles.row} ${styles.rowSent}`;
   const requestLabel = buildRequestLabel(request.direction, isIncoming);
   const requestText = buildRequestText(request, isIncoming);
   const isInvitation = request.direction === 'invitation';
@@ -42,18 +42,18 @@ export function RequestRow({
   }, [onAction, request.id]);
 
   return (
-    <div className={rowClass}>
+    <div className={rowClassName}>
       <div className={iconClassName}>
         {isInvitation ? <Users size={14} /> : <GitPullRequest size={14} />}
       </div>
-      <div className="request-row-info">
+      <div className={styles.info}>
         <span className={labelClassName}>{requestLabel}</span>
-        <span className="request-row-text">{requestText}</span>
-        <div className="request-row-meta">
-          <span className="request-row-date">{formatRelativeDate(request.createdAt)}</span>
+        <span className={styles.text}>{requestText}</span>
+        <div className={styles.meta}>
+          <span className={styles.date}>{formatRelativeDate(request.createdAt)}</span>
         </div>
       </div>
-      <div className="request-row-actions">
+      <div className={styles.actions}>
         {isPending && isIncoming && (
           <>
             <Button variant="success" size="small" onClick={handleAccept}>
@@ -68,7 +68,7 @@ export function RequestRow({
         )}
         {isPending && !isIncoming && (
           <>
-            <span className="request-row-pending-label">
+            <span className={styles.pendingLabel}>
               <Clock size={12} />
               Pending
             </span>
@@ -79,7 +79,7 @@ export function RequestRow({
           </>
         )}
         {!isPending && (
-          <span className="request-row-status label-uppercase">{request.status}</span>
+          <span className={styles.status}>{request.status}</span>
         )}
       </div>
     </div>
@@ -118,12 +118,13 @@ function buildRequestText(
 }
 
 function buildRequestIconClassName(isIncoming: boolean): string {
-  const baseClassName = 'request-row-icon';
-  const modifier = isIncoming ? 'incoming' : 'sent';
-  return `${baseClassName} ${baseClassName}--${modifier}`;
+  return isIncoming
+    ? `${styles.icon} ${styles.iconIncoming}`
+    : `${styles.icon} ${styles.iconSent}`;
 }
 
 function buildLabelClassName(isIncoming: boolean): string {
-  const baseClassName = 'request-row-type';
-  return isIncoming ? baseClassName : `${baseClassName} request-row-type--sent`;
+  return isIncoming
+    ? styles.type
+    : `${styles.type} ${styles.typeSent}`;
 }

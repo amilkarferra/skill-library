@@ -13,7 +13,7 @@ import { formatCollaboratorsLabel } from '../../shared/formatters/format-collabo
 import { del, post } from '../../shared/services/api.client';
 import { RoleBadge } from '../../shared/components/RoleBadge';
 import type { Skill } from '../../shared/models/Skill';
-import './SkillRowExpanded.css';
+import styles from './SkillRowExpanded.module.css';
 
 interface SkillRowExpandedProps {
   readonly skill: Skill;
@@ -120,62 +120,62 @@ export function SkillRowExpanded({
   const hasActionError = actionError !== null;
 
   return (
-    <div className="skill-row-expanded">
-      <div className="skill-row-expanded-header">
-        <div className="skill-row-expanded-heading">
-          <span className="skill-row-expanded-name">
+    <div className={styles.expanded}>
+      <div className={styles.header}>
+        <div className={styles.heading}>
+          <span className={styles.name}>
             {skill.displayName}
           </span>
           <RoleBadge role={skill.myRole} />
         </div>
       </div>
-      <div className="skill-row-expanded-description-panel">
-        <p className="skill-row-expanded-description">
+      <div className={styles.descriptionPanel}>
+        <p className={styles.description}>
           {truncatedDescription}
         </p>
       </div>
       <TagList tags={skill.tags} />
-      <div className="skill-row-expanded-meta">
-        <span className="skill-row-expanded-meta-item">
+      <div className={styles.meta}>
+        <span className={styles.metaItem}>
           <User size={12} />
-          <strong className="skill-row-expanded-meta-value">
+          <strong className={styles.metaValue}>
             @{skill.ownerUsername}
           </strong>
         </span>
-        <span className="skill-row-expanded-meta-item">
+        <span className={styles.metaItem}>
           <Box size={12} />
-          <strong className="skill-row-expanded-meta-value">
+          <strong className={styles.metaValue}>
             {skill.categoryName}
           </strong>
         </span>
-        <span className="skill-row-expanded-meta-item">
+        <span className={styles.metaItem}>
           <Calendar size={12} />
-          <strong className="skill-row-expanded-meta-value">
+          <strong className={styles.metaValue}>
             {formatDate(skill.createdAt)}
           </strong>
         </span>
-        <span className="skill-row-expanded-meta-item">
+        <span className={styles.metaItem}>
           <UserPlus size={12} />
-          <strong className="skill-row-expanded-meta-value">
+          <strong className={styles.metaValue}>
             {buildCollaborationModeLabel(skill.collaborationMode)}
           </strong>
         </span>
         {hasCollaborators && (
-          <span className="skill-row-expanded-meta-item">
+          <span className={styles.metaItem}>
             <Users size={12} />
-            <strong className="skill-row-expanded-meta-value">
+            <strong className={styles.metaValue}>
               {collaboratorsLabel}
             </strong>
           </span>
         )}
       </div>
       {hasDownloadError && (
-        <p className="skill-row-expanded-error">{downloadError}</p>
+        <p className={styles.error}>{downloadError}</p>
       )}
       {hasActionError && (
-        <p className="skill-row-expanded-error">{actionError}</p>
+        <p className={styles.error}>{actionError}</p>
       )}
-      <div className="skill-row-expanded-actions">
+      <div className={styles.actions}>
         {hasCurrentVersion && (
           <Button
             variant="primary"

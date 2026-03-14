@@ -5,7 +5,7 @@ import { StatusBadge } from '../../shared/components/StatusBadge';
 import { CollabModeBadge } from '../../shared/components/CollabModeBadge';
 import { SkillQuickActions } from '../../shared/components/SkillQuickActions';
 import type { SkillSummary } from '../../shared/models/SkillSummary';
-import './MySkillRow.css';
+import styles from './MySkillRow.module.css';
 
 interface MySkillRowProps {
   readonly skill: SkillSummary;
@@ -21,8 +21,8 @@ export function MySkillRow({ skill, onDelete, onRestore }: MySkillRowProps) {
   const hasVersion = skill.currentVersion !== null;
   const versionLabel = hasVersion ? `v${skill.currentVersion}` : 'No version';
   const rowClassName = skill.isActive
-    ? 'my-skill-row'
-    : 'my-skill-row my-skill-row--inactive';
+    ? styles.row
+    : `${styles.row} ${styles.rowInactive}`;
 
   const handleEdit = useCallback(() => {
     navigate(`/skills/${skill.name}?edit=true`);
@@ -46,57 +46,57 @@ export function MySkillRow({ skill, onDelete, onRestore }: MySkillRowProps) {
 
   return (
     <div className={rowClassName}>
-      <div className="my-skills-col-name">
-        <div className="my-skill-row-name-block">
-          <span className="my-skill-row-name">{skill.displayName}</span>
-          <span className="my-skill-row-description">
+      <div>
+        <div className={styles.nameBlock}>
+          <span className={styles.name}>{skill.displayName}</span>
+          <span className={styles.description}>
             {skill.shortDescription}
           </span>
         </div>
       </div>
-      <div className="my-skills-col-status">
+      <div>
         <StatusBadge isActive={skill.isActive} />
       </div>
-      <div className="my-skills-col-version">
-        <span className="my-skill-row-version">{versionLabel}</span>
+      <div>
+        <span className={styles.version}>{versionLabel}</span>
       </div>
-      <div className="my-skills-col-stats">
+      <div>
         <SkillQuickActions
           totalLikes={skill.totalLikes}
           totalDownloads={skill.totalDownloads}
           size="small"
         />
       </div>
-      <div className="my-skills-col-collab">
+      <div>
         <CollabModeBadge collaborationMode={skill.collaborationMode} />
       </div>
-      <div className="my-skills-col-actions">
-        <div className="my-skill-row-actions">
+      <div>
+        <div className={styles.actions}>
           {skill.isActive && (
             <>
               <button
-                className="my-skill-row-action"
+                className={styles.action}
                 title="Edit"
                 onClick={handleEdit}
               >
                 <Pencil size={ACTION_ICON_SIZE} />
               </button>
               <button
-                className="my-skill-row-action"
+                className={styles.action}
                 title="Versions"
                 onClick={handleVersions}
               >
                 <History size={ACTION_ICON_SIZE} />
               </button>
               <button
-                className="my-skill-row-action"
+                className={styles.action}
                 title="Collaborators"
                 onClick={handleCollaborators}
               >
                 <Users size={ACTION_ICON_SIZE} />
               </button>
               <button
-                className="my-skill-row-action my-skill-row-action--danger"
+                className={`${styles.action} ${styles.actionDanger}`}
                 title="Deactivate"
                 onClick={handleDelete}
               >
@@ -107,7 +107,7 @@ export function MySkillRow({ skill, onDelete, onRestore }: MySkillRowProps) {
           {!skill.isActive && (
             <>
               <button
-                className="my-skill-row-action my-skill-row-action--restore"
+                className={`${styles.action} ${styles.actionRestore}`}
                 title="Restore"
                 onClick={handleRestore}
               >
@@ -115,7 +115,7 @@ export function MySkillRow({ skill, onDelete, onRestore }: MySkillRowProps) {
                 Restore
               </button>
               <button
-                className="my-skill-row-action my-skill-row-action--danger"
+                className={`${styles.action} ${styles.actionDanger}`}
                 title="Delete permanently"
                 onClick={handleDelete}
               >

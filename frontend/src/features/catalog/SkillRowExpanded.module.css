@@ -1,11 +1,11 @@
-.skill-row-expanded {
+.expanded {
   padding: 14px 16px 16px 64px;
   background: var(--bg-container);
   border-bottom: 2px solid var(--accent);
   font-family: 'Segoe UI', sans-serif;
 }
 
-.skill-row-expanded-header {
+.header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -13,33 +13,32 @@
   margin-bottom: 12px;
 }
 
-.skill-row-expanded-heading {
+.heading {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.skill-row-expanded-name {
+.name {
   font-size: 13px;
   font-weight: 600;
   color: var(--text-primary);
 }
 
-
-.skill-row-expanded-description-panel {
+.descriptionPanel {
   padding: 12px 14px;
   margin-bottom: 12px;
   background: var(--bg-surface);
   border: 1px solid var(--border-row);
 }
 
-.skill-row-expanded-description {
+.description {
   font-size: 12px;
   color: var(--text-secondary);
   line-height: 1.7;
 }
 
-.skill-row-expanded-meta {
+.meta {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -48,7 +47,7 @@
   margin-top: 12px;
 }
 
-.skill-row-expanded-meta-item {
+.metaItem {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -56,25 +55,24 @@
   color: var(--text-muted);
 }
 
-.skill-row-expanded-meta-value {
+.metaValue {
   color: var(--text-primary);
   font-weight: 600;
 }
 
-.skill-row-expanded-error {
+.error {
   font-size: 12px;
   color: var(--danger);
   margin-bottom: 8px;
 }
 
-.skill-row-expanded-actions {
+.actions {
   display: flex;
   align-items: center;
   gap: 6px;
   flex-wrap: wrap;
 }
 
-.skill-row-expanded-spacer {
+.spacer {
   flex: 1;
 }
-

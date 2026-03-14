@@ -6,7 +6,7 @@ import { CollabModeBadge } from '../../shared/components/CollabModeBadge';
 import { PanelListSkeleton } from './PanelListSkeleton';
 import { fetchMyCollaborations } from './panel.service';
 import type { SkillSummary } from '../../shared/models/SkillSummary';
-import './CollaborationsSection.css';
+import styles from './CollaborationsSection.module.css';
 
 export function CollaborationsSection() {
   const [skills, setSkills] = useState<SkillSummary[]>([]);
@@ -38,14 +38,14 @@ export function CollaborationsSection() {
   const isDataReady = !isLoading && !hasLoadError;
 
   return (
-    <div className="collaborations-section">
-      <div className="collaborations-header">
-        <h2 className="collaborations-title">Collaborations</h2>
-        <Users size={16} className="collaborations-icon" />
+    <div className={styles.section}>
+      <div className={styles.header}>
+        <h2 className={styles.title}>Collaborations</h2>
+        <Users size={16} className={styles.icon} />
       </div>
       {isLoading && <PanelListSkeleton />}
       {hasLoadError && (
-        <p className="collaborations-error">{loadError}</p>
+        <p className={styles.error}>{loadError}</p>
       )}
       {isDataReady && !hasSkills && (
         <EmptyState
@@ -54,23 +54,23 @@ export function CollaborationsSection() {
         />
       )}
       {isDataReady && hasSkills && (
-        <div className="collaborations-list">
+        <div className={styles.list}>
           {skills.map((skill) => (
-            <div key={skill.id} className="collaboration-item">
-              <Link to={`/skills/${skill.name}`} className="collaboration-info">
-                <span className="collaboration-name">{skill.displayName}</span>
-                <span className="collaboration-owner">
+            <div key={skill.id} className={styles.item}>
+              <Link to={`/skills/${skill.name}`} className={styles.info}>
+                <span className={styles.name}>{skill.displayName}</span>
+                <span className={styles.owner}>
                   @{skill.ownerUsername}
                 </span>
               </Link>
-              <div className="collaboration-meta">
+              <div className={styles.meta}>
                 <CollabModeBadge collaborationMode={skill.collaborationMode} />
-                <span className="collaboration-version">
+                <span className={styles.version}>
                   {skill.currentVersion ? `v${skill.currentVersion}` : '-'}
                 </span>
                 <Link
                   to={`/skills/${skill.name}?tab=versions`}
-                  className="collaboration-propose-link"
+                  className={styles.proposeLink}
                   title="Propose version"
                 >
                   <Upload size={13} />

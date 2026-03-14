@@ -1,4 +1,4 @@
-.skill-row-skeleton {
+.skeleton {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -6,31 +6,31 @@
   border-bottom: 1px solid var(--border-row);
 }
 
-.skill-row-skeleton--alt {
+.alt {
   background: var(--bg-row-alt);
 }
 
-.skill-row-skeleton-main {
+.main {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.skill-row-skeleton-header {
+.header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
 }
 
-.skill-row-skeleton-title-group {
+.titleGroup {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.skill-row-skeleton-footer {
+.footer {
   display: flex;
   align-items: center;
   gap: 12px;

@@ -7,7 +7,7 @@ import { CollaborationsSection } from './CollaborationsSection';
 import { MyLikesSection } from './MyLikesSection';
 import { SettingsPage } from '../settings/SettingsPage';
 import { SidebarLayout } from '../../shared/components/SidebarLayout';
-import './MyPanelPage.css';
+import styles from './MyPanelPage.module.css';
 
 export function MyPanelPage() {
   const { section } = useParams<{ section: string }>();
@@ -30,7 +30,7 @@ export function MyPanelPage() {
 
   return (
     <SidebarLayout sidebar={<PanelSidebar activeSection={activeSection} />}>
-      <div className="my-panel-content">
+      <div className={styles.content}>
         {sectionContent}
       </div>
     </SidebarLayout>

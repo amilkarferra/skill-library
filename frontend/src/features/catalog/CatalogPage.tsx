@@ -20,7 +20,7 @@ import {
   fetchPopularTags,
 } from './catalog.service';
 import { SidebarLayout } from '../../shared/components/SidebarLayout';
-import './CatalogPage.css';
+import styles from './CatalogPage.module.css';
 
 const DEBOUNCE_DELAY_MS = 350;
 const PAGE_SIZE = 20;
@@ -266,22 +266,22 @@ export function CatalogPage() {
         />
       }
     >
-      <div className="catalog-content">
-        <div className="catalog-header">
-          <span className="catalog-count">
+      <div className={styles.content}>
+        <div className={styles.header}>
+          <span className={styles.count}>
             {totalCount} skills
           </span>
         </div>
-        <div className="catalog-search-row">
+        <div className={styles.searchRow}>
           <SearchBar value={searchQuery} onChange={handleSearchChange} />
         </div>
         {hasAuthorFilter && (
-          <div className="catalog-active-filter">
-            <span className="catalog-active-filter-label">
+          <div className={styles.activeFilter}>
+            <span className={styles.activeFilterLabel}>
               Author: @{selectedAuthor}
             </span>
             <button
-              className="catalog-active-filter-clear"
+              className={styles.activeFilterClear}
               onClick={handleClearAuthor}
             >
               x
@@ -289,9 +289,9 @@ export function CatalogPage() {
           </div>
         )}
         {hasError && (
-          <div className="catalog-error">{loadError}</div>
+          <div className={styles.error}>{loadError}</div>
         )}
-        <div className="catalog-list">
+        <div className={styles.list}>
           {isLoading && (
             <SkillRowSkeletonList />
           )}

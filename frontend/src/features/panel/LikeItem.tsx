@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Heart } from 'lucide-react';
 import { SkillQuickActions } from '../../shared/components/SkillQuickActions';
 import type { SkillSummary } from '../../shared/models/SkillSummary';
+import styles from './MyLikesSection.module.css';
 
 interface LikeItemProps {
   readonly skill: SkillSummary;
@@ -15,21 +16,24 @@ export function LikeItem({ skill, onUnlike }: LikeItemProps) {
   }, [onUnlike, skill]);
 
   return (
-    <div className="like-item">
-      <Link to={`/skills/${skill.name}`} className="like-item-info">
-        <span className="like-item-name">{skill.displayName}</span>
-        <span className="like-item-owner">@{skill.ownerUsername}</span>
-        <span className="like-item-description">
+    <div className={styles.item}>
+      <Link to={`/skills/${skill.name}`} className={styles.itemInfo}>
+        <span className={styles.itemName}>{skill.displayName}</span>
+        <span className={styles.itemOwner}>@{skill.ownerUsername}</span>
+        <span className={styles.itemDescription}>
           {skill.shortDescription}
         </span>
       </Link>
-      <div className="like-item-meta">
+      <div className={styles.itemMeta}>
         <SkillQuickActions
           totalLikes={skill.totalLikes}
           totalDownloads={skill.totalDownloads}
           size="small"
         />
-        <button className="like-item-unlike" onClick={handleUnlikeClick}>
+        <button
+          className={styles.itemUnlike}
+          onClick={handleUnlikeClick}
+        >
           <Heart size={13} />
           Unlike
         </button>

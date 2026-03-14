@@ -1,9 +1,9 @@
-.search-bar {
+.bar {
   position: relative;
   width: 100%;
 }
 
-.search-bar-icon {
+.icon {
   position: absolute;
   top: 50%;
   left: 12px;
@@ -12,7 +12,7 @@
   pointer-events: none;
 }
 
-.search-bar-input {
+.input {
   width: 100%;
   padding: 9px 12px 9px 38px;
   border: 1px solid var(--border-main);
@@ -25,11 +25,11 @@
   box-sizing: border-box;
 }
 
-.search-bar-input::placeholder {
+.input::placeholder {
   color: var(--text-muted);
 }
 
-.search-bar-input:focus {
+.input:focus {
   border-color: var(--accent);
   background: var(--bg-container);
 }

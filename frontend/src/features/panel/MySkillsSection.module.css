@@ -1,9 +1,9 @@
-.my-skills-section {
+.section {
   background: var(--bg-container);
   flex: 1;
 }
 
-.my-skills-header {
+.header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -12,31 +12,31 @@
   background: var(--bg-surface);
 }
 
-.my-skills-title-group {
+.titleGroup {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.my-skills-title {
+.title {
   font-size: 14px;
   font-weight: 700;
   color: var(--text-primary);
 }
 
-.my-skills-subtitle {
+.subtitle {
   font-size: 11px;
   font-weight: 400;
   color: var(--text-muted);
 }
 
-.my-skills-loading {
+.loading {
   padding: 32px 20px;
   font-size: 13px;
   color: var(--text-muted);
 }
 
-.my-skills-table-header {
+.tableHeader {
   display: flex;
   padding: 8px 16px;
   background: var(--bg-sidebar);
@@ -48,32 +48,32 @@
   color: var(--text-muted);
 }
 
-.my-skills-col-name {
+.colName {
   flex: 1;
   min-width: 0;
 }
 
-.my-skills-col-status {
+.colStatus {
   width: 75px;
   text-align: center;
 }
 
-.my-skills-col-version {
+.colVersion {
   width: 65px;
   text-align: center;
 }
 
-.my-skills-col-stats {
+.colStats {
   width: 110px;
   text-align: center;
 }
 
-.my-skills-col-collab {
+.colCollab {
   width: 75px;
   text-align: center;
 }
 
-.my-skills-col-actions {
+.colActions {
   width: 130px;
   text-align: right;
 }

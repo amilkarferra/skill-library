@@ -6,7 +6,7 @@ import { SkillInitialTile } from '../../shared/components/SkillInitialTile';
 import { SkillQuickActions } from '../../shared/components/SkillQuickActions';
 import { RoleBadge } from '../../shared/components/RoleBadge';
 import { useSkillActions } from '../../shared/hooks/useSkillActions';
-import './SkillRow.css';
+import styles from './SkillRow.module.css';
 
 interface SkillRowProps {
   readonly skill: Skill;
@@ -35,7 +35,7 @@ export function SkillRow({
     onToggleExpand(skill.id);
   }, [skill.id, onToggleExpand]);
 
-  const rowClassName = buildRowClassName(isAlternate);
+  const rowClassName = buildRowClassName(isAlternate, styles);
   const hasVersion = !!skill.currentVersion;
   const collaborationModeLabel = buildCollaborationModeLabel(
     skill.collaborationMode
@@ -44,28 +44,28 @@ export function SkillRow({
   return (
     <div className={rowClassName} onClick={handleRowClick}>
       <SkillInitialTile displayName={skill.displayName} />
-      <div className="skill-row-main">
-        <div className="skill-row-header">
-          <div className="skill-row-title-group">
-            <span className="skill-row-name">{skill.displayName}</span>
+      <div className={styles.main}>
+        <div className={styles.header}>
+          <div className={styles.titleGroup}>
+            <span className={styles.name}>{skill.displayName}</span>
             <RoleBadge role={skill.myRole} />
             {hasVersion && (
-              <span className="skill-row-version">
+              <span className={styles.version}>
                 v{skill.currentVersion}
               </span>
             )}
           </div>
-          <span className="skill-row-category-label">
+          <span className={styles.categoryLabel}>
             {skill.categoryName}
           </span>
         </div>
-        <div className="skill-row-description">{skill.shortDescription}</div>
-        <div className="skill-row-footer">
-          <span className="skill-row-meta">
+        <div className={styles.description}>{skill.shortDescription}</div>
+        <div className={styles.footer}>
+          <span className={styles.meta}>
             <User size={12} />
             @{skill.ownerUsername}
           </span>
-          <span className="skill-row-meta">
+          <span className={styles.meta}>
             <Box size={12} />
             {collaborationModeLabel}
           </span>
@@ -82,7 +82,7 @@ export function SkillRow({
         onDownload={handleDownload}
         onCommentNavigate={handleNavigateToComments}
       />
-      <div className="skill-row-chevron">
+      <div className={styles.chevron}>
         {isExpanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
       </div>
 
@@ -100,9 +100,12 @@ export function SkillRow({
   );
 }
 
-function buildRowClassName(isAlternate: boolean): string {
-  const base = 'skill-row';
-  return isAlternate ? `${base} skill-row--alt` : base;
+function buildRowClassName(
+  isAlternate: boolean,
+  styles: Record<string, string>
+): string {
+  const base = styles.row;
+  return isAlternate ? `${base} ${styles.alt}` : base;
 }
 
 function buildCollaborationModeLabel(

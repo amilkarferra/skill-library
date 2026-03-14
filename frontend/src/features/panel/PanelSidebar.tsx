@@ -5,7 +5,7 @@ import { useAuthStore } from '../../shared/stores/useAuthStore';
 import { useNotificationsStore } from '../../shared/stores/useNotificationsStore';
 import { CountBadge } from '../../shared/components/CountBadge';
 import { QuickPublishDropzone } from '../../shared/components/QuickPublishDropzone';
-import './PanelSidebar.css';
+import styles from './PanelSidebar.module.css';
 
 interface SidebarItem {
   readonly key: string;
@@ -50,15 +50,15 @@ export function PanelSidebar({ activeSection }: PanelSidebarProps) {
     return MAIN_SIDEBAR_ITEMS.map((item) => {
       const isActive = item.key === activeSection;
       const itemClassName = isActive
-        ? 'panel-sidebar-item panel-sidebar-item--active'
-        : 'panel-sidebar-item';
+        ? `${styles.item} ${styles.itemActive}`
+        : styles.item;
       const IconComponent = item.icon;
       const itemCount = sidebarCountMap[item.key] ?? 0;
       return (
         <Link key={item.key} to={item.path} className={itemClassName}>
-          <span className="panel-sidebar-item-content">
-            <IconComponent size={15} className="panel-sidebar-item-icon" />
-            <span className="panel-sidebar-item-label">{item.label}</span>
+          <span className={styles.itemContent}>
+            <IconComponent size={15} className={styles.itemIcon} />
+            <span className={styles.itemLabel}>{item.label}</span>
           </span>
           <CountBadge count={itemCount} />
         </Link>
@@ -68,28 +68,28 @@ export function PanelSidebar({ activeSection }: PanelSidebarProps) {
 
   const isSettingsActive = activeSection === SETTINGS_ITEM.key;
   const settingsClassName = isSettingsActive
-    ? 'panel-sidebar-item panel-sidebar-item--active panel-sidebar-item--separated'
-    : 'panel-sidebar-item panel-sidebar-item--separated';
+    ? `${styles.item} ${styles.itemActive} ${styles.itemSeparated}`
+    : `${styles.item} ${styles.itemSeparated}`;
 
   return (
-    <div className="panel-sidebar">
-      <div className="panel-sidebar-user">
-        <span className="panel-sidebar-user-name">{user?.displayName}</span>
-        <span className="panel-sidebar-user-handle">@{user?.username}</span>
+    <div>
+      <div className={styles.user}>
+        <span className={styles.userName}>{user?.displayName}</span>
+        <span className={styles.userHandle}>@{user?.username}</span>
       </div>
-      <span className="panel-sidebar-title">Workspace</span>
-      <nav className="panel-sidebar-nav">
+      <span className={styles.title}>Workspace</span>
+      <nav className={styles.nav}>
         {renderedMainItems}
         <Link to={SETTINGS_ITEM.path} className={settingsClassName}>
-          <span className="panel-sidebar-item-content">
-            <Settings size={15} className="panel-sidebar-item-icon" />
-            <span className="panel-sidebar-item-label">
+          <span className={styles.itemContent}>
+            <Settings size={15} className={styles.itemIcon} />
+            <span className={styles.itemLabel}>
               {SETTINGS_ITEM.label}
             </span>
           </span>
         </Link>
       </nav>
-      <div className="panel-sidebar-quick-publish">
+      <div className={styles.quickPublish}>
         <QuickPublishDropzone />
       </div>
     </div>

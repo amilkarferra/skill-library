@@ -1,4 +1,4 @@
-.skill-row {
+.row {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -9,24 +9,24 @@
   font-family: 'Segoe UI', sans-serif;
 }
 
-.skill-row:hover {
+.row:hover {
   background: var(--bg-row-hover);
 }
 
-.skill-row--alt {
+.alt {
   background: var(--bg-row-alt);
 }
 
-.skill-row--alt:hover {
+.alt:hover {
   background: var(--bg-row-hover);
 }
 
-.skill-row-main {
+.main {
   flex: 1;
   min-width: 0;
 }
 
-.skill-row-header {
+.header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -34,20 +34,20 @@
   margin-bottom: 4px;
 }
 
-.skill-row-title-group {
+.titleGroup {
   display: flex;
   align-items: center;
   gap: 8px;
   min-width: 0;
 }
 
-.skill-row-name {
+.name {
   font-size: 13px;
   font-weight: 600;
   color: var(--text-primary);
 }
 
-.skill-row-version {
+.version {
   display: inline-block;
   padding: 1px 6px;
   font-size: 10px;
@@ -59,7 +59,7 @@
   border: 1px solid var(--border-main);
 }
 
-.skill-row-category-label {
+.categoryLabel {
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.6px;
@@ -68,7 +68,7 @@
   flex-shrink: 0;
 }
 
-.skill-row-description {
+.description {
   font-size: 11px;
   color: var(--text-muted);
   line-height: 1.4;
@@ -78,13 +78,13 @@
   text-overflow: ellipsis;
 }
 
-.skill-row-footer {
+.footer {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.skill-row-meta {
+.meta {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -92,7 +92,7 @@
   color: var(--text-secondary);
 }
 
-.skill-row-chevron {
+.chevron {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -103,6 +103,6 @@
   transition: color 0.12s;
 }
 
-.skill-row:hover .skill-row-chevron {
+.row:hover .chevron {
   color: var(--text-secondary);
 }

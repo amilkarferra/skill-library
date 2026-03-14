@@ -1,28 +1,33 @@
-.my-likes-section {
+.section {
   background: var(--bg-container);
   flex: 1;
 }
 
-.my-likes-header {
+.header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 16px 20px;
   border-bottom: 1px solid var(--border-row);
 }
 
-.my-likes-title {
+.title {
   font-size: 16px;
   font-weight: 600;
   color: var(--text-primary);
 }
 
-.my-likes-loading {
+.icon {
+  color: var(--text-muted);
+}
+
+.loading {
   padding: 32px 20px;
   font-size: 13px;
   color: var(--text-muted);
 }
 
-.my-likes-error {
+.error {
   padding: 16px 20px;
   font-size: 13px;
   color: var(--danger);
@@ -30,12 +35,12 @@
   border-bottom: 1px solid var(--danger-border);
 }
 
-.my-likes-list {
+.list {
   display: flex;
   flex-direction: column;
 }
 
-.like-item {
+.item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -44,63 +49,55 @@
   transition: background 0.12s;
 }
 
-.like-item:last-child {
+.item:last-child {
   border-bottom: none;
 }
 
-.like-item:hover {
+.item:hover {
   background: var(--bg-row-hover);
 }
 
-.like-item-info {
+.info {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex: 1;
-  min-width: 0;
 }
 
-.like-item-name {
+.name {
   font-size: 14px;
   font-weight: 600;
   color: var(--text-primary);
 }
 
-.like-item-owner {
+.owner {
   font-size: 12px;
   color: var(--text-muted);
-  flex-shrink: 0;
 }
 
-.like-item-description {
-  font-size: 13px;
-  color: var(--text-secondary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.like-item-meta {
+.meta {
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-shrink: 0;
-  margin-left: 16px;
 }
 
-.like-item-unlike {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
+.version {
   font-size: 12px;
-  font-weight: 500;
-  color: var(--danger);
-  border: 1px solid var(--danger-border);
-  background: var(--bg-container);
-  transition: all 0.12s;
+  color: var(--text-muted);
 }
 
-.like-item-unlike:hover {
-  background: var(--danger-hover-bg);
+.proposeLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  color: var(--text-muted);
+  border: 1px solid var(--border-main);
+  transition: all 0.15s;
+}
+
+.proposeLink:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-bg);
 }

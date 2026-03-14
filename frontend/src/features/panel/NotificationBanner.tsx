@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ChevronRight, X } from 'lucide-react';
 import { fetchNotificationCount } from './panel.service';
 import { useNotificationsStore } from '../../shared/stores/useNotificationsStore';
-import './NotificationBanner.css';
+import styles from './NotificationBanner.module.css';
 
 export function NotificationBanner() {
   const {
@@ -42,17 +42,17 @@ export function NotificationBanner() {
   const bannerTarget = buildNotificationTarget();
 
   return (
-    <div className="notification-banner">
-      <div className="notification-banner-left">
-        <span className="notification-banner-dot" />
-        <span className="notification-banner-text">{bannerMessage}</span>
+    <div className={styles.banner}>
+      <div className={styles.left}>
+        <span className={styles.dot} />
+        <span className={styles.text}>{bannerMessage}</span>
       </div>
-      <div className="notification-banner-right">
-        <Link to={bannerTarget} className="notification-banner-link">
+      <div className={styles.right}>
+        <Link to={bannerTarget} className={styles.link}>
           Review now
           <ChevronRight size={12} />
         </Link>
-        <button className="notification-banner-dismiss" onClick={handleDismiss}>
+        <button className={styles.dismiss} onClick={handleDismiss}>
           <X size={14} />
         </button>
       </div>
@@ -71,11 +71,11 @@ function buildNotificationMessage(
     return (
       <>
         You have{' '}
-        <strong className="notification-banner-count">
+        <strong className={styles.count}>
           {pendingVersionProposals} version proposals
         </strong>
         {' '}and{' '}
-        <strong className="notification-banner-count">
+        <strong className={styles.count}>
           {pendingCollaborationRequests} collaboration requests
         </strong>
         {' '}waiting for your review
@@ -87,7 +87,7 @@ function buildNotificationMessage(
     return (
       <>
         You have{' '}
-        <strong className="notification-banner-count">
+        <strong className={styles.count}>
           {pendingVersionProposals} version proposals
         </strong>
         {' '}waiting for your review
@@ -98,7 +98,7 @@ function buildNotificationMessage(
   return (
     <>
       You have{' '}
-      <strong className="notification-banner-count">
+      <strong className={styles.count}>
         {pendingCollaborationRequests} collaboration requests
       </strong>
       {' '}waiting for your review

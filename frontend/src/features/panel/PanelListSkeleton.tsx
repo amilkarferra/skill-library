@@ -1,5 +1,5 @@
 import { Skeleton } from '../../shared/components/Skeleton';
-import './PanelListSkeleton.css';
+import styles from './PanelListSkeleton.module.css';
 
 interface PanelListSkeletonProps {
   readonly rowCount?: number;
@@ -19,12 +19,12 @@ export function PanelListSkeleton({ rowCount = DEFAULT_ROW_COUNT }: PanelListSke
 
 function PanelListSkeletonItem() {
   return (
-    <div className="panel-list-skeleton-item">
-      <div className="panel-list-skeleton-left">
+    <div className={styles.item}>
+      <div className={styles.left}>
         <Skeleton variant="text" width="150px" height="12px" />
         <Skeleton variant="text" width="90px" height="10px" />
       </div>
-      <div className="panel-list-skeleton-right">
+      <div className={styles.right}>
         <Skeleton variant="badge" width="55px" height="18px" />
         <Skeleton variant="text" width="35px" height="11px" />
       </div>

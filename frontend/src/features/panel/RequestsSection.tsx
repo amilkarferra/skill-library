@@ -10,7 +10,7 @@ import { useAuthStore } from '../../shared/stores/useAuthStore';
 import { useNotificationsStore } from '../../shared/stores/useNotificationsStore';
 import { PanelListSkeleton } from './PanelListSkeleton';
 import type { CollaborationRequest } from '../../shared/models/CollaborationRequest';
-import './RequestsSection.css';
+import styles from './RequestsSection.module.css';
 
 export function RequestsSection() {
   const { user } = useAuthStore();
@@ -89,13 +89,13 @@ export function RequestsSection() {
   const isDataReady = !isLoading && !hasLoadError;
 
   return (
-    <div className="requests-section">
+    <div className={styles.section}>
       {isLoading && <PanelListSkeleton />}
       {hasLoadError && (
-        <p className="requests-error">{loadError}</p>
+        <p className={styles.error}>{loadError}</p>
       )}
       {hasActionError && (
-        <p className="requests-error">{actionError}</p>
+        <p className={styles.error}>{actionError}</p>
       )}
       {isDataReady && !hasAnyRequests && (
         <EmptyState
@@ -104,8 +104,8 @@ export function RequestsSection() {
         />
       )}
       {isDataReady && hasIncoming && (
-        <div className="requests-group">
-          <span className="requests-group-label label-uppercase">INCOMING</span>
+        <div className={styles.group}>
+          <span className={styles.groupLabel}>INCOMING</span>
           {incomingRequests.map((collaborationRequest) => (
             <RequestRow
               key={collaborationRequest.id}
@@ -117,8 +117,8 @@ export function RequestsSection() {
         </div>
       )}
       {isDataReady && hasSent && (
-        <div className="requests-group">
-          <span className="requests-group-label label-uppercase">SENT</span>
+        <div className={styles.group}>
+          <span className={styles.groupLabel}>SENT</span>
           {sentRequests.map((collaborationRequest) => (
             <RequestRow
               key={collaborationRequest.id}

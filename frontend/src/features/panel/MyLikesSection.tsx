@@ -6,7 +6,7 @@ import { useLikeStore } from '../../shared/stores/useLikeStore';
 import { LikeItem } from './LikeItem';
 import { PanelListSkeleton } from './PanelListSkeleton';
 import type { SkillSummary } from '../../shared/models/SkillSummary';
-import './MyLikesSection.css';
+import styles from './MyLikesSection.module.css';
 
 export function MyLikesSection() {
   const { lastLikeUpdate } = useLikeStore();
@@ -65,13 +65,13 @@ export function MyLikesSection() {
   const isDataReady = !isLoading && !hasLoadError;
 
   return (
-    <div className="my-likes-section">
-      <div className="my-likes-header">
-        <h2 className="my-likes-title">My Likes</h2>
+    <div className={styles.section}>
+      <div className={styles.header}>
+        <h2 className={styles.title}>My Likes</h2>
       </div>
       {isLoading && <PanelListSkeleton />}
       {hasLoadError && (
-        <p className="my-likes-error">{loadError}</p>
+        <p className={styles.error}>{loadError}</p>
       )}
       {isDataReady && !hasLikedSkills && (
         <EmptyState
@@ -80,7 +80,7 @@ export function MyLikesSection() {
         />
       )}
       {isDataReady && hasLikedSkills && (
-        <div className="my-likes-list">
+        <div className={styles.list}>
           {likedSkills.map((likedSkill) => (
             <LikeItem
               key={likedSkill.id}

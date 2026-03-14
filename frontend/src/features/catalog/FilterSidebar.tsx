@@ -3,7 +3,7 @@ import type { Category } from '../../shared/models/Category';
 import type { Tag } from '../../shared/models/Tag';
 import type { SkillFilters } from '../../shared/models/SkillFilters';
 import { QuickPublishDropzone } from '../../shared/components/QuickPublishDropzone';
-import './FilterSidebar.css';
+import styles from './FilterSidebar.module.css';
 
 interface FilterSidebarProps {
   categories: Category[];
@@ -60,12 +60,12 @@ export function FilterSidebar({
   );
 
   return (
-    <div className="filter-sidebar">
-      <div className="filter-section">
-        <div className="filter-section-header">
-          <span className="filter-section-label">Categories</span>
+    <div className={styles.sidebar}>
+      <div className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <span className={styles.sectionLabel}>Categories</span>
           <button
-            className="filter-clear-button"
+            className={styles.clearButton}
             onClick={onClearFilters}
             disabled={!hasActiveFilters}
           >
@@ -73,35 +73,35 @@ export function FilterSidebar({
           </button>
         </div>
         <button
-          className={buildFilterItemClass(!selectedCategory)}
+          className={buildFilterItemClass(!selectedCategory, styles)}
           onClick={() => handleCategoryClick('')}
         >
           {'All'}
-          <span className="filter-item-count">{computeTotalSkillCount(categories)}</span>
+          <span className={styles.itemCount}>{computeTotalSkillCount(categories)}</span>
         </button>
         {categories.map((category) => {
           const isActive = category.slug === selectedCategory;
           return (
             <button
               key={category.id}
-              className={buildFilterItemClass(isActive)}
+              className={buildFilterItemClass(isActive, styles)}
               onClick={() => handleCategoryClick(category.slug)}
             >
               {category.name}
-              <span className="filter-item-count">{category.skillCount}</span>
+              <span className={styles.itemCount}>{category.skillCount}</span>
             </button>
           );
         })}
       </div>
 
-      <div className="filter-section">
-        <span className="filter-section-label">Sort by</span>
+      <div className={styles.section}>
+        <span className={styles.sectionLabel}>Sort by</span>
         {SORT_OPTIONS.map((option) => {
           const isActive = option.value === selectedSort;
           return (
             <button
               key={option.value}
-              className={buildFilterItemClass(isActive)}
+              className={buildFilterItemClass(isActive, styles)}
               onClick={() => handleSortClick(option.value)}
             >
               {option.label}
@@ -110,15 +110,15 @@ export function FilterSidebar({
         })}
       </div>
 
-      <div className="filter-section">
-        <span className="filter-section-label">Popular tags</span>
-        <div className="filter-tags">
+      <div className={styles.section}>
+        <span className={styles.sectionLabel}>Popular tags</span>
+        <div className={styles.tags}>
           {popularTags.map((tag) => {
             const isSelected = selectedTags.includes(tag.name);
             return (
               <button
                 key={tag.name}
-                className={buildFilterTagClass(isSelected)}
+                className={buildFilterTagClass(isSelected, styles)}
                 onClick={() => handleTagClick(tag.name)}
               >
                 {tag.name}
@@ -128,21 +128,27 @@ export function FilterSidebar({
         </div>
       </div>
 
-      <div className="filter-section">
+      <div className={styles.section}>
         <QuickPublishDropzone />
       </div>
     </div>
   );
 }
 
-function buildFilterItemClass(isActive: boolean): string {
-  const base = 'filter-item';
-  return isActive ? `${base} filter-item--active` : base;
+function buildFilterItemClass(
+  isActive: boolean,
+  styles: Record<string, string>
+): string {
+  const base = styles.item;
+  return isActive ? `${base} ${styles.itemActive}` : base;
 }
 
-function buildFilterTagClass(isSelected: boolean): string {
-  const base = 'filter-tag';
-  return isSelected ? `${base} filter-tag--selected` : base;
+function buildFilterTagClass(
+  isSelected: boolean,
+  styles: Record<string, string>
+): string {
+  const base = styles.tag;
+  return isSelected ? `${base} ${styles.tagSelected}` : base;
 }
 
 function computeTotalSkillCount(categories: Category[]): number {

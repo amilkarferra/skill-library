@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import type { ChangeEvent } from 'react';
 import { Search } from 'lucide-react';
-import './SearchBar.css';
+import styles from './SearchBar.module.css';
 
 interface SearchBarProps {
   value: string;
@@ -17,11 +17,11 @@ export function SearchBar({ value, onChange }: SearchBarProps) {
   );
 
   return (
-    <div className="search-bar">
-      <Search size={16} className="search-bar-icon" />
+    <div className={styles.bar}>
+      <Search size={16} className={styles.icon} />
       <input
         type="text"
-        className="search-bar-input"
+        className={styles.input}
         placeholder="Search skills by name, description or author..."
         value={value}
         onChange={handleInputChange}

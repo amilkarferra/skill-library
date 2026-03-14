@@ -1,4 +1,4 @@
-.proposed-version-row {
+.row {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -8,15 +8,15 @@
   transition: background 0.12s;
 }
 
-.proposed-version-row:last-child {
+.row:last-child {
   border-bottom: none;
 }
 
-.proposed-version-row:hover {
+.row:hover {
   background: var(--bg-row-hover);
 }
 
-.proposed-version-icon {
+.icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -27,7 +27,7 @@
   color: var(--warn-color);
 }
 
-.proposed-version-info {
+.info {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -35,7 +35,7 @@
   min-width: 0;
 }
 
-.proposed-version-label {
+.label {
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.8px;
@@ -43,19 +43,19 @@
   color: var(--warn-color);
 }
 
-.proposed-version-number {
+.number {
   font-size: 12px;
   font-weight: 600;
   color: var(--text-primary);
 }
 
-.proposed-version-changelog {
+.changelog {
   font-size: 11px;
   color: var(--text-secondary);
   line-height: 1.4;
 }
 
-.proposed-version-meta {
+.meta {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -63,7 +63,7 @@
   margin-top: 2px;
 }
 
-.proposed-version-meta-item {
+.metaItem {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -71,11 +71,10 @@
   color: var(--text-muted);
 }
 
-.proposed-version-actions {
+.actions {
   display: flex;
   align-items: center;
   gap: 6px;
   flex-shrink: 0;
   margin-left: 16px;
 }
-

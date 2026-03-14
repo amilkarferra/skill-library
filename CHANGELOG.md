@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **CSS Modules migration (catalog, auth, panel)** — migrated from global CSS to scoped CSS Modules for catalog (6 components), auth (LoginPage), and panel (14 components); class names converted to camelCase with automatic scoping; added tsconfig.test.json with vite/client types for test compilation
+
 - **Partial unique index on `skills.name`** — replaced absolute unique constraint with filtered index (`WHERE is_active = 1`) so soft-deleted skills free their slug for reuse (Alembic migration)
 - **`_raise_if_slug_taken` checks only active skills** — slug uniqueness validation now excludes soft-deleted skills
 - **Race condition handling** — `create_skill` and `update_skill_metadata` catch `IntegrityError` on commit, verify if it's a slug collision, and return 409 or re-raise

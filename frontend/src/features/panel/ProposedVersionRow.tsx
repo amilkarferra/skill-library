@@ -4,7 +4,7 @@ import { Button } from '../../shared/components/Button';
 import { formatFileSize } from '../../shared/formatters/format-file-size';
 import { formatRelativeDate } from '../../shared/formatters/format-relative-date';
 import type { SkillVersion } from '../../shared/models/SkillVersion';
-import './ProposedVersionRow.css';
+import styles from './ProposedVersionRow.module.css';
 
 type ReviewAction = 'approve' | 'reject';
 
@@ -28,27 +28,27 @@ export function ProposedVersionRow({
   }, [onReview, skillSlug, version.version]);
 
   return (
-    <div className="proposed-version-row">
-      <div className="proposed-version-icon">
+    <div className={styles.row}>
+      <div className={styles.icon}>
         <Upload size={14} />
       </div>
-      <div className="proposed-version-info">
-        <span className="proposed-version-label">Version proposal</span>
-        <span className="proposed-version-number">
+      <div className={styles.info}>
+        <span className={styles.label}>Version proposal</span>
+        <span className={styles.number}>
           @{version.uploadedByUsername} proposed <strong>v{version.version}</strong> for <strong>{skillSlug}</strong>
         </span>
-        <span className="proposed-version-changelog">{version.changelog}</span>
-        <div className="proposed-version-meta">
-          <span className="proposed-version-meta-item">
+        <span className={styles.changelog}>{version.changelog}</span>
+        <div className={styles.meta}>
+          <span className={styles.metaItem}>
             <HardDrive size={12} />
             {formatFileSize(version.fileSize)}
           </span>
-          <span className="proposed-version-meta-item">
+          <span className={styles.metaItem}>
             {formatRelativeDate(version.createdAt)}
           </span>
         </div>
       </div>
-      <div className="proposed-version-actions">
+      <div className={styles.actions}>
         <Button variant="success" size="small" onClick={handleApprove}>
           <Check size={13} />
           Approve

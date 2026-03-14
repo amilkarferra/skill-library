@@ -1,33 +1,28 @@
-.collaborations-section {
+.section {
   background: var(--bg-container);
   flex: 1;
 }
 
-.collaborations-header {
+.header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 16px 20px;
   border-bottom: 1px solid var(--border-row);
 }
 
-.collaborations-title {
+.title {
   font-size: 16px;
   font-weight: 600;
   color: var(--text-primary);
 }
 
-.collaborations-icon {
-  color: var(--text-muted);
-}
-
-.collaborations-loading {
+.loading {
   padding: 32px 20px;
   font-size: 13px;
   color: var(--text-muted);
 }
 
-.collaborations-error {
+.error {
   padding: 16px 20px;
   font-size: 13px;
   color: var(--danger);
@@ -35,12 +30,12 @@
   border-bottom: 1px solid var(--danger-border);
 }
 
-.collaborations-list {
+.list {
   display: flex;
   flex-direction: column;
 }
 
-.collaboration-item {
+.item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -49,55 +44,63 @@
   transition: background 0.12s;
 }
 
-.collaboration-item:last-child {
+.item:last-child {
   border-bottom: none;
 }
 
-.collaboration-item:hover {
+.item:hover {
   background: var(--bg-row-hover);
 }
 
-.collaboration-info {
+.itemInfo {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex: 1;
+  min-width: 0;
 }
 
-.collaboration-name {
+.itemName {
   font-size: 14px;
   font-weight: 600;
   color: var(--text-primary);
 }
 
-.collaboration-owner {
+.itemOwner {
   font-size: 12px;
   color: var(--text-muted);
+  flex-shrink: 0;
 }
 
-.collaboration-meta {
+.itemDescription {
+  font-size: 13px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.itemMeta {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-shrink: 0;
+  margin-left: 16px;
 }
 
-.collaboration-version {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.collaboration-propose-link {
-  display: flex;
+.itemUnlike {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  color: var(--text-muted);
-  border: 1px solid var(--border-main);
-  transition: all 0.15s;
+  gap: 4px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--danger);
+  border: 1px solid var(--danger-border);
+  background: var(--bg-container);
+  transition: all 0.12s;
 }
 
-.collaboration-propose-link:hover {
-  color: var(--accent);
-  border-color: var(--accent);
-  background: var(--accent-bg);
+.itemUnlike:hover {
+  background: var(--danger-hover-bg);
 }

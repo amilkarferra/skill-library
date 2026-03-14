@@ -14,7 +14,7 @@ import { fetchMySkills } from './panel.service';
 import { ApiError, del, patch } from '../../shared/services/api.client';
 import type { SkillSummary } from '../../shared/models/SkillSummary';
 
-import './MySkillsSection.css';
+import styles from './MySkillsSection.module.css';
 
 const SECTION_ICON_SIZE = 13;
 const CONFLICT_STATUS_CODE = 409;
@@ -106,12 +106,12 @@ export function MySkillsSection() {
   const isDataReady = !isLoading && !hasLoadError;
 
   return (
-    <div className="my-skills-section">
-      <div className="my-skills-header">
-        <div className="my-skills-title-group">
-          <h2 className="my-skills-title">My Skills</h2>
+    <div className={styles.section}>
+      <div className={styles.header}>
+        <div className={styles.titleGroup}>
+          <h2 className={styles.title}>My Skills</h2>
           {isDataReady && (
-            <span className="my-skills-subtitle">{headerSubtitle}</span>
+            <span className={styles.subtitle}>{headerSubtitle}</span>
           )}
         </div>
       </div>
@@ -130,13 +130,13 @@ export function MySkillsSection() {
       )}
       {isDataReady && hasSkills && (
         <>
-          <div className="my-skills-table-header">
-            <div className="my-skills-col-name">Skill</div>
-            <div className="my-skills-col-status">Status</div>
-            <div className="my-skills-col-version">Version</div>
-            <div className="my-skills-col-stats">Likes / Downloads</div>
-            <div className="my-skills-col-collab">Mode</div>
-            <div className="my-skills-col-actions">Actions</div>
+          <div className={styles.tableHeader}>
+            <div className={styles.colName}>Skill</div>
+            <div className={styles.colStatus}>Status</div>
+            <div className={styles.colVersion}>Version</div>
+            <div className={styles.colStats}>Likes / Downloads</div>
+            <div className={styles.colCollab}>Mode</div>
+            <div className={styles.colActions}>Actions</div>
           </div>
           {skills.map((skill) => (
             <MySkillRow

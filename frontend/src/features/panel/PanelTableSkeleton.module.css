@@ -1,4 +1,4 @@
-.panel-table-skeleton-row {
+.row {
   display: flex;
   align-items: center;
   padding: 10px 16px;
@@ -6,7 +6,7 @@
   gap: 8px;
 }
 
-.panel-table-skeleton-col-name {
+.colName {
   flex: 1;
   min-width: 0;
   display: flex;
@@ -14,12 +14,12 @@
   gap: 4px;
 }
 
-.panel-table-skeleton-col-center {
+.colCenter {
   display: flex;
   justify-content: center;
 }
 
-.panel-table-skeleton-col-right {
+.colRight {
   display: flex;
   justify-content: flex-end;
   gap: 6px;

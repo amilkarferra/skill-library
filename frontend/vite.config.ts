@@ -21,5 +21,6 @@ export default defineConfig({
     setupFiles: './src/test-setup.ts',
     css: false,
     include: ['src/**/__tests__/**/*.test.{ts,tsx}'],
+    fileParallelism: false,
   },
 })

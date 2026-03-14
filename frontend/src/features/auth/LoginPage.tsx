@@ -4,7 +4,7 @@ import { useAuth } from './useAuth';
 import { AppLogo } from '../../shared/components/AppLogo';
 import { AlertMessage } from '../../shared/components/AlertMessage';
 import { Button } from '../../shared/components/Button';
-import './LoginPage.css';
+import styles from './LoginPage.module.css';
 
 export function LoginPage() {
   const { isAuthenticated, isLoading, authError, signIn } = useAuth();
@@ -19,13 +19,13 @@ export function LoginPage() {
   const hasAuthError = authError !== null && authError !== undefined;
 
   return (
-    <div className="login-page">
-      <div className="login-card">
-        <div className="login-badge">
+    <div className={styles.page}>
+      <div className={styles.card}>
+        <div className={styles.badge}>
           <AppLogo size={72} />
         </div>
-        <h1 className="login-title">Skill Library</h1>
-        <p className="login-subtitle">
+        <h1 className={styles.title}>Skill Library</h1>
+        <p className={styles.subtitle}>
           Share, discover, and download skills for Claude Code and Codex
         </p>
 
@@ -34,9 +34,9 @@ export function LoginPage() {
         )}
 
         {isLoading ? (
-          <div className="login-loading">
-            <div className="login-spinner" />
-            <span className="login-loading-text">Signing in...</span>
+          <div className={styles.loading}>
+            <div className={styles.spinner} />
+            <span className={styles.loadingText}>Signing in...</span>
           </div>
         ) : (
           <Button
