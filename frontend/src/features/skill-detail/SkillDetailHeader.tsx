@@ -1,6 +1,7 @@
 import { Download, Heart, MessageSquare, ArrowDownToLine, Users, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '../../shared/components/Button';
+import { ConfirmDialog } from '../../shared/components/ConfirmDialog';
 import { TagList } from '../../shared/components/TagList';
 import { CollabModeBadge } from '../../shared/components/CollabModeBadge';
 import { RoleBadge } from '../../shared/components/RoleBadge';
@@ -24,7 +25,13 @@ export function SkillDetailHeader({
   isCollabRequesting,
   isCollabRequestSent,
 }: SkillDetailHeaderProps) {
-  const { handleDownload, handleToggleLike } = useSkillActions(skill);
+  const {
+    handleDownload,
+    handleToggleLike,
+    isLikeInProgress,
+    loginDialogState,
+    closeLoginDialog,
+  } = useSkillActions(skill);
   const isLiked = skill.isLikedByMe === true;
   const isOwner = skill.myRole === 'owner';
   const isCollaborator = skill.myRole === 'collaborator';
@@ -53,7 +60,7 @@ export function SkillDetailHeader({
               Download v{skill.currentVersion}
             </Button>
           )}
-          <Button variant={likeVariant} onClick={handleToggleLike}>
+          <Button variant={likeVariant} onClick={handleToggleLike} isLoading={isLikeInProgress}>
             <Heart size={16} fill={likeIconFill} />
             {likeLabel}
           </Button>
@@ -122,6 +129,17 @@ export function SkillDetailHeader({
       </div>
 
       <TagList tags={skill.tags} />
+
+      {loginDialogState.isOpen && (
+        <ConfirmDialog
+          title={loginDialogState.title}
+          message={loginDialogState.message}
+          confirmLabel={loginDialogState.confirmLabel}
+          isDangerous={loginDialogState.isDangerous}
+          onConfirm={loginDialogState.onConfirm}
+          onCancel={closeLoginDialog}
+        />
+      )}
     </header>
   );
 }

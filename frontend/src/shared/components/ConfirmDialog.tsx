@@ -21,6 +21,7 @@ export function ConfirmDialog({
 }: ConfirmDialogProps) {
   const handleOverlayClick = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
+      event.stopPropagation();
       const isOverlayTarget = event.target === event.currentTarget;
       if (isOverlayTarget) onCancel();
     },

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../features/auth/useAuth';
 import { useAuthStore } from '../stores/useAuthStore';
@@ -45,7 +45,6 @@ export function useSkillActions(skill: SkillActionTarget): SkillActionsResult {
   const [isLikeInProgress, setIsLikeInProgress] = useState(false);
   const [isDownloadInProgress, setIsDownloadInProgress] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
-  const [shouldLikeAfterLogin, setShouldLikeAfterLogin] = useState(false);
 
   const hasCurrentVersion = skill.currentVersion !== null;
 
@@ -69,11 +68,18 @@ export function useSkillActions(skill: SkillActionTarget): SkillActionsResult {
     }
   }, [skill.id, skill.name, skill.isLikedByMe, skill.totalLikes, publishLikeUpdate]);
 
-  useEffect(() => {
-    if (!shouldLikeAfterLogin || !isAuthenticated) return;
-    setShouldLikeAfterLogin(false);
-    void executeLikeToggle();
-  }, [shouldLikeAfterLogin, isAuthenticated, executeLikeToggle]);
+  const signInThenLike = useCallback(async () => {
+    setIsLikeInProgress(true);
+    await signIn();
+
+    const isNowAuthenticated = useAuthStore.getState().isAuthenticated;
+    if (isNowAuthenticated) {
+      await executeLikeToggle();
+      return;
+    }
+
+    setIsLikeInProgress(false);
+  }, [signIn, executeLikeToggle]);
 
   const promptLoginForLike = useCallback(() => {
     openLoginDialog({
@@ -83,11 +89,10 @@ export function useSkillActions(skill: SkillActionTarget): SkillActionsResult {
       isDangerous: false,
       onConfirm: () => {
         closeLoginDialog();
-        setShouldLikeAfterLogin(true);
-        void signIn();
+        void signInThenLike();
       },
     });
-  }, [openLoginDialog, closeLoginDialog, signIn]);
+  }, [openLoginDialog, closeLoginDialog, signInThenLike]);
 
   const handleToggleLike = useCallback(async () => {
     if (!isAuthenticated) {

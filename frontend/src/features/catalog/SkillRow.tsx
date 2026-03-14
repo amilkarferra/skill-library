@@ -25,6 +25,7 @@ export function SkillRow({
     handleToggleLike,
     handleDownload,
     handleNavigateToComments,
+    isLikeInProgress,
     isDownloadInProgress,
     loginDialogState,
     closeLoginDialog,
@@ -75,6 +76,7 @@ export function SkillRow({
         totalDownloads={skill.totalDownloads}
         totalComments={skill.totalComments}
         isLiked={skill.isLikedByMe}
+        isLikeLoading={isLikeInProgress}
         isDownloadLoading={isDownloadInProgress}
         onLikeToggle={handleToggleLike}
         onDownload={handleDownload}
