@@ -12,7 +12,6 @@ import './SkillDetailHeader.css';
 
 interface SkillDetailHeaderProps {
   readonly skill: Skill;
-  readonly isAuthenticated: boolean;
   readonly onRequestCollaboration: () => void;
   readonly isCollabRequesting: boolean;
   readonly isCollabRequestSent: boolean;
@@ -20,7 +19,6 @@ interface SkillDetailHeaderProps {
 
 export function SkillDetailHeader({
   skill,
-  isAuthenticated,
   onRequestCollaboration,
   isCollabRequesting,
   isCollabRequestSent,
@@ -36,7 +34,7 @@ export function SkillDetailHeader({
   const isOwner = skill.myRole === 'owner';
   const isCollaborator = skill.myRole === 'collaborator';
   const hasCurrentVersion = skill.currentVersion !== null;
-  const canRequestCollab = isAuthenticated && !isOwner && !isCollaborator;
+  const canRequestCollab = !isOwner && !isCollaborator;
   const isOpenCollab = skill.collaborationMode === 'open';
   const shouldShowCollabButton = canRequestCollab && isOpenCollab;
 

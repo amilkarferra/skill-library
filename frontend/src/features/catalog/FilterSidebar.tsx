@@ -3,7 +3,6 @@ import type { Category } from '../../shared/models/Category';
 import type { Tag } from '../../shared/models/Tag';
 import type { SkillFilters } from '../../shared/models/SkillFilters';
 import { QuickPublishDropzone } from '../../shared/components/QuickPublishDropzone';
-import { useAuthStore } from '../../shared/stores/useAuthStore';
 import './FilterSidebar.css';
 
 interface FilterSidebarProps {
@@ -12,9 +11,11 @@ interface FilterSidebarProps {
   selectedCategory: string;
   selectedTags: string[];
   selectedSort: SkillFilters['sort'];
+  hasActiveFilters: boolean;
   onCategoryChange: (categorySlug: string) => void;
   onTagToggle: (tagName: string) => void;
   onSortChange: (sort: SkillFilters['sort']) => void;
+  onClearFilters: () => void;
 }
 
 const SORT_OPTIONS: { value: SkillFilters['sort']; label: string }[] = [
@@ -30,12 +31,12 @@ export function FilterSidebar({
   selectedCategory,
   selectedTags,
   selectedSort,
+  hasActiveFilters,
   onCategoryChange,
   onTagToggle,
   onSortChange,
-}: FilterSidebarProps) {
-  const { isAuthenticated } = useAuthStore();
-
+  onClearFilters,
+}: Readonly<FilterSidebarProps>) {
   const handleCategoryClick = useCallback(
     (slug: string) => {
       const isSameCategory = slug === selectedCategory;
@@ -61,12 +62,21 @@ export function FilterSidebar({
   return (
     <div className="filter-sidebar">
       <div className="filter-section">
-        <span className="filter-section-label">Categories</span>
+        <div className="filter-section-header">
+          <span className="filter-section-label">Categories</span>
+          <button
+            className="filter-clear-button"
+            onClick={onClearFilters}
+            disabled={!hasActiveFilters}
+          >
+            Clear filters
+          </button>
+        </div>
         <button
           className={buildFilterItemClass(!selectedCategory)}
           onClick={() => handleCategoryClick('')}
         >
-          All
+          {'All'}
           <span className="filter-item-count">{computeTotalSkillCount(categories)}</span>
         </button>
         {categories.map((category) => {
@@ -118,11 +128,9 @@ export function FilterSidebar({
         </div>
       </div>
 
-      {isAuthenticated && (
-        <div className="filter-section">
-          <QuickPublishDropzone />
-        </div>
-      )}
+      <div className="filter-section">
+        <QuickPublishDropzone />
+      </div>
     </div>
   );
 }

@@ -1,16 +1,24 @@
 import { useCallback, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Upload } from 'lucide-react';
+import { useAuthGuard } from '../hooks/useAuthGuard';
 import { buildFileValidationError } from '../../features/publish/publish-validation';
+import { ConfirmDialog } from './ConfirmDialog';
 import './QuickPublishDropzone.css';
 
 const QUICK_PUBLISH_ICON_SIZE = 20;
+const PUBLISH_LOGIN_MESSAGE = 'You need to sign in to publish skills. Would you like to sign in now?';
 
 export function QuickPublishDropzone() {
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
+  const {
+    guardWithLogin,
+    loginDialogState,
+    closeLoginDialog,
+  } = useAuthGuard();
 
   const navigateToPublishWithFile = useCallback(
     (file: File) => {
@@ -26,9 +34,37 @@ export function QuickPublishDropzone() {
     [navigate],
   );
 
+  const pendingFileRef = useRef<File | null>(null);
+
+  const handleAuthenticatedPublish = useCallback(() => {
+    const pendingFile = pendingFileRef.current;
+    if (pendingFile !== null) {
+      navigateToPublishWithFile(pendingFile);
+      pendingFileRef.current = null;
+      return;
+    }
+    navigate('/publish');
+  }, [navigateToPublishWithFile, navigate]);
+
+  const guardedPublishWithFile = useCallback(
+    (file: File) => {
+      pendingFileRef.current = file;
+      const guardedAction = guardWithLogin({
+        message: PUBLISH_LOGIN_MESSAGE,
+        onAuthenticated: handleAuthenticatedPublish,
+      });
+      guardedAction();
+    },
+    [guardWithLogin, handleAuthenticatedPublish],
+  );
+
   const handleClick = useCallback(() => {
-    inputRef.current?.click();
-  }, []);
+    const guardedAction = guardWithLogin({
+      message: PUBLISH_LOGIN_MESSAGE,
+      onAuthenticated: () => inputRef.current?.click(),
+    });
+    guardedAction();
+  }, [guardWithLogin]);
 
   const handleFileChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,37 +92,50 @@ export function QuickPublishDropzone() {
       setIsDragOver(false);
       const hasDroppedFiles = event.dataTransfer.files.length > 0;
       if (hasDroppedFiles) {
-        navigateToPublishWithFile(event.dataTransfer.files[0]);
+        guardedPublishWithFile(event.dataTransfer.files[0]);
       }
     },
-    [navigateToPublishWithFile],
+    [guardedPublishWithFile],
   );
 
   const containerClassName = buildContainerClassName(isDragOver);
   const hasValidationError = validationError !== null;
 
   return (
-    <div
-      className={containerClassName}
-      onClick={handleClick}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
-    >
-      <input
-        ref={inputRef}
-        type="file"
-        accept=".skill,.md,.zip"
-        className="quick-publish-hidden-input"
-        onChange={handleFileChange}
-      />
-      <Upload size={QUICK_PUBLISH_ICON_SIZE} className="quick-publish-icon" />
-      <span className="quick-publish-label">Quick Publish</span>
-      <span className="quick-publish-hint">Drop file or click</span>
-      {hasValidationError && (
-        <span className="quick-publish-error">{validationError}</span>
+    <>
+      <div
+        className={containerClassName}
+        onClick={handleClick}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
+        <input
+          ref={inputRef}
+          type="file"
+          accept=".skill,.md,.zip"
+          className="quick-publish-hidden-input"
+          onChange={handleFileChange}
+        />
+        <Upload size={QUICK_PUBLISH_ICON_SIZE} className="quick-publish-icon" />
+        <span className="quick-publish-label">Quick Publish</span>
+        <span className="quick-publish-hint">Drop file or click</span>
+        {hasValidationError && (
+          <span className="quick-publish-error">{validationError}</span>
+        )}
+      </div>
+
+      {loginDialogState.isOpen && (
+        <ConfirmDialog
+          title={loginDialogState.title}
+          message={loginDialogState.message}
+          confirmLabel={loginDialogState.confirmLabel}
+          isDangerous={loginDialogState.isDangerous}
+          onConfirm={loginDialogState.onConfirm}
+          onCancel={closeLoginDialog}
+        />
       )}
-    </div>
+    </>
   );
 }
 

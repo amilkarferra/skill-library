@@ -15,6 +15,7 @@ interface CatalogStore {
   setSearchQuery: (query: string) => void;
   setSelectedCategory: (category: string) => void;
   toggleSelectedTag: (tagName: string) => void;
+  clearSelectedTags: () => void;
   setSelectedAuthor: (author: string) => void;
   setSelectedSort: (sort: SkillFilters['sort']) => void;
   setCategories: (categories: Category[]) => void;
@@ -41,6 +42,7 @@ export const useCatalogStore = create<CatalogStore>((set) => ({
         : [...state.selectedTags, tagName];
       return { selectedTags: updatedTags };
     }),
+  clearSelectedTags: () => set({ selectedTags: [] }),
   setSelectedAuthor: (selectedAuthor) => set({ selectedAuthor }),
   setSelectedSort: (selectedSort) => set({ selectedSort }),
   setCategories: (categories) => set({ categories }),

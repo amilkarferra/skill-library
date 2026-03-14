@@ -1,19 +1,28 @@
 import { useCallback } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Upload, User, LogOut } from 'lucide-react';
 import { useAuth } from '../../features/auth/useAuth';
+import { useAuthGuard } from '../hooks/useAuthGuard';
 import { useNotificationsStore } from '../stores/useNotificationsStore';
 import { AppLogo } from './AppLogo';
 import { Button } from './Button';
+import { ConfirmDialog } from './ConfirmDialog';
 import './Navbar.css';
 
 const ICON_SIZE_SMALL = 14;
 const ICON_SIZE_MEDIUM = 16;
 const LOGO_SIZE = 28;
+const PUBLISH_LOGIN_MESSAGE = 'You need to sign in to publish skills. Would you like to sign in now?';
 
 export function Navbar() {
   const { user, isAuthenticated, isLoading, signIn, signOut } = useAuth();
+  const navigate = useNavigate();
   const location = useLocation();
+  const {
+    guardWithLogin,
+    loginDialogState,
+    closeLoginDialog,
+  } = useAuthGuard();
   const pendingNotificationCount = useNotificationsStore(
     (state) => state.pendingNotificationCount
   );
@@ -28,6 +37,11 @@ export function Navbar() {
   const handleSignOut = useCallback(() => {
     signOut();
   }, [signOut]);
+
+  const handlePublishClick = guardWithLogin({
+    message: PUBLISH_LOGIN_MESSAGE,
+    onAuthenticated: () => navigate('/publish'),
+  });
 
   return (
     <div className="nav-wrapper">
@@ -49,15 +63,16 @@ export function Navbar() {
           </div>
         </div>
         <div className="nav-right">
+          <Button
+            variant="primary"
+            size="small"
+            onClick={handlePublishClick}
+          >
+            <Upload size={ICON_SIZE_SMALL} />
+            Publish
+          </Button>
           {isAuthenticated ? (
             <>
-              <Link
-                to="/publish"
-                className="button button--primary button--small"
-              >
-                <Upload size={ICON_SIZE_SMALL} />
-                Publish
-              </Link>
               <div className="nav-profile">
                 <User size={ICON_SIZE_MEDIUM} />
                 <span className="nav-username">@{user?.username}</span>
@@ -80,7 +95,7 @@ export function Navbar() {
             </>
           ) : (
             <Button
-              variant="primary"
+              variant="secondary"
               size="small"
               isLoading={isLoading}
               onClick={signIn}
@@ -90,6 +105,17 @@ export function Navbar() {
           )}
         </div>
       </nav>
+
+      {loginDialogState.isOpen && (
+        <ConfirmDialog
+          title={loginDialogState.title}
+          message={loginDialogState.message}
+          confirmLabel={loginDialogState.confirmLabel}
+          isDangerous={loginDialogState.isDangerous}
+          onConfirm={loginDialogState.onConfirm}
+          onCancel={closeLoginDialog}
+        />
+      )}
     </div>
   );
 }

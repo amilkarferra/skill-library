@@ -10,7 +10,6 @@ interface CommentsTabProps {
   comments: Comment[];
   currentPage: number;
   totalPages: number;
-  isAuthenticated: boolean;
   isSubmitting: boolean;
   isUpdating: boolean;
   currentUserId: number | null;
@@ -25,7 +24,6 @@ export function CommentsTab({
   comments,
   currentPage,
   totalPages,
-  isAuthenticated,
   isSubmitting,
   isUpdating,
   currentUserId,
@@ -63,7 +61,6 @@ export function CommentsTab({
   return (
     <div className="comments-tab">
       <CommentForm
-        isAuthenticated={isAuthenticated}
         isSubmitting={isSubmitting}
         onSubmit={onSubmitComment}
       />

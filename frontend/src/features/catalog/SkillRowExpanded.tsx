@@ -6,7 +6,7 @@ import { ConfirmDialog } from '../../shared/components/ConfirmDialog';
 import { TagList } from '../../shared/components/TagList';
 import { useConfirmDialog } from '../../shared/hooks/useConfirmDialog';
 import { useSkillActions } from '../../shared/hooks/useSkillActions';
-import { useAuthStore } from '../../shared/stores/useAuthStore';
+import { useAuthGuard } from '../../shared/hooks/useAuthGuard';
 import { formatDate } from '../../shared/formatters/format-date';
 import { formatCollaboratorsLabel } from '../../shared/formatters/format-collaborators-label';
 import { del, post } from '../../shared/services/api.client';
@@ -30,7 +30,7 @@ export function SkillRowExpanded({
   const { handleDownload, downloadError } = useSkillActions(skill);
   const [actionError, setActionError] = useState<string | null>(null);
   const { dialogState, openDialog, closeDialog } = useConfirmDialog();
-  const { isAuthenticated } = useAuthStore();
+  const { guardWithLogin, loginDialogState: collabLoginDialogState, closeLoginDialog: closeCollabLoginDialog } = useAuthGuard();
   const [isCollabRequesting, setIsCollabRequesting] = useState(false);
   const [isCollabRequestSent, setIsCollabRequestSent] = useState(false);
   const hasCurrentVersion = skill.currentVersion !== null;
@@ -38,7 +38,7 @@ export function SkillRowExpanded({
   const isCollaborator = skill.myRole === 'collaborator';
   const canCreateVersion = isOwner || isCollaborator;
   const isOpenCollab = skill.collaborationMode === 'open';
-  const canRequestCollab = isAuthenticated && !isOwner && !isCollaborator && isOpenCollab;
+  const canRequestCollab = !isOwner && !isCollaborator && isOpenCollab;
   const shouldShowReviewLink = isOwner && isOpenCollab;
   const hasCollaborators = skill.collaboratorsCount > 0;
   const collaboratorsLabel = formatCollaboratorsLabel(skill.collaboratorsCount);
@@ -72,7 +72,7 @@ export function SkillRowExpanded({
     }
   }, [skill.name, skill.id, closeDialog, onSkillDeleted]);
 
-  const handleRequestCollaboration = useCallback(async () => {
+  const executeRequestCollaboration = useCallback(async () => {
     setIsCollabRequesting(true);
     setActionError(null);
     try {
@@ -86,6 +86,11 @@ export function SkillRowExpanded({
       setIsCollabRequesting(false);
     }
   }, [skill.name]);
+
+  const handleRequestCollaboration = guardWithLogin({
+    message: 'You need to sign in to request collaboration. Would you like to sign in now?',
+    onAuthenticated: executeRequestCollaboration,
+  });
 
   const handleRequestDelete = useCallback(() => {
     openDialog({
@@ -249,6 +254,16 @@ export function SkillRowExpanded({
           isDangerous={dialogState.isDangerous}
           onConfirm={dialogState.onConfirm}
           onCancel={closeDialog}
+        />
+      )}
+      {collabLoginDialogState.isOpen && (
+        <ConfirmDialog
+          title={collabLoginDialogState.title}
+          message={collabLoginDialogState.message}
+          confirmLabel={collabLoginDialogState.confirmLabel}
+          isDangerous={collabLoginDialogState.isDangerous}
+          onConfirm={collabLoginDialogState.onConfirm}
+          onCancel={closeCollabLoginDialog}
         />
       )}
     </div>

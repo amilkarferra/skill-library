@@ -24,7 +24,6 @@ interface SkillContentProps {
   readonly activeTab: string;
   readonly versions: SkillVersion[];
   readonly isEditing: boolean;
-  readonly isAuthenticated: boolean;
   readonly isCollabRequesting: boolean;
   readonly isCollabRequestSent: boolean;
   readonly isSubmittingComment: boolean;
@@ -113,7 +112,6 @@ export function SkillDetailPage() {
         activeTab={state.activeTab}
         versions={state.versions}
         isEditing={state.isEditing}
-        isAuthenticated={state.isAuthenticated}
         isCollabRequesting={state.isCollabRequesting}
         isCollabRequestSent={state.isCollabRequestSent}
         isSubmittingComment={state.isSubmittingComment}
@@ -135,6 +133,16 @@ export function SkillDetailPage() {
           onCancel={actions.closeDialog}
         />
       )}
+      {state.collabLoginDialogState.isOpen && (
+        <ConfirmDialog
+          title={state.collabLoginDialogState.title}
+          message={state.collabLoginDialogState.message}
+          confirmLabel={state.collabLoginDialogState.confirmLabel}
+          isDangerous={state.collabLoginDialogState.isDangerous}
+          onConfirm={state.collabLoginDialogState.onConfirm}
+          onCancel={state.closeCollabLoginDialog}
+        />
+      )}
     </SidebarLayout>
   );
 }
@@ -145,7 +153,6 @@ function SkillDetailContent({
   activeTab,
   versions,
   isEditing,
-  isAuthenticated,
   isCollabRequesting,
   isCollabRequestSent,
   isSubmittingComment,
@@ -183,7 +190,6 @@ function SkillDetailContent({
       ) : (
         <SkillDetailHeader
           skill={skill}
-          isAuthenticated={isAuthenticated}
           onRequestCollaboration={actions.handleRequestCollaboration}
           isCollabRequesting={isCollabRequesting}
           isCollabRequestSent={isCollabRequestSent}
@@ -221,7 +227,6 @@ function SkillDetailContent({
             comments={comments}
             currentPage={commentsPagination.currentPage}
             totalPages={commentsPagination.totalPages}
-            isAuthenticated={isAuthenticated}
             isSubmitting={isSubmittingComment}
             isUpdating={isUpdatingComment}
             currentUserId={currentUserId}

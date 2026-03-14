@@ -1,24 +1,16 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../features/auth/useAuth';
-import { useAuthStore } from '../stores/useAuthStore';
 import { useLikeStore } from '../stores/useLikeStore';
 import { useDownloadStore } from '../stores/useDownloadStore';
-import { useConfirmDialog } from './useConfirmDialog';
+import { useAuthGuard } from './useAuthGuard';
 import {
   toggleSkillLike,
   fetchSkillVersionDownloadUrl,
 } from '../services/skill-actions.service';
 import type { SkillActionTarget } from '../models/SkillActionTarget';
+import type { AuthGuardDialogState } from './useAuthGuard';
 
-interface LoginDialogState {
-  readonly isOpen: boolean;
-  readonly title: string;
-  readonly message: string;
-  readonly confirmLabel: string;
-  readonly isDangerous: boolean;
-  readonly onConfirm: () => void;
-}
+const LIKE_LOGIN_MESSAGE = 'You need to sign in to like skills. Would you like to sign in now?';
 
 interface SkillActionsResult {
   readonly handleToggleLike: () => void;
@@ -27,21 +19,19 @@ interface SkillActionsResult {
   readonly isLikeInProgress: boolean;
   readonly isDownloadInProgress: boolean;
   readonly downloadError: string | null;
-  readonly loginDialogState: LoginDialogState;
+  readonly loginDialogState: AuthGuardDialogState;
   readonly closeLoginDialog: () => void;
 }
 
 export function useSkillActions(skill: SkillActionTarget): SkillActionsResult {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuthStore();
-  const { signIn } = useAuth();
   const publishLikeUpdate = useLikeStore((s) => s.publishLikeUpdate);
   const publishDownloadUpdate = useDownloadStore((s) => s.publishDownloadUpdate);
   const {
-    dialogState: loginDialogState,
-    openDialog: openLoginDialog,
-    closeDialog: closeLoginDialog,
-  } = useConfirmDialog();
+    guardWithLogin,
+    loginDialogState,
+    closeLoginDialog,
+  } = useAuthGuard();
   const [isLikeInProgress, setIsLikeInProgress] = useState(false);
   const [isDownloadInProgress, setIsDownloadInProgress] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
@@ -68,39 +58,10 @@ export function useSkillActions(skill: SkillActionTarget): SkillActionsResult {
     }
   }, [skill.id, skill.name, skill.isLikedByMe, skill.totalLikes, publishLikeUpdate]);
 
-  const signInThenLike = useCallback(async () => {
-    setIsLikeInProgress(true);
-    await signIn();
-
-    const isNowAuthenticated = useAuthStore.getState().isAuthenticated;
-    if (isNowAuthenticated) {
-      await executeLikeToggle();
-      return;
-    }
-
-    setIsLikeInProgress(false);
-  }, [signIn, executeLikeToggle]);
-
-  const promptLoginForLike = useCallback(() => {
-    openLoginDialog({
-      title: 'Sign in required',
-      message: 'You need to sign in to like skills. Would you like to sign in now?',
-      confirmLabel: 'Sign in',
-      isDangerous: false,
-      onConfirm: () => {
-        closeLoginDialog();
-        void signInThenLike();
-      },
-    });
-  }, [openLoginDialog, closeLoginDialog, signInThenLike]);
-
-  const handleToggleLike = useCallback(async () => {
-    if (!isAuthenticated) {
-      promptLoginForLike();
-      return;
-    }
-    await executeLikeToggle();
-  }, [isAuthenticated, promptLoginForLike, executeLikeToggle]);
+  const handleToggleLike = guardWithLogin({
+    message: LIKE_LOGIN_MESSAGE,
+    onAuthenticated: executeLikeToggle,
+  });
 
   const handleDownload = useCallback(async () => {
     const currentVersion = skill.currentVersion;

@@ -6,6 +6,7 @@ import { useDebounce } from '../../shared/hooks/useDebounce';
 import { usePagination } from '../../shared/hooks/usePagination';
 import { useCatalogStore } from '../../shared/stores/useCatalogStore';
 import { useLikeStore } from '../../shared/stores/useLikeStore';
+import { useDownloadStore } from '../../shared/stores/useDownloadStore';
 import { Pagination } from '../../shared/components/Pagination';
 import { EmptyState } from '../../shared/components/EmptyState';
 import { SearchBar } from './SearchBar';
@@ -37,6 +38,7 @@ export function CatalogPage() {
     setSearchQuery,
     setSelectedCategory,
     toggleSelectedTag,
+    clearSelectedTags,
     setSelectedAuthor,
     setSelectedSort,
     setCategories,
@@ -46,6 +48,7 @@ export function CatalogPage() {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const { lastLikeUpdate } = useLikeStore();
+  const { lastDownloadUpdate } = useDownloadStore();
 
   const [skills, setSkills] = useState<Skill[]>([]);
   const [expandedSkillId, setExpandedSkillId] = useState<number | null>(null);
@@ -150,6 +153,22 @@ export function CatalogPage() {
     );
   }, [lastLikeUpdate]);
 
+  useEffect(() => {
+    const hasNoUpdate = lastDownloadUpdate === null;
+    if (hasNoUpdate) return;
+
+    setSkills((previous) =>
+      previous.map((existingSkill) => {
+        const isTargetSkill = existingSkill.id === lastDownloadUpdate.skillId;
+        if (!isTargetSkill) return existingSkill;
+        return {
+          ...existingSkill,
+          totalDownloads: lastDownloadUpdate.totalDownloads,
+        };
+      })
+    );
+  }, [lastDownloadUpdate]);
+
   const handleCategoryChange = useCallback(
     (categorySlug: string) => {
       setSelectedCategory(categorySlug);
@@ -219,9 +238,16 @@ export function CatalogPage() {
     []
   );
 
+  const handleClearFilters = useCallback(() => {
+    setSelectedCategory('');
+    clearSelectedTags();
+    resetToFirstPage();
+  }, [setSelectedCategory, clearSelectedTags, resetToFirstPage]);
+
   const hasSkills = skills.length > 0;
   const hasError = loadError !== null;
   const hasAuthorFilter = selectedAuthor.length > 0;
+  const hasActiveFilters = selectedCategory.length > 0 || selectedTags.length > 0;
 
   return (
     <SidebarLayout
@@ -232,9 +258,11 @@ export function CatalogPage() {
           selectedCategory={selectedCategory}
           selectedTags={selectedTags}
           selectedSort={selectedSort}
+          hasActiveFilters={hasActiveFilters}
           onCategoryChange={handleCategoryChange}
           onTagToggle={handleTagToggle}
           onSortChange={handleSortChange}
+          onClearFilters={handleClearFilters}
         />
       }
     >

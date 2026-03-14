@@ -16,7 +16,6 @@ import './SkillSidebar.css';
 
 interface SkillSidebarProps {
   readonly skill: Skill;
-  readonly isAuthenticated: boolean;
   readonly onToggleLike: () => void;
   readonly onRequestCollaboration: () => void;
   readonly onDelete: () => void;
@@ -25,7 +24,6 @@ interface SkillSidebarProps {
 
 export function SkillSidebar({
   skill,
-  isAuthenticated,
   onToggleLike,
   onRequestCollaboration,
   onDelete,
@@ -35,7 +33,7 @@ export function SkillSidebar({
   const isLiked = skill.isLikedByMe === true;
   const isOwner = skill.myRole === 'owner';
   const isCollaborator = skill.myRole === 'collaborator';
-  const canRequestCollab = isAuthenticated && !isOwner && !isCollaborator;
+  const canRequestCollab = !isOwner && !isCollaborator;
   const isOpenCollab = skill.collaborationMode === 'open';
   const hasCurrentVersion = skill.currentVersion !== null;
 

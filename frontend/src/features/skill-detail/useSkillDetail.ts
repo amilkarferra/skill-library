@@ -3,6 +3,7 @@ import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../../shared/stores/useAuthStore';
 import { useLikeStore } from '../../shared/stores/useLikeStore';
 import { useDownloadStore } from '../../shared/stores/useDownloadStore';
+import { useAuthGuard } from '../../shared/hooks/useAuthGuard';
 import { useConfirmDialog } from '../../shared/hooks/useConfirmDialog';
 import { usePagination } from '../../shared/hooks/usePagination';
 import { del } from '../../shared/services/api.client';
@@ -49,7 +50,6 @@ interface SkillDetailState {
   readonly isCollabRequesting: boolean;
   readonly isCollabRequestSent: boolean;
   readonly isEditing: boolean;
-  readonly isAuthenticated: boolean;
   readonly currentUserId: number | null;
   readonly commentsPagination: {
     readonly currentPage: number;
@@ -64,6 +64,15 @@ interface SkillDetailState {
     readonly isDangerous: boolean;
     readonly onConfirm: () => void;
   };
+  readonly collabLoginDialogState: {
+    readonly isOpen: boolean;
+    readonly title: string;
+    readonly message: string;
+    readonly confirmLabel: string;
+    readonly isDangerous: boolean;
+    readonly onConfirm: () => void;
+  };
+  readonly closeCollabLoginDialog: () => void;
 }
 
 interface SkillDetailActions {
@@ -89,11 +98,12 @@ export function useSkillDetail(): SkillDetailResult {
   const { slug } = useParams<{ slug: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuthStore();
+  const { user } = useAuthStore();
 
   const { lastLikeUpdate } = useLikeStore();
   const { lastDownloadUpdate } = useDownloadStore();
   const { dialogState, openDialog, closeDialog } = useConfirmDialog();
+  const { guardWithLogin, loginDialogState: collabLoginDialogState, closeLoginDialog: closeCollabLoginDialog } = useAuthGuard();
   const [skill, setSkill] = useState<Skill | null>(null);
   const [skillMarkdownContent, setSkillMarkdownContent] = useState('');
   const [versions, setVersions] = useState<SkillVersion[]>([]);
@@ -259,7 +269,7 @@ export function useSkillDetail(): SkillDetailResult {
     }
   }, [slug, commentsPagination.currentPage, loadComments]);
 
-  const handleRequestCollaboration = useCallback(async () => {
+  const executeRequestCollaboration = useCallback(async () => {
     if (slug === undefined) return;
 
     setIsCollabRequesting(true);
@@ -276,6 +286,11 @@ export function useSkillDetail(): SkillDetailResult {
       setIsCollabRequesting(false);
     }
   }, [slug]);
+
+  const handleRequestCollaboration = guardWithLogin({
+    message: 'You need to sign in to request collaboration. Would you like to sign in now?',
+    onAuthenticated: executeRequestCollaboration,
+  });
 
   const executeDeleteSkill = useCallback(async () => {
     if (slug === undefined) return;
@@ -355,7 +370,6 @@ export function useSkillDetail(): SkillDetailResult {
       isCollabRequesting,
       isCollabRequestSent,
       isEditing,
-      isAuthenticated,
       currentUserId,
       commentsPagination: {
         currentPage: commentsPagination.currentPage,
@@ -363,6 +377,8 @@ export function useSkillDetail(): SkillDetailResult {
         goToPage: commentsPagination.goToPage,
       },
       dialogState,
+      collabLoginDialogState,
+      closeCollabLoginDialog,
     },
     actions: {
       handleSelectTab,

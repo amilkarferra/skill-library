@@ -2,6 +2,42 @@
   overflow-y: auto;
 }
 
+.filter-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.filter-section-header .filter-section-label {
+  margin-bottom: 0;
+}
+
+.filter-clear-button {
+  border: 1px solid var(--border-accent);
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 3px 8px;
+  transition: background 0.12s, color 0.12s;
+}
+
+.filter-clear-button:disabled {
+  border-color: var(--border-main);
+  background: none;
+  color: var(--text-muted);
+  cursor: default;
+  opacity: 0.5;
+}
+
+.filter-clear-button:not(:disabled):hover {
+  background: var(--accent);
+  color: #fff;
+}
+
 .filter-section {
   margin-bottom: 22px;
 }
