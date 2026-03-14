@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Clear filters button in catalog sidebar** — "Clear filters" chip inline with "Categories" label; resets selected category and tags to defaults; shown disabled when no filters are active (no layout shift); `clearSelectedTags` action added to `useCatalogStore`
+
 - **Frontend unit test suite** — Vitest 4.x with @testing-library/react and jsdom; 212 tests across 26 files covering formatters (formatFileSize, formatDate, formatRelativeDate, formatCollaboratorsLabel), validators (publish file validation), logic (string-similarity, similar-skills sorting, tag autocomplete fuzzy matching), Zustand stores (catalog toggle, auth derived state), hooks (usePagination, useDebounce, useApi, useConfirmDialog), and 12 shared UI components (Button, AlertMessage, Pagination, ConfirmDialog, TabBar, StatusBadge, VersionStatusBadge, CollabModeBadge, CountBadge, EmptyState, TextInput, TextArea)
 
 - **Duplicate skill detection** — publish form detects when a skill with the same or similar name already exists; shows warning with links to similar skills and contextual actions (Propose version for Open mode, Request collaboration for Closed mode)
