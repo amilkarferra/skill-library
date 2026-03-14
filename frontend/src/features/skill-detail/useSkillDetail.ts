@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useAuth } from '../auth/useAuth';
 import { useAuthStore } from '../../shared/stores/useAuthStore';
 import { useLikeStore } from '../../shared/stores/useLikeStore';
 import { useDownloadStore } from '../../shared/stores/useDownloadStore';
@@ -92,6 +93,7 @@ export function useSkillDetail(): SkillDetailResult {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuthStore();
+  const { signIn } = useAuth();
 
   const { publishLikeUpdate } = useLikeStore();
   const { lastDownloadUpdate } = useDownloadStore();
@@ -188,6 +190,11 @@ export function useSkillDetail(): SkillDetailResult {
   const handleToggleLike = useCallback(async () => {
     if (skill === null || slug === undefined) return;
 
+    if (!isAuthenticated) {
+      await signIn();
+      return;
+    }
+
     const currentlyLiked = skill.isLikedByMe === true;
     setActionError(null);
     try {
@@ -215,7 +222,7 @@ export function useSkillDetail(): SkillDetailResult {
       const errorMessage = error instanceof Error ? error.message : 'Failed to toggle like';
       setActionError(errorMessage);
     }
-  }, [skill, slug, publishLikeUpdate]);
+  }, [skill, slug, isAuthenticated, signIn, publishLikeUpdate]);
 
   const handleSubmitComment = useCallback(async (commentText: string) => {
     if (slug === undefined) return;

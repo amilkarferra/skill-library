@@ -55,12 +55,10 @@ export function SkillDetailHeader({
               Download v{skill.currentVersion}
             </Button>
           )}
-          {isAuthenticated && (
-            <Button variant={likeVariant} onClick={onToggleLike}>
-              <Heart size={16} fill={likeIconFill} />
-              {likeLabel}
-            </Button>
-          )}
+          <Button variant={likeVariant} onClick={onToggleLike}>
+            <Heart size={16} fill={likeIconFill} />
+            {likeLabel}
+          </Button>
           {shouldShowCollabButton && !isCollabRequestSent && (
             <Button
               variant="secondary"

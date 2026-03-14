@@ -57,12 +57,10 @@ export function SkillSidebar({
         </Button>
       )}
 
-      {isAuthenticated && (
-        <button className={likeButtonClass} onClick={onToggleLike}>
-          <Heart size={16} fill={isLiked ? 'currentColor' : 'none'} />
-          {isLiked ? 'Liked' : 'Like'}
-        </button>
-      )}
+      <button className={likeButtonClass} onClick={onToggleLike}>
+        <Heart size={16} fill={isLiked ? 'currentColor' : 'none'} />
+        {isLiked ? 'Liked' : 'Like'}
+      </button>
 
       <div className="skill-sidebar-stats">
         <div className="skill-sidebar-stat">
