@@ -112,9 +112,26 @@ def deactivate_skill(database_session: Session, skill: Skill) -> None:
 
 
 def restore_skill(database_session: Session, skill: Skill) -> None:
+    _raise_if_slug_taken_by_other_skill(database_session, skill.name, skill.id)
     skill.is_active = True
     skill.deactivated_at = None
     database_session.commit()
+
+
+def _raise_if_slug_taken_by_other_skill(
+    database_session: Session, slug: str, exclude_skill_id: int
+) -> None:
+    existing = database_session.query(Skill).filter(
+        Skill.name == slug,
+        Skill.is_active == True,
+        Skill.id != exclude_skill_id,
+    ).first()
+    is_slug_taken = existing is not None
+    if is_slug_taken:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Cannot restore: a skill with this name already exists. Change the skill name before restoring.",
+        )
 
 
 def find_skill_by_slug_include_inactive(

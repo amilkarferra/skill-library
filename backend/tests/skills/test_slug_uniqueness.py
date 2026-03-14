@@ -10,7 +10,7 @@ from app.auth.models.user import User
 from app.skills.models.category import Category
 from app.skills.models.skill import Skill
 from app.skills.schemas.skill_create_request import SkillCreateRequest
-from app.skills.service import _raise_if_slug_taken, create_skill
+from app.skills.service import _raise_if_slug_taken, create_skill, restore_skill
 
 SQLITE_IN_MEMORY_URL = "sqlite://"
 OWNER_AZURE_ID = "azure-1"
@@ -131,3 +131,41 @@ class TestCreateSkillSlugCollisionOnCommit:
         ):
             with pytest.raises(IntegrityError):
                 create_skill(seeded_session, owner, request)
+
+
+CONFLICTING_SLUG = "taken-slug"
+FREE_SLUG = "free-slug"
+
+
+class TestRestoreSkillSlugConflict:
+
+    def test_raises_409_when_slug_taken_by_another_active_skill(self, seeded_session):
+        active_skill = Skill(
+            id=1, owner_id=1, name=CONFLICTING_SLUG, display_name="Taken Skill",
+            short_description=SKILL_SHORT_DESCRIPTION, long_description=SKILL_LONG_DESCRIPTION,
+            category_id=1, is_active=True,
+        )
+        inactive_skill_same_slug = Skill(
+            id=2, owner_id=1, name=CONFLICTING_SLUG, display_name="Old Skill",
+            short_description=SKILL_SHORT_DESCRIPTION, long_description=SKILL_LONG_DESCRIPTION,
+            category_id=1, is_active=False,
+        )
+        seeded_session.add_all([active_skill, inactive_skill_same_slug])
+        seeded_session.commit()
+
+        with pytest.raises(HTTPException) as exc_info:
+            restore_skill(seeded_session, inactive_skill_same_slug)
+        assert exc_info.value.status_code == CONFLICT_STATUS_CODE
+
+    def test_restores_successfully_when_slug_is_free(self, seeded_session):
+        inactive_skill = Skill(
+            id=1, owner_id=1, name=FREE_SLUG, display_name="Free Slug",
+            short_description=SKILL_SHORT_DESCRIPTION, long_description=SKILL_LONG_DESCRIPTION,
+            category_id=1, is_active=False,
+        )
+        seeded_session.add(inactive_skill)
+        seeded_session.commit()
+
+        restore_skill(seeded_session, inactive_skill)
+
+        assert inactive_skill.is_active is True

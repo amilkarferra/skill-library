@@ -11,7 +11,7 @@ class Skill(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     owner_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
-    name = Column(String(100), unique=True, nullable=False, index=True)
+    name = Column(String(100), nullable=False, index=True)
     display_name = Column(String(DISPLAY_NAME_MAX_LENGTH), nullable=False)
     short_description = Column(String(SHORT_DESCRIPTION_MAX_LENGTH), nullable=False)
     long_description = Column(Text, nullable=False)
