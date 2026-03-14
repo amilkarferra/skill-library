@@ -28,7 +28,11 @@ export function SimilarSkillsWarning({ skills }: SimilarSkillsWarningProps) {
 }
 
 function renderSimilarSkillItem(skill: SimilarSkill) {
-  const modeLabel = skill.collaborationMode === 'open' ? 'Open' : 'Closed';
+  const isOpenMode = skill.collaborationMode === 'open';
+  const actionLabel = isOpenMode ? 'Propose version' : 'Request collaboration';
+  const actionHref = isOpenMode
+    ? `/skills/${skill.name}/new-version`
+    : `/skills/${skill.name}`;
 
   return (
     <li key={skill.name} className="similar-skills-warning-item">
@@ -41,8 +45,16 @@ function renderSimilarSkillItem(skill: SimilarSkill) {
         {skill.displayName}
       </a>
       <span className="similar-skills-warning-meta">
-        by @{skill.ownerUsername} ({modeLabel})
+        by @{skill.ownerUsername}
       </span>
+      <a
+        href={actionHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="similar-skills-warning-action"
+      >
+        {actionLabel}
+      </a>
     </li>
   );
 }

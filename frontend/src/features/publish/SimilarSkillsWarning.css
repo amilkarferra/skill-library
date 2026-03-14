@@ -40,6 +40,23 @@
   font-size: 11px;
 }
 
+.similar-skills-warning-action {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: var(--accent);
+  border: 1px solid var(--border-accent);
+  padding: 1px 6px;
+  text-decoration: none;
+  margin-left: auto;
+}
+
+.similar-skills-warning-action:hover {
+  background: var(--accent-bg);
+  color: var(--accent-hover);
+}
+
 .similar-skills-warning-hint {
   font-size: 11px;
   color: var(--text-muted);
