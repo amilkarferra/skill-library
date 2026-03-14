@@ -26,6 +26,8 @@ from app.skills.schemas.frontmatter_response import FrontmatterResponse
 from app.skills.schemas.tag_response import TagResponse
 from app.skills import search_service
 from app.skills import service
+from app.skills import similarity_service
+from app.skills.schemas.similar_skill_response import SimilarSkillResponse
 from app.skills.schemas.slug_preview_response import SlugPreviewResponse
 from app.skills.slug import generate_slug as generate_slug_from_name
 from app.versions import blob_service
@@ -71,6 +73,15 @@ def preview_slug(
     slug = generate_slug_from_name(display_name)
     is_taken = service.is_slug_taken_by_active_skill(database_session, slug)
     return SlugPreviewResponse(slug=slug, is_available=not is_taken)
+
+
+@router.get("/skills/similar", response_model=list[SimilarSkillResponse])
+def list_similar_skills(
+    display_name: str = Query(..., alias="displayName"),
+    database_session: Session = Depends(provide_database_session),
+) -> list[SimilarSkillResponse]:
+    slug = generate_slug_from_name(display_name)
+    return similarity_service.find_similar_skills(database_session, slug)
 
 
 @router.get("/skills/{slug}", response_model=SkillDetailResponse)
