@@ -32,8 +32,13 @@
 4. Form: displayName, shortDescription, longDescription (markdown), category, tags, collaboration mode
 5. File upload: .zip or .md (max 50MB)
 6. Frontmatter extraction: auto-fills name/description from SKILL.md
-7. Backend: uploads to Azure Blob -> saves metadata to SQL Server
-8. Result: skill created with currentVersion = null (no version yet)
+7. Duplicate detection (debounced 500ms after typing displayName):
+   - Backend checks slug availability via `GET /skills/slug-preview`
+   - If slug is taken: fetches similar skills via `GET /skills/similar`, ranked by Levenshtein distance
+   - Warning shows similar skills with contextual actions: "Propose version" (Open mode) or "Request collaboration" (Closed mode)
+   - On submit with duplicate slug: 409 error with link to existing skill
+8. Backend: uploads to Azure Blob -> saves metadata to SQL Server
+9. Result: skill created with currentVersion = null (no version yet)
 
 ## 5. Publish New Version
 1. Owner/collaborator clicks "New Version" on skill detail
@@ -58,7 +63,7 @@
 
 ## 8. My Panel (Dashboard)
 Sections:
-- **My Skills**: table of published skills, toggle active/inactive, manage versions & collaborators
+- **My Skills**: table of published skills, toggle active/inactive, manage versions & collaborators. Restore of soft-deleted skill fails with 409 if slug is taken by another active skill
 - **Collaborations**: skills where user is collaborator
 - **My Likes**: favorited skills
 - **Requests**: incoming invitations (blue) + outgoing requests (gray), accept/reject/cancel

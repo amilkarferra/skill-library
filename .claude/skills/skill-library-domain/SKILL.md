@@ -24,7 +24,8 @@ A community platform where developers share, discover, rate, and download skills
 
 ### Skill
 - The core product unit: a reusable code asset (.zip or .md file)
-- Fields: id, name (slug, unique), displayName, shortDescription (200 chars), longDescription (markdown), categoryId, collaborationMode, currentVersion, totalLikes, totalDownloads, totalComments, isActive
+- Fields: id, name (slug, unique among active skills), displayName, shortDescription (200 chars), longDescription (markdown), categoryId, collaborationMode, currentVersion, totalLikes, totalDownloads, totalComments, isActive
+- Slug uniqueness: enforced via partial unique index (WHERE is_active=1). Soft-deleted skills free their slug for reuse
 - Each skill has one owner (User) and optionally multiple collaborators
 - Belongs to exactly one Category
 
@@ -81,6 +82,7 @@ Frontend, Backend, Testing, DevOps, Architecture, Tooling
 | Soft Delete | Logical deactivation (isActive=false) without removing data |
 | Collaboration Mode | Closed (invited only) or Open (anyone proposes) |
 | Version Proposal | A version submitted by non-collaborator in Open mode, awaiting owner review |
+| Similar Skills Detection | System that finds skills with matching slug words when publishing, ranked by Levenshtein distance |
 
 ## User Flows
 
