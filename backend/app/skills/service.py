@@ -177,7 +177,8 @@ def _find_or_create_tag(database_session: Session, name: str) -> Tag:
 
 def _raise_if_slug_taken(database_session: Session, slug: str) -> None:
     existing = database_session.query(Skill).filter(
-        Skill.name == slug
+        Skill.name == slug,
+        Skill.is_active == True,
     ).first()
     is_slug_taken = existing is not None
     if is_slug_taken:
