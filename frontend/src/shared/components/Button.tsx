@@ -19,6 +19,7 @@ interface ButtonProps {
   readonly variant?: ButtonVariant;
   readonly size?: ButtonSize;
   readonly isFullWidth?: boolean;
+  readonly isLoading?: boolean;
   readonly disabled?: boolean;
   readonly type?: 'button' | 'submit';
   readonly onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
@@ -30,21 +31,24 @@ export function Button({
   variant = 'primary',
   size = 'medium',
   isFullWidth = false,
+  isLoading = false,
   disabled = false,
   type = 'button',
   onClick,
   ariaLabel,
 }: ButtonProps) {
   const className = buildButtonClassName(variant, size, isFullWidth);
+  const isDisabled = disabled || isLoading;
 
   return (
     <button
       type={type}
       className={className}
-      disabled={disabled}
+      disabled={isDisabled}
       onClick={onClick}
       aria-label={ariaLabel}
     >
+      {isLoading && <span className="button-spinner" />}
       {children}
     </button>
   );

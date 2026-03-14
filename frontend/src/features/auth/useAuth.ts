@@ -1,9 +1,7 @@
 import { useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import type { NavigateFunction } from 'react-router-dom';
 import { useMsal } from '@azure/msal-react';
 import { InteractionRequiredAuthError, InteractionStatus } from '@azure/msal-browser';
-import { loginRequest } from './msal-config';
+import { loginRequest, popupRedirectUri } from './msal-config';
 import {
   exchangeAzureTokenForAppJwt,
   fetchCurrentUserProfile,
@@ -14,11 +12,6 @@ import { API_BASE_URL } from '../../shared/services/api.config';
 import { registerTokenProvider } from '../../shared/services/token.refresh';
 import { useAuthStore } from '../../shared/stores/useAuthStore';
 import type { AuthState } from '../../shared/models/AuthState';
-
-function navigateAfterSignIn(navigate: NavigateFunction, isFirstLogin: boolean): void {
-  const destinationPath = isFirstLogin ? '/settings' : '/';
-  navigate(destinationPath, { replace: true });
-}
 
 function buildAuthenticationErrorMessage(error: unknown): string {
   const isApiError = error instanceof ApiError;
@@ -46,7 +39,6 @@ export function useAuth(): AuthState & {
   reconnect: () => Promise<void>;
 } {
   const { instance, accounts, inProgress } = useMsal();
-  const navigate = useNavigate();
 
   const {
     user,
@@ -124,14 +116,16 @@ export function useAuth(): AuthState & {
 
   const signIn = useCallback(async (): Promise<void> => {
     setAuthError(null);
+    setIsLoading(true);
     try {
       const loginResult = await instance.loginPopup(loginRequest);
       const hasNoIdToken = !loginResult.idToken;
-      if (hasNoIdToken) return;
+      if (hasNoIdToken) {
+        setIsLoading(false);
+        return;
+      }
 
-      setIsLoading(true);
-
-      const callbackResponse = await exchangeAzureTokenForAppJwt(loginResult.idToken);
+      await exchangeAzureTokenForAppJwt(loginResult.idToken);
       const authenticatedUser = await fetchCurrentUserProfile();
       setUser(authenticatedUser);
 
@@ -141,18 +135,26 @@ export function useAuth(): AuthState & {
         instance.setActiveAccount(authenticatedAccount);
       }
 
-      navigateAfterSignIn(navigate, callbackResponse.isFirstLogin);
+      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
       setAuthError(buildAuthenticationErrorMessage(error));
     }
-  }, [instance, navigate, setAuthError, setIsLoading, setUser]);
+  }, [instance, setAuthError, setIsLoading, setUser]);
 
   const signOut = useCallback(async (): Promise<void> => {
-    clearAuthSession();
-    clearAuthState();
-    await instance.logoutPopup();
-  }, [instance, clearAuthState]);
+    setIsLoading(true);
+    try {
+      await instance.logoutPopup({
+        postLogoutRedirectUri: popupRedirectUri,
+        mainWindowRedirectUri: '/',
+      });
+      clearAuthSession();
+      clearAuthState();
+    } catch {
+      setIsLoading(false);
+    }
+  }, [instance, clearAuthState, setIsLoading]);
 
   const reconnect = useCallback(async (): Promise<void> => {
     const hasNoAccounts = accounts.length === 0;

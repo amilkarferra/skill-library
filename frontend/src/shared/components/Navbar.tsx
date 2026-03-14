@@ -4,6 +4,7 @@ import { Upload, User, LogOut } from 'lucide-react';
 import { useAuth } from '../../features/auth/useAuth';
 import { useNotificationsStore } from '../stores/useNotificationsStore';
 import { AppLogo } from './AppLogo';
+import { Button } from './Button';
 import './Navbar.css';
 
 const ICON_SIZE_SMALL = 14;
@@ -11,7 +12,7 @@ const ICON_SIZE_MEDIUM = 16;
 const LOGO_SIZE = 28;
 
 export function Navbar() {
-  const { user, isAuthenticated, signOut } = useAuth();
+  const { user, isAuthenticated, isLoading, signIn, signOut } = useAuth();
   const location = useLocation();
   const pendingNotificationCount = useNotificationsStore(
     (state) => state.pendingNotificationCount
@@ -67,19 +68,25 @@ export function Navbar() {
               <button
                 className="nav-logout"
                 onClick={handleSignOut}
+                disabled={isLoading}
                 aria-label="Sign out"
                 title="Sign out"
               >
-                <LogOut size={ICON_SIZE_SMALL} />
+                {isLoading
+                  ? <span className="button-spinner" />
+                  : <LogOut size={ICON_SIZE_SMALL} />
+                }
               </button>
             </>
           ) : (
-            <Link
-              to="/login"
-              className="button button--primary button--small"
+            <Button
+              variant="primary"
+              size="small"
+              isLoading={isLoading}
+              onClick={signIn}
             >
               Sign in
-            </Link>
+            </Button>
           )}
         </div>
       </nav>

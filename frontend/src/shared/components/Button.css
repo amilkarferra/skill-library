@@ -131,3 +131,17 @@
   color: var(--danger);
   border-color: var(--danger);
 }
+
+.button-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: buttonSpin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes buttonSpin {
+  to { transform: rotate(360deg); }
+}

@@ -8,36 +8,40 @@ Feature: User login via Azure AD
   I want to sign in with my Microsoft account
   So that I can access authenticated features of Skill Library
 
-  Scenario: Visitor sees the sign-in button
+  Scenario: Visitor sees the sign-in button on any page
     Given I am not logged in
-    When I navigate to the login page
-    Then I see a "Sign in with Microsoft" button
+    When I visit any page
+    Then I see a "Sign in" button in the navigation bar
 
-  Scenario: Successful first-time login
+  Scenario: Successful first-time login via popup
     Given I am not logged in
     And I have never used Skill Library before
-    When I click "Sign in with Microsoft"
-    And I authenticate with my Microsoft account
-    Then my profile is automatically created from my Microsoft account information
-    And I am redirected to the catalog
+    When I click "Sign in"
+    Then a Microsoft authentication popup appears
+    When I authenticate with my Microsoft account
+    Then the popup closes automatically
+    And my profile is automatically created from my Microsoft account information
+    And I remain on the same page I was browsing
     And I see my profile icon in the navigation bar
 
-  Scenario: Successful returning login
+  Scenario: Successful returning login via popup
     Given I have used Skill Library before
-    When I click "Sign in with Microsoft"
-    And I authenticate with my Microsoft account
-    Then I am logged in and redirected to the catalog
+    When I click "Sign in"
+    Then a Microsoft authentication popup appears
+    When I authenticate with my Microsoft account
+    Then the popup closes automatically
+    And I remain on the same page I was browsing
+
+  Scenario: Sign-in button shows loading state during authentication
+    Given I am not logged in
+    When I click "Sign in"
+    Then the sign-in button shows a loading spinner
+    And the button is disabled until authentication completes
 
   Scenario: Login rejected for deactivated account
     Given my Skill Library account has been deactivated
     When I sign in with my Microsoft account
     Then the system rejects the login indicating the account is deactivated
-
-  Scenario: First login allows optional username selection
-    Given I am signing in for the first time
-    When my profile is created
-    Then my username defaults to my email prefix
-    And I can optionally change my username before continuing
 ```
 
 ## 1.2 Session Management
@@ -72,8 +76,18 @@ Feature: Session management
     And the reconnection cannot be completed
     Then I see an error message indicating I need to sign in again
 
-  Scenario: Logging out
+  Scenario: Logging out via popup
     Given I am logged in
-    When I click the logout option
-    Then I am logged out and redirected to the catalog as a visitor
+    When I click the logout button
+    Then the logout button shows a loading spinner
+    And a Microsoft sign-out popup appears
+    When I select the account to sign out of
+    Then the popup closes automatically
+    And I am logged out and redirected to the catalog as a visitor
+
+  Scenario: Logout button remains in loading state while popup is open
+    Given I am logged in
+    When I click the logout button
+    Then the logout button shows a loading spinner
+    And the button is disabled until the sign-out popup closes
 ```

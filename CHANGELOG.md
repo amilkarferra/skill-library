@@ -42,6 +42,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Login/logout popup rendering app inside popup** (BUG) — MSAL v5 redirect bridge page (`redirect.html`) called `broadcastResponseToMainFrame()` unconditionally, which hangs on logout (no auth response to broadcast); now detects login vs logout and closes the popup on logout
+- **Login navigated away from current page** (BUG) — sign-in button was a `<Link to="/login">` causing a full page redirect; replaced with popup-based login that keeps the user on their current page
+- **Logout cleared auth state before popup closed** (BUG) — `clearAuthSession()` ran synchronously before `logoutPopup()`, showing "Sign in" while the popup was still open; now clears state only after popup completes
+- **Sign-in/out buttons had no loading feedback** — added `isLoading` prop to shared `Button` component with spinner; both sign-in and sign-out buttons show loading state during authentication
+
 - **Tags sent as JSON string instead of individual form values** (BUG) — `SkillDetailsForm` used `JSON.stringify(selectedTags)` creating corrupted tags like `[]` and `["python"]` in the database; fixed to `forEach` + `append`
 - **Tag chips showing usageCount concatenated to name** — removed `usageCount` span from `FilterSidebar` tag chips; count is useful for categories but noise for compact tag chips
 - **`collaboration_mode` missing from `SkillResponse`** (BUG) — field was absent from Pydantic schema and `_build_skill_response`, causing all skills to show "Closed collaboration" regardless of actual mode

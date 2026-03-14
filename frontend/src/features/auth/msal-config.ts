@@ -10,11 +10,13 @@ function validateRedirectUri(redirectUri: string): string {
   return redirectUri;
 }
 
+export const popupRedirectUri = validateRedirectUri(import.meta.env.VITE_AZURE_REDIRECT_URI);
+
 const msalConfiguration: Configuration = {
   auth: {
     clientId: import.meta.env.VITE_AZURE_CLIENT_ID,
     authority: import.meta.env.VITE_AZURE_AUTHORITY,
-    redirectUri: validateRedirectUri(import.meta.env.VITE_AZURE_REDIRECT_URI),
+    redirectUri: popupRedirectUri,
   },
   cache: {
     cacheLocation: 'sessionStorage',
