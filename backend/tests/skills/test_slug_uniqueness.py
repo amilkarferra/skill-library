@@ -1,13 +1,16 @@
 import pytest
+from unittest.mock import patch
 from fastapi import HTTPException
 from sqlalchemy import create_engine
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
 from app.shared.database import Base
 from app.auth.models.user import User
 from app.skills.models.category import Category
 from app.skills.models.skill import Skill
-from app.skills.service import _raise_if_slug_taken
+from app.skills.schemas.skill_create_request import SkillCreateRequest
+from app.skills.service import _raise_if_slug_taken, create_skill
 
 SQLITE_IN_MEMORY_URL = "sqlite://"
 OWNER_AZURE_ID = "azure-1"
@@ -80,3 +83,51 @@ class TestRaiseIfSlugTaken:
 
     def test_does_not_raise_when_no_skill_with_slug_exists(self, seeded_session):
         _raise_if_slug_taken(seeded_session, NONEXISTENT_SLUG)
+
+
+class TestCreateSkillSlugCollisionOnCommit:
+
+    def test_returns_409_when_concurrent_slug_collision(self, seeded_session):
+        existing_skill = Skill(
+            id=1, owner_id=1, name="my-skill", display_name=SKILL_DISPLAY_NAME,
+            short_description=SKILL_SHORT_DESCRIPTION, long_description=SKILL_LONG_DESCRIPTION,
+            category_id=1, is_active=True,
+        )
+        seeded_session.add(existing_skill)
+        seeded_session.commit()
+
+        request = SkillCreateRequest(
+            display_name=SKILL_DISPLAY_NAME,
+            short_description=SKILL_SHORT_DESCRIPTION,
+            long_description=SKILL_LONG_DESCRIPTION,
+            category_id=1,
+            tags=[],
+            collaboration_mode="closed",
+        )
+        owner = seeded_session.query(User).first()
+
+        with patch.object(
+            seeded_session, "commit",
+            side_effect=IntegrityError("duplicate", {}, None),
+        ):
+            with pytest.raises(HTTPException) as exc_info:
+                create_skill(seeded_session, owner, request)
+            assert exc_info.value.status_code == CONFLICT_STATUS_CODE
+
+    def test_reraises_integrity_error_when_not_slug_collision(self, seeded_session):
+        request = SkillCreateRequest(
+            display_name=SKILL_DISPLAY_NAME,
+            short_description=SKILL_SHORT_DESCRIPTION,
+            long_description=SKILL_LONG_DESCRIPTION,
+            category_id=1,
+            tags=[],
+            collaboration_mode="closed",
+        )
+        owner = seeded_session.query(User).first()
+
+        with patch.object(
+            seeded_session, "commit",
+            side_effect=IntegrityError("other constraint", {}, None),
+        ):
+            with pytest.raises(IntegrityError):
+                create_skill(seeded_session, owner, request)

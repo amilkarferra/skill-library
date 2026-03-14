@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 
 from fastapi import HTTPException, status
 from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.auth.models.user import User
@@ -43,7 +44,7 @@ def create_skill(
     database_session.flush()
 
     _sync_skill_tags(database_session, skill.id, request.tags)
-    database_session.commit()
+    _commit_or_raise_on_slug_collision(database_session, slug)
     database_session.refresh(skill)
     return skill
 
@@ -99,7 +100,7 @@ def update_skill_metadata(
     if has_new_tags:
         _sync_skill_tags(database_session, skill.id, request.tags)
 
-    database_session.commit()
+    _commit_or_raise_on_slug_collision(database_session, skill.name)
     database_session.refresh(skill)
     return skill
 
@@ -175,17 +176,35 @@ def _find_or_create_tag(database_session: Session, name: str) -> Tag:
     return tag
 
 
-def _raise_if_slug_taken(database_session: Session, slug: str) -> None:
+def _is_slug_taken_by_active_skill(database_session: Session, slug: str) -> bool:
     existing = database_session.query(Skill).filter(
         Skill.name == slug,
         Skill.is_active == True,
     ).first()
-    is_slug_taken = existing is not None
+    return existing is not None
+
+
+def _raise_if_slug_taken(database_session: Session, slug: str) -> None:
+    is_slug_taken = _is_slug_taken_by_active_skill(database_session, slug)
     if is_slug_taken:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail="A skill with this name already exists",
         )
+
+
+def _commit_or_raise_on_slug_collision(database_session: Session, slug: str) -> None:
+    try:
+        database_session.commit()
+    except IntegrityError:
+        database_session.rollback()
+        is_slug_collision = _is_slug_taken_by_active_skill(database_session, slug)
+        if is_slug_collision:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="A skill with this name already exists",
+            )
+        raise
 
 
 def resolve_user_role_on_skill(
