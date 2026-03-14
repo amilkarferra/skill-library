@@ -137,6 +137,13 @@ Feature: Requesting collaboration from skill detail
   Scenario: Request button not shown for existing collaborators
     Given I am already a collaborator on this skill
     Then I do not see the request collaboration button
+
+  Scenario: Anonymous user is prompted to sign in when requesting collaboration
+    Given I am not logged in
+    And a published skill with open collaboration exists
+    And I am on the skill detail page
+    When I click the request collaboration button
+    Then I am prompted to sign in via a confirmation dialog
 ```
 
 ## 3.6 Role-Based Actions on Detail

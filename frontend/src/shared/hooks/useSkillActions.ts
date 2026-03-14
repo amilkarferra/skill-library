@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLikeStore } from '../stores/useLikeStore';
 import { useDownloadStore } from '../stores/useDownloadStore';
@@ -58,10 +58,13 @@ export function useSkillActions(skill: SkillActionTarget): SkillActionsResult {
     }
   }, [skill.id, skill.name, skill.isLikedByMe, skill.totalLikes, publishLikeUpdate]);
 
-  const handleToggleLike = guardWithLogin({
-    message: LIKE_LOGIN_MESSAGE,
-    onAuthenticated: executeLikeToggle,
-  });
+  const handleToggleLike = useMemo(
+    () => guardWithLogin({
+      message: LIKE_LOGIN_MESSAGE,
+      onAuthenticated: executeLikeToggle,
+    }),
+    [guardWithLogin, executeLikeToggle],
+  );
 
   const handleDownload = useCallback(async () => {
     const currentVersion = skill.currentVersion;

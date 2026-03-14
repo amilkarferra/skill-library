@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { ChevronRight, Pencil, Trash2 } from 'lucide-react';
 import { Button } from '../../shared/components/Button';
 import { ConfirmDialog } from '../../shared/components/ConfirmDialog';
+import { AuthGuardDialog } from '../../shared/components/AuthGuardDialog';
 import { TabBar } from '../../shared/components/TabBar';
 import { SidebarLayout } from '../../shared/components/SidebarLayout';
 import { NavigationSidebar } from '../../shared/components/NavigationSidebar';
@@ -133,16 +134,10 @@ export function SkillDetailPage() {
           onCancel={actions.closeDialog}
         />
       )}
-      {state.collabLoginDialogState.isOpen && (
-        <ConfirmDialog
-          title={state.collabLoginDialogState.title}
-          message={state.collabLoginDialogState.message}
-          confirmLabel={state.collabLoginDialogState.confirmLabel}
-          isDangerous={state.collabLoginDialogState.isDangerous}
-          onConfirm={state.collabLoginDialogState.onConfirm}
-          onCancel={state.closeCollabLoginDialog}
-        />
-      )}
+      <AuthGuardDialog
+        dialogState={state.collabLoginDialogState}
+        onClose={state.closeCollabLoginDialog}
+      />
     </SidebarLayout>
   );
 }

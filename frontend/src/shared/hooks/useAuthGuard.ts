@@ -40,16 +40,16 @@ export function useAuthGuard(): AuthGuardResult {
   const signInThenExecute = useCallback(
     async (onAuthenticated: () => void | Promise<void>) => {
       setIsAuthActionInProgress(true);
-      await signIn();
+      try {
+        await signIn();
 
-      const isNowAuthenticated = useAuthStore.getState().isAuthenticated;
-      if (isNowAuthenticated) {
-        await onAuthenticated();
+        const isNowAuthenticated = useAuthStore.getState().isAuthenticated;
+        if (isNowAuthenticated) {
+          await onAuthenticated();
+        }
+      } finally {
         setIsAuthActionInProgress(false);
-        return;
       }
-
-      setIsAuthActionInProgress(false);
     },
     [signIn],
   );

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Upload } from 'lucide-react';
 import { useAuthGuard } from '../hooks/useAuthGuard';
 import { buildFileValidationError } from '../../features/publish/publish-validation';
-import { ConfirmDialog } from './ConfirmDialog';
+import { AuthGuardDialog } from './AuthGuardDialog';
 import './QuickPublishDropzone.css';
 
 const QUICK_PUBLISH_ICON_SIZE = 20;
@@ -125,16 +125,7 @@ export function QuickPublishDropzone() {
         )}
       </div>
 
-      {loginDialogState.isOpen && (
-        <ConfirmDialog
-          title={loginDialogState.title}
-          message={loginDialogState.message}
-          confirmLabel={loginDialogState.confirmLabel}
-          isDangerous={loginDialogState.isDangerous}
-          onConfirm={loginDialogState.onConfirm}
-          onCancel={closeLoginDialog}
-        />
-      )}
+      <AuthGuardDialog dialogState={loginDialogState} onClose={closeLoginDialog} />
     </>
   );
 }

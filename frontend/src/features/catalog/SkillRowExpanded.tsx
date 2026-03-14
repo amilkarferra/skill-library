@@ -1,8 +1,9 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, Download, Upload, User, Box, Calendar, UserPlus, Users, Trash2, Check } from 'lucide-react';
 import { Button } from '../../shared/components/Button';
 import { ConfirmDialog } from '../../shared/components/ConfirmDialog';
+import { AuthGuardDialog } from '../../shared/components/AuthGuardDialog';
 import { TagList } from '../../shared/components/TagList';
 import { useConfirmDialog } from '../../shared/hooks/useConfirmDialog';
 import { useSkillActions } from '../../shared/hooks/useSkillActions';
@@ -21,6 +22,7 @@ interface SkillRowExpandedProps {
 
 const MAX_DESCRIPTION_LENGTH = 200;
 const ACTION_ICON_SIZE = 12;
+const COLLABORATION_LOGIN_MESSAGE = 'You need to sign in to request collaboration. Would you like to sign in now?';
 
 export function SkillRowExpanded({
   skill,
@@ -30,7 +32,11 @@ export function SkillRowExpanded({
   const { handleDownload, downloadError } = useSkillActions(skill);
   const [actionError, setActionError] = useState<string | null>(null);
   const { dialogState, openDialog, closeDialog } = useConfirmDialog();
-  const { guardWithLogin, loginDialogState: collabLoginDialogState, closeLoginDialog: closeCollabLoginDialog } = useAuthGuard();
+  const {
+    guardWithLogin,
+    loginDialogState: collabLoginDialogState,
+    closeLoginDialog: closeCollabLoginDialog,
+  } = useAuthGuard();
   const [isCollabRequesting, setIsCollabRequesting] = useState(false);
   const [isCollabRequestSent, setIsCollabRequestSent] = useState(false);
   const hasCurrentVersion = skill.currentVersion !== null;
@@ -87,10 +93,13 @@ export function SkillRowExpanded({
     }
   }, [skill.name]);
 
-  const handleRequestCollaboration = guardWithLogin({
-    message: 'You need to sign in to request collaboration. Would you like to sign in now?',
-    onAuthenticated: executeRequestCollaboration,
-  });
+  const handleRequestCollaboration = useMemo(
+    () => guardWithLogin({
+      message: COLLABORATION_LOGIN_MESSAGE,
+      onAuthenticated: executeRequestCollaboration,
+    }),
+    [guardWithLogin, executeRequestCollaboration],
+  );
 
   const handleRequestDelete = useCallback(() => {
     openDialog({
@@ -256,16 +265,10 @@ export function SkillRowExpanded({
           onCancel={closeDialog}
         />
       )}
-      {collabLoginDialogState.isOpen && (
-        <ConfirmDialog
-          title={collabLoginDialogState.title}
-          message={collabLoginDialogState.message}
-          confirmLabel={collabLoginDialogState.confirmLabel}
-          isDangerous={collabLoginDialogState.isDangerous}
-          onConfirm={collabLoginDialogState.onConfirm}
-          onCancel={closeCollabLoginDialog}
-        />
-      )}
+      <AuthGuardDialog
+        dialogState={collabLoginDialogState}
+        onClose={closeCollabLoginDialog}
+      />
     </div>
   );
 }

@@ -1,8 +1,8 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { Send } from 'lucide-react';
 import { TextArea } from '../../shared/components/TextArea';
 import { Button } from '../../shared/components/Button';
-import { ConfirmDialog } from '../../shared/components/ConfirmDialog';
+import { AuthGuardDialog } from '../../shared/components/AuthGuardDialog';
 import { useAuthGuard } from '../../shared/hooks/useAuthGuard';
 import { useAuthStore } from '../../shared/stores/useAuthStore';
 import './CommentForm.css';
@@ -12,6 +12,7 @@ const COMMENT_INPUT_BUFFER = 100;
 const MAX_COMMENT_INPUT_LENGTH = MAX_COMMENT_LENGTH + COMMENT_INPUT_BUFFER;
 const COMMENT_LOGIN_MESSAGE = 'You need to sign in to post comments. Would you like to sign in now?';
 const SEND_ICON_SIZE = 14;
+const NOOP = () => {};
 
 interface CommentFormProps {
   readonly isSubmitting: boolean;
@@ -46,10 +47,13 @@ export function CommentForm({
     []
   );
 
-  const handleFocusWhenAnonymous = guardWithLogin({
-    message: COMMENT_LOGIN_MESSAGE,
-    onAuthenticated: () => {},
-  });
+  const handleFocusWhenAnonymous = useMemo(
+    () => guardWithLogin({
+      message: COMMENT_LOGIN_MESSAGE,
+      onAuthenticated: NOOP,
+    }),
+    [guardWithLogin],
+  );
 
   const submitComment = useCallback(() => {
     const canSubmit = !isCommentTextEmpty && !isOverLimit && !isSubmitting;
@@ -59,10 +63,13 @@ export function CommentForm({
     }
   }, [commentText, isCommentTextEmpty, isOverLimit, isSubmitting, onSubmit]);
 
-  const handleSubmit = guardWithLogin({
-    message: COMMENT_LOGIN_MESSAGE,
-    onAuthenticated: submitComment,
-  });
+  const handleSubmit = useMemo(
+    () => guardWithLogin({
+      message: COMMENT_LOGIN_MESSAGE,
+      onAuthenticated: submitComment,
+    }),
+    [guardWithLogin, submitComment],
+  );
 
   const isReadOnlyForAnonymous = !isAuthenticated;
 
@@ -87,16 +94,7 @@ export function CommentForm({
         </Button>
       </div>
 
-      {loginDialogState.isOpen && (
-        <ConfirmDialog
-          title={loginDialogState.title}
-          message={loginDialogState.message}
-          confirmLabel={loginDialogState.confirmLabel}
-          isDangerous={loginDialogState.isDangerous}
-          onConfirm={loginDialogState.onConfirm}
-          onCancel={closeLoginDialog}
-        />
-      )}
+      <AuthGuardDialog dialogState={loginDialogState} onClose={closeLoginDialog} />
     </div>
   );
 }

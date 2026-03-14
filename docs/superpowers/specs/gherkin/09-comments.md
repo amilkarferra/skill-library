@@ -61,11 +61,19 @@ Feature: Comment validation and restrictions
     When I try to submit a comment longer than 2000 characters
     Then the system rejects indicating the comment exceeds the maximum length
 
-  Scenario: Anonymous user cannot comment
+  Scenario: Anonymous user sees readonly comment form
     Given I am not logged in
     And I am on the comments tab of a skill
-    Then I do not see the comment form
-    And I see a prompt to log in to leave a comment
+    Then I see the comment form with a "Sign in to leave a comment..." placeholder
+    And the textarea is readonly
+    When I click on the textarea
+    Then I am prompted to sign in via a confirmation dialog
+
+  Scenario: Anonymous user is prompted to sign in when submitting
+    Given I am not logged in
+    And I am on the comments tab of a skill
+    When I click the post comment button
+    Then I am prompted to sign in via a confirmation dialog
 
   Scenario: Cannot comment on an inactive skill
     Given a skill has been deactivated

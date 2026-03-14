@@ -43,10 +43,10 @@ Feature: Publishing a new skill
       | a file larger than 50 MB                      | the file exceeds the maximum allowed size    |
       | a file that is not .zip or .md                | only .zip or .md files are accepted          |
 
-  Scenario: Anonymous user cannot access publish page
+  Scenario: Anonymous user is prompted to sign in when publishing
     Given I am not logged in
-    When I try to navigate to the publish skill page
-    Then I am redirected to the login page
+    When I click the publish button in the navbar
+    Then I am prompted to sign in via a confirmation dialog
 ```
 
 ## 4.4 Quick Publish
@@ -84,10 +84,18 @@ Feature: Quick publishing a skill via drag and drop
     When I drop a file that is not .zip or .md onto the quick publish dropzone
     Then I see an error message in the dropzone indicating the file type is not accepted
 
-  Scenario: Quick publish dropzone is not visible for anonymous users
+  Scenario: Anonymous user is prompted to sign in when using quick publish
     Given I am not logged in
     And I am on the catalog page
-    Then I do not see the "Quick Publish" dropzone in the sidebar
+    Then I see the "Quick Publish" dropzone in the sidebar
+    When I click on the quick publish dropzone
+    Then I am prompted to sign in via a confirmation dialog
+
+  Scenario: Anonymous user is prompted to sign in when dropping a file
+    Given I am not logged in
+    And I am on the catalog page
+    When I drop a file onto the quick publish dropzone
+    Then I am prompted to sign in via a confirmation dialog
 ```
 
 ## 4.2 Edit Skill Metadata

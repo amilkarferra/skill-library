@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Upload, User, LogOut } from 'lucide-react';
 import { useAuth } from '../../features/auth/useAuth';
@@ -6,7 +6,7 @@ import { useAuthGuard } from '../hooks/useAuthGuard';
 import { useNotificationsStore } from '../stores/useNotificationsStore';
 import { AppLogo } from './AppLogo';
 import { Button } from './Button';
-import { ConfirmDialog } from './ConfirmDialog';
+import { AuthGuardDialog } from './AuthGuardDialog';
 import './Navbar.css';
 
 const ICON_SIZE_SMALL = 14;
@@ -38,10 +38,15 @@ export function Navbar() {
     signOut();
   }, [signOut]);
 
-  const handlePublishClick = guardWithLogin({
-    message: PUBLISH_LOGIN_MESSAGE,
-    onAuthenticated: () => navigate('/publish'),
-  });
+  const navigateToPublish = useCallback(() => navigate('/publish'), [navigate]);
+
+  const handlePublishClick = useMemo(
+    () => guardWithLogin({
+      message: PUBLISH_LOGIN_MESSAGE,
+      onAuthenticated: navigateToPublish,
+    }),
+    [guardWithLogin, navigateToPublish],
+  );
 
   return (
     <div className="nav-wrapper">
@@ -106,16 +111,7 @@ export function Navbar() {
         </div>
       </nav>
 
-      {loginDialogState.isOpen && (
-        <ConfirmDialog
-          title={loginDialogState.title}
-          message={loginDialogState.message}
-          confirmLabel={loginDialogState.confirmLabel}
-          isDangerous={loginDialogState.isDangerous}
-          onConfirm={loginDialogState.onConfirm}
-          onCancel={closeLoginDialog}
-        />
-      )}
+      <AuthGuardDialog dialogState={loginDialogState} onClose={closeLoginDialog} />
     </div>
   );
 }

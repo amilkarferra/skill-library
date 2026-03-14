@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../../shared/stores/useAuthStore';
 import { useLikeStore } from '../../shared/stores/useLikeStore';
 import { useDownloadStore } from '../../shared/stores/useDownloadStore';
 import { useAuthGuard } from '../../shared/hooks/useAuthGuard';
+import type { AuthGuardDialogState } from '../../shared/hooks/useAuthGuard';
 import { useConfirmDialog } from '../../shared/hooks/useConfirmDialog';
 import { usePagination } from '../../shared/hooks/usePagination';
 import { del } from '../../shared/services/api.client';
@@ -24,6 +25,7 @@ import type { Comment } from '../../shared/models/Comment';
 type TabId = 'overview' | 'versions' | 'comments' | 'collaborators';
 
 const COMMENTS_PAGE_SIZE = 15;
+const COLLABORATION_LOGIN_MESSAGE = 'You need to sign in to request collaboration. Would you like to sign in now?';
 
 const VALID_TABS: ReadonlySet<string> = new Set([
   'overview', 'versions', 'comments', 'collaborators',
@@ -64,14 +66,7 @@ interface SkillDetailState {
     readonly isDangerous: boolean;
     readonly onConfirm: () => void;
   };
-  readonly collabLoginDialogState: {
-    readonly isOpen: boolean;
-    readonly title: string;
-    readonly message: string;
-    readonly confirmLabel: string;
-    readonly isDangerous: boolean;
-    readonly onConfirm: () => void;
-  };
+  readonly collabLoginDialogState: AuthGuardDialogState;
   readonly closeCollabLoginDialog: () => void;
 }
 
@@ -103,7 +98,11 @@ export function useSkillDetail(): SkillDetailResult {
   const { lastLikeUpdate } = useLikeStore();
   const { lastDownloadUpdate } = useDownloadStore();
   const { dialogState, openDialog, closeDialog } = useConfirmDialog();
-  const { guardWithLogin, loginDialogState: collabLoginDialogState, closeLoginDialog: closeCollabLoginDialog } = useAuthGuard();
+  const {
+    guardWithLogin,
+    loginDialogState: collabLoginDialogState,
+    closeLoginDialog: closeCollabLoginDialog,
+  } = useAuthGuard();
   const [skill, setSkill] = useState<Skill | null>(null);
   const [skillMarkdownContent, setSkillMarkdownContent] = useState('');
   const [versions, setVersions] = useState<SkillVersion[]>([]);
@@ -287,10 +286,13 @@ export function useSkillDetail(): SkillDetailResult {
     }
   }, [slug]);
 
-  const handleRequestCollaboration = guardWithLogin({
-    message: 'You need to sign in to request collaboration. Would you like to sign in now?',
-    onAuthenticated: executeRequestCollaboration,
-  });
+  const handleRequestCollaboration = useMemo(
+    () => guardWithLogin({
+      message: COLLABORATION_LOGIN_MESSAGE,
+      onAuthenticated: executeRequestCollaboration,
+    }),
+    [guardWithLogin, executeRequestCollaboration],
+  );
 
   const executeDeleteSkill = useCallback(async () => {
     if (slug === undefined) return;
