@@ -47,6 +47,11 @@ Feature: Skill detail tabs
   Scenario: Switching to comments tab
     When I click on the comments tab
     Then I see the list of comments for this skill
+
+  Scenario: Switching to collaborators tab
+    When I click on the collaborators tab
+    Then I see the list of collaborators for this skill
+    And the tab label shows the number of collaborators
 ```
 
 ## 3.3 Download from Detail
@@ -165,4 +170,17 @@ Feature: Role-based actions on skill detail
     And I am a collaborator on this skill
     Then I see the option to upload a new version
     And I do not see edit metadata or delete options
+
+  Scenario: Owner deletes a skill from the detail page
+    Given I am logged in
+    And I am viewing a skill I own
+    When I click the delete button
+    Then I see a confirmation dialog asking if I am sure
+    And the dialog indicates the skill will be deactivated
+
+  Scenario: Owner confirms skill deletion
+    Given I see the delete confirmation dialog
+    When I confirm the deletion
+    Then the skill is deactivated
+    And I am redirected to the catalog
 ```

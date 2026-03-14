@@ -53,12 +53,24 @@ Feature: Session management
     When I continue using the platform within the session duration
     Then my session is automatically renewed without interruption
 
-  Scenario: Session expires after prolonged inactivity
+  Scenario: Session expired shows reconnect banner
     Given I am logged in
-    And I have been inactive beyond the session duration
-    When I try to perform an action that requires authentication
-    Then I am redirected to the login page
-    And I see a message indicating my session has expired
+    And my session has expired due to prolonged inactivity
+    When the platform detects the expired session
+    Then I see a banner indicating my session has expired
+    And I see a "Reconnect" button in the banner
+
+  Scenario: Reconnecting after session expiration
+    Given I see the session expired banner
+    When I click the "Reconnect" button
+    Then my session is restored without losing my current page
+    And the session expired banner disappears
+
+  Scenario: Reconnect fails
+    Given I see the session expired banner
+    When I click the "Reconnect" button
+    And the reconnection cannot be completed
+    Then I see an error message indicating I need to sign in again
 
   Scenario: Logging out
     Given I am logged in

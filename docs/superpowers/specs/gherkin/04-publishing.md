@@ -49,6 +49,47 @@ Feature: Publishing a new skill
     Then I am redirected to the login page
 ```
 
+## 4.4 Quick Publish
+
+```gherkin
+Feature: Quick publishing a skill via drag and drop
+  As a registered user
+  I want to quickly start publishing by dropping a file onto the sidebar
+  So that I can skip navigating to the publish page manually
+
+  Background:
+    Given I am logged in
+
+  Scenario: Quick publish dropzone is visible in the sidebar
+    Given I am on the catalog page
+    Then I see a "Quick Publish" dropzone in the sidebar
+
+  Scenario: Quick publish dropzone is visible on other pages
+    Given I am on a page with the navigation sidebar
+    And I am not already on the publish page
+    Then I see a "Quick Publish" dropzone in the sidebar
+
+  Scenario: Quick publish dropzone is hidden on the publish page
+    Given I am on the publish skill page
+    Then I do not see the "Quick Publish" dropzone in the sidebar
+
+  Scenario: Dropping a valid file on the quick publish dropzone
+    Given I am on the catalog page
+    When I drop a valid .zip or .md file onto the quick publish dropzone
+    Then I am navigated to the publish page with the file pre-loaded
+    And the frontmatter extraction runs automatically on the pre-loaded file
+
+  Scenario: Dropping an invalid file on the quick publish dropzone
+    Given I am on the catalog page
+    When I drop a file that is not .zip or .md onto the quick publish dropzone
+    Then I see an error message in the dropzone indicating the file type is not accepted
+
+  Scenario: Quick publish dropzone is not visible for anonymous users
+    Given I am not logged in
+    And I am on the catalog page
+    Then I do not see the "Quick Publish" dropzone in the sidebar
+```
+
 ## 4.2 Edit Skill Metadata
 
 ```gherkin

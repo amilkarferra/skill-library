@@ -13,6 +13,7 @@ Feature: Browsing the skill catalog
 
   Scenario: Visitor sees the catalog layout
     Then I see a sidebar with categories, sort options, and popular tags
+    And each category shows the number of skills it contains
     And I see a list of skills in the main area
     And each skill row shows the name, short description, author, category, likes count, and downloads count
 
@@ -28,8 +29,13 @@ Feature: Browsing the skill catalog
   Scenario: Expanding a skill row to see details
     Given there are published skills in the list
     When I click on a skill row to expand it
-    Then I see the full description, tags, and metadata for that skill
+    Then I see the full description, tags, collaboration mode, and collaborator count for that skill
     And I see action buttons relevant to my role
+
+  Scenario: Authenticated user sees role badge on their skills
+    Given I am logged in
+    And I own or collaborate on published skills
+    Then each skill where I have a role shows a badge indicating whether I am the owner or a collaborator
 
   Scenario: Collapsing an expanded skill row
     Given I have expanded a skill row
@@ -68,6 +74,10 @@ Feature: Searching and filtering skills
   Scenario: Filter by author
     When I search by a specific author username
     Then the skill list updates to show only skills published by that author
+
+  Scenario: Filter by author via URL parameter
+    When I navigate to the catalog with an author parameter in the URL
+    Then the skill list is pre-filtered to show only skills by that author
 
   Scenario: Clear all filters
     Given I have applied some filters
