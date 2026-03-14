@@ -1,6 +1,10 @@
 import { useCallback, useEffect } from 'react';
 import { useMsal } from '@azure/msal-react';
-import { InteractionRequiredAuthError, InteractionStatus } from '@azure/msal-browser';
+import {
+  BrowserAuthError,
+  InteractionRequiredAuthError,
+  InteractionStatus,
+} from '@azure/msal-browser';
 import { loginRequest, popupRedirectUri } from './msal-config';
 import {
   exchangeAzureTokenForAppJwt,
@@ -12,6 +16,14 @@ import { API_BASE_URL } from '../../shared/services/api.config';
 import { registerTokenProvider } from '../../shared/services/token.refresh';
 import { useAuthStore } from '../../shared/stores/useAuthStore';
 import type { AuthState } from '../../shared/models/AuthState';
+
+function isUserCancelledPopup(error: unknown): boolean {
+  const isBrowserAuthError = error instanceof BrowserAuthError;
+  if (!isBrowserAuthError) return false;
+
+  const cancelledErrorCodes = ['user_cancelled', 'popup_window_error'];
+  return cancelledErrorCodes.includes(error.errorCode);
+}
 
 function buildAuthenticationErrorMessage(error: unknown): string {
   const isApiError = error instanceof ApiError;
@@ -120,10 +132,7 @@ export function useAuth(): AuthState & {
     try {
       const loginResult = await instance.loginPopup(loginRequest);
       const hasNoIdToken = !loginResult.idToken;
-      if (hasNoIdToken) {
-        setIsLoading(false);
-        return;
-      }
+      if (hasNoIdToken) return;
 
       await exchangeAzureTokenForAppJwt(loginResult.idToken);
       const authenticatedUser = await fetchCurrentUserProfile();
@@ -134,11 +143,13 @@ export function useAuth(): AuthState & {
       if (hasAuthenticatedAccount) {
         instance.setActiveAccount(authenticatedAccount);
       }
-
-      setIsLoading(false);
     } catch (error) {
+      const isPopupCancelled = isUserCancelledPopup(error);
+      if (!isPopupCancelled) {
+        setAuthError(buildAuthenticationErrorMessage(error));
+      }
+    } finally {
       setIsLoading(false);
-      setAuthError(buildAuthenticationErrorMessage(error));
     }
   }, [instance, setAuthError, setIsLoading, setUser]);
 
