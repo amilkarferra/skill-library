@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { useAuth } from '../auth/useAuth';
 import { useAuthStore } from '../../shared/stores/useAuthStore';
 import { useLikeStore } from '../../shared/stores/useLikeStore';
 import { useDownloadStore } from '../../shared/stores/useDownloadStore';
@@ -17,7 +16,6 @@ import {
   deleteComment,
   requestCollaboration,
 } from './skill-detail.service';
-import { toggleSkillLike } from '../../shared/services/skill-actions.service';
 import type { Skill } from '../../shared/models/Skill';
 import type { SkillVersion } from '../../shared/models/SkillVersion';
 import type { Comment } from '../../shared/models/Comment';
@@ -70,7 +68,6 @@ interface SkillDetailState {
 
 interface SkillDetailActions {
   readonly handleSelectTab: (tabId: string) => void;
-  readonly handleToggleLike: () => void;
   readonly handleVersionDownloaded: () => void;
   readonly handleSubmitComment: (commentText: string) => void;
   readonly handleEditComment: (commentId: number, commentText: string) => void;
@@ -93,9 +90,8 @@ export function useSkillDetail(): SkillDetailResult {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuthStore();
-  const { signIn } = useAuth();
 
-  const { publishLikeUpdate } = useLikeStore();
+  const { lastLikeUpdate } = useLikeStore();
   const { lastDownloadUpdate } = useDownloadStore();
   const { dialogState, openDialog, closeDialog } = useConfirmDialog();
   const [skill, setSkill] = useState<Skill | null>(null);
@@ -187,42 +183,21 @@ export function useSkillDetail(): SkillDetailResult {
     setActiveTab(tabId as TabId);
   }, []);
 
-  const handleToggleLike = useCallback(async () => {
-    if (skill === null || slug === undefined) return;
+  useEffect(() => {
+    const hasNoUpdate = lastLikeUpdate === null;
+    if (hasNoUpdate) return;
 
-    if (!isAuthenticated) {
-      await signIn();
-      return;
-    }
-
-    const currentlyLiked = skill.isLikedByMe === true;
-    setActionError(null);
-    try {
-      await toggleSkillLike(slug, currentlyLiked);
-      const likesDelta = currentlyLiked ? -1 : 1;
-      const updatedTotalLikes = skill.totalLikes + likesDelta;
-      const updatedIsLiked = !currentlyLiked;
-
-      setSkill((previous) => {
-        const hasNoPrevious = previous === null;
-        if (hasNoPrevious) return null;
-        return {
-          ...previous,
-          isLikedByMe: updatedIsLiked,
-          totalLikes: updatedTotalLikes,
-        };
-      });
-
-      publishLikeUpdate({
-        skillId: skill.id,
-        isLiked: updatedIsLiked,
-        totalLikes: updatedTotalLikes,
-      });
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to toggle like';
-      setActionError(errorMessage);
-    }
-  }, [skill, slug, isAuthenticated, signIn, publishLikeUpdate]);
+    setSkill((previous) => {
+      if (previous === null) return null;
+      const isCurrentSkill = previous.id === lastLikeUpdate.skillId;
+      if (!isCurrentSkill) return previous;
+      return {
+        ...previous,
+        isLikedByMe: lastLikeUpdate.isLiked,
+        totalLikes: lastLikeUpdate.totalLikes,
+      };
+    });
+  }, [lastLikeUpdate]);
 
   const handleSubmitComment = useCallback(async (commentText: string) => {
     if (slug === undefined) return;
@@ -391,7 +366,6 @@ export function useSkillDetail(): SkillDetailResult {
     },
     actions: {
       handleSelectTab,
-      handleToggleLike,
       handleVersionDownloaded,
       handleSubmitComment,
       handleEditComment,

@@ -12,7 +12,6 @@ import './SkillDetailHeader.css';
 interface SkillDetailHeaderProps {
   readonly skill: Skill;
   readonly isAuthenticated: boolean;
-  readonly onToggleLike: () => void;
   readonly onRequestCollaboration: () => void;
   readonly isCollabRequesting: boolean;
   readonly isCollabRequestSent: boolean;
@@ -21,12 +20,11 @@ interface SkillDetailHeaderProps {
 export function SkillDetailHeader({
   skill,
   isAuthenticated,
-  onToggleLike,
   onRequestCollaboration,
   isCollabRequesting,
   isCollabRequestSent,
 }: SkillDetailHeaderProps) {
-  const { handleDownload } = useSkillActions(skill);
+  const { handleDownload, handleToggleLike } = useSkillActions(skill);
   const isLiked = skill.isLikedByMe === true;
   const isOwner = skill.myRole === 'owner';
   const isCollaborator = skill.myRole === 'collaborator';
@@ -55,7 +53,7 @@ export function SkillDetailHeader({
               Download v{skill.currentVersion}
             </Button>
           )}
-          <Button variant={likeVariant} onClick={onToggleLike}>
+          <Button variant={likeVariant} onClick={handleToggleLike}>
             <Heart size={16} fill={likeIconFill} />
             {likeLabel}
           </Button>

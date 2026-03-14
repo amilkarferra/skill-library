@@ -43,7 +43,6 @@ interface SkillContentProps {
 
 interface SkillContentActions {
   readonly handleSelectTab: (tabId: string) => void;
-  readonly handleToggleLike: () => void;
   readonly handleVersionDownloaded: () => void;
   readonly handleSubmitComment: (text: string) => void;
   readonly handleEditComment: (id: number, text: string) => void;
@@ -185,7 +184,6 @@ function SkillDetailContent({
         <SkillDetailHeader
           skill={skill}
           isAuthenticated={isAuthenticated}
-          onToggleLike={actions.handleToggleLike}
           onRequestCollaboration={actions.handleRequestCollaboration}
           isCollabRequesting={isCollabRequesting}
           isCollabRequestSent={isCollabRequestSent}

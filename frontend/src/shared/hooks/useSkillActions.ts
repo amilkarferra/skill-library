@@ -100,7 +100,7 @@ export function useSkillActions(skill: SkillActionTarget): SkillActionsResult {
   const downloadHandler = hasCurrentVersion ? handleDownload : null;
 
   return {
-    handleToggleLike: handleToggleLike,
+    handleToggleLike,
     handleDownload: downloadHandler,
     handleNavigateToComments,
     isLikeInProgress,
