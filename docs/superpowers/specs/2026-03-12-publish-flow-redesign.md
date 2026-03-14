@@ -6,7 +6,7 @@
 
 ## Problem
 
-The current publish flow presents a long form upfront with all fields visible. The file upload is just another field in the form. This creates friction: users must manually fill name, description, and other fields even when the `.skill` file already contains that metadata in its frontmatter. Fields lack clear required/optional indicators, long description has no markdown editor, tags require manual typing without suggestions, and the category dropdown is not the most ergonomic component.
+The current publish flow presents a long form upfront with all fields visible. The file upload is just another field in the form. This creates friction: users must manually fill name, description, and other fields even when the uploaded file already contains that metadata in its frontmatter. Fields lack clear required/optional indicators, long description has no markdown editor, tags require manual typing without suggestions, and the category dropdown is not the most ergonomic component.
 
 ## Design Decision
 
@@ -21,10 +21,10 @@ The file becomes the entry point. The user drops their file, metadata is extract
 A full-width dropzone with the Upload icon (lucide `Upload`), centered on the page. No other form fields visible.
 
 - Text: "Drop your skill file here or click to browse"
-- Hint: ".skill (ZIP) or .md - Max 50MB"
+- Hint: ".zip or .md - Max 50MB"
 - No "create without file" option. File upload is mandatory.
 - **Client-side validation on drop/select:**
-  - Extension check: only `.skill` and `.md` accepted. Show inline error on dropzone if wrong type.
+  - Extension check: only `.zip` and `.md` accepted. Show inline error on dropzone if wrong type.
   - Size check: reject files > 50MB before uploading. Show inline error with file size.
   - Error state: dropzone border turns red, error message replaces the hint text. Clears on next valid file.
 

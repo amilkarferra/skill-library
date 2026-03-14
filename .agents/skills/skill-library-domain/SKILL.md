@@ -23,7 +23,7 @@ A community platform where developers share, discover, rate, and download skills
 - Soft-delete via deactivation (GDPR)
 
 ### Skill
-- The core product unit: a reusable code asset (.skill file or .md)
+- The core product unit: a reusable code asset (.zip or .md file)
 - Fields: id, name (slug, unique), displayName, shortDescription (200 chars), longDescription (markdown), categoryId, collaborationMode, currentVersion, totalLikes, totalDownloads, totalComments, isActive
 - Each skill has one owner (User) and optionally multiple collaborators
 - Belongs to exactly one Category

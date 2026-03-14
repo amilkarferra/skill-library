@@ -41,7 +41,7 @@ Feature: Publishing a new skill
       | a short description longer than 200 characters| the short description exceeds the limit      |
       | more than 10 tags                             | no more than 10 tags are allowed             |
       | a file larger than 50 MB                      | the file exceeds the maximum allowed size    |
-      | a file that is not .skill or .md              | only .skill or .md files are accepted        |
+      | a file that is not .zip or .md                | only .zip or .md files are accepted          |
 
   Scenario: Anonymous user cannot access publish page
     Given I am not logged in

@@ -29,7 +29,7 @@ Modular by domain. Each module has `models.py` (SQLAlchemy), `schemas.py` (Pydan
 - **`auth/`** — Azure AD OAuth + JWT. Token validation, user auto-creation. `POST /auth/callback`
 - **`skills/`** — Core skill CRUD and search. Soft delete. `/skills`, `/categories`, `/tags/popular`
 - **`versions/`** — Semver versioning with review workflow. `/skills/{slug}/versions`
-- **`downloads/`** — Azure Blob Storage SAS URL generation for `.skill` and `.md` files
+- **`downloads/`** — Azure Blob Storage SAS URL generation for `.zip` and `.md` files
 - **`social/`** — Likes and comments with soft delete. Separate routers for each
 - **`collaboration/`** — Collaborators and collaboration requests with enums for mode/status
 - **`users/`** — User profile management. `/me`, `/users` search

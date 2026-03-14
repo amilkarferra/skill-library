@@ -8,13 +8,13 @@ Skill Library is a community platform for developers to share, discover, rate, a
 
 ```
 React SPA (Vite) --> FastAPI (REST) --> SQL Server
-                                    --> Azure Blob Storage (.skill files)
+                                    --> Azure Blob Storage (.zip/.md files)
 ```
 
 - **Frontend**: React + Vite. Palette: Indigo (#4f46e5) + Emerald (#059669). Hosted on Azure Static Web Apps (`swa-skill-library`).
 - **Backend**: Python FastAPI (REST API). Hosted on Azure App Service (`api-skill-library`, `api-skill-library.azurewebsites.net`).
 - **Database**: SQL Server (`sql-skill-library.database.windows.net` / `db-skill-library`). Users, skills metadata, versions, likes, comments, collaborators, requests, downloads.
-- **Storage**: Azure Blob Storage (`stskilllibraryfiles`, container `skill-files`). Skill files (.skill zip or .md).
+- **Storage**: Azure Blob Storage (`stskilllibraryfiles`, container `skill-files`). Skill files (.zip or .md).
 - **Auth**: Azure AD (multi-tenant + personal Microsoft accounts) via MSAL. Frontend acquires AD token, backend validates and issues JWT. User profile created on first login.
 - **Secrets**: Azure Key Vault (`kv-skill-library.vault.azure.net`). All secrets stored here; App Service reads via managed identity.
 
@@ -53,12 +53,12 @@ React SPA (Vite) --> FastAPI (REST) --> SQL Server
 
 A skill is either:
 - A single `.md` file with YAML frontmatter (name, description).
-- A `.skill` file (zip with .skill extension) containing a `SKILL.md` + optional resources (scripts/, references/, assets/, agents/).
+- A `.zip` file containing a `SKILL.md` + optional resources (scripts/, references/, assets/, agents/).
 
 On upload:
-- If user uploads `.md`, backend wraps it in a `.skill` zip.
+- If user uploads `.md`, backend wraps it in a `.zip`.
 - Backend extracts YAML frontmatter from SKILL.md to pre-fill name and description.
-- The `.skill` file is stored as-is in Azure Blob Storage.
+- The file is stored as-is in Azure Blob Storage.
 
 On download:
 - Backend generates a temporary SAS URL to the blob.
@@ -69,7 +69,7 @@ On download:
 
 ### Upload
 1. User fills form: displayName, shortDescription, longDescription, category, tags.
-2. User uploads .skill or .md file (max 50MB).
+2. User uploads .zip or .md file (max 50MB).
 3. Backend uploads to Azure Blob Storage first.
 4. If blob upload succeeds, save metadata to SQL Server.
 5. If SQL fails, delete the blob (worst case: orphan blob cleaned by periodic job).
@@ -78,7 +78,7 @@ On download:
 ### Download
 1. User clicks Download (public, no auth required).
 2. Backend generates temporary SAS URL to blob.
-3. User downloads .skill file directly.
+3. User downloads the file directly.
 4. Download record created in SQL. Counter incremented on Skill table.
 
 ## Data Model
@@ -310,7 +310,7 @@ Server-side paging on `GET /skills`:
 
 ### 4. Publish Skill
 - Form: displayName, shortDescription, longDescription (markdown), category, tags, collaboration mode.
-- File upload: .skill or .md (max 50MB).
+- File upload: .zip or .md (max 50MB).
 - Frontmatter auto-extraction to pre-fill fields.
 
 ### 5. New Version

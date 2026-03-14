@@ -124,6 +124,7 @@ Font: Segoe UI. No rounded corners. Thin borders. Small uppercase labels. Lucide
 | Frontend entry | `frontend/src/main.tsx` |
 | Frontend router | `frontend/src/router.tsx` |
 | API client | `frontend/src/shared/services/api.client.ts` |
+| Token refresh | `frontend/src/shared/services/token.refresh.ts` |
 | CSS variables | `frontend/src/shared/styles/variables.css` |
 
 ## Build & Run

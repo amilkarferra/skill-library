@@ -1014,7 +1014,7 @@ Feature: Publish Skill
       - Category (select dropdown)
       - Tags (multi-input, max 10)
       - Collaboration Mode (radio: Closed / Open)
-      - File Upload (.skill or .md, max 50MB)
+      - File Upload (.zip or .md, max 50MB)
 
   Scenario: should auto-fill form fields when uploading a file with frontmatter
     Given I upload a .md file with frontmatter name="Angular Dev" description="A skill for Angular"
@@ -1050,14 +1050,14 @@ Feature: Publish Skill
 Feature: File Upload Component
   Scenario: should accept file when dragging and dropping onto upload area
     Given the file upload area is visible
-    When I drag a .skill file over the area
+    When I drag a .zip file over the area
     Then the border changes to --accent color
     When I drop the file
     Then the filename appears with file size
 
   Scenario: should open file picker when clicking the upload area
     When I click the upload area
-    Then a file picker opens filtered to .skill,.md files
+    Then a file picker opens filtered to .zip,.md files
 
   Scenario: should clear file and reset area when clicking remove button
     Given a file is uploaded
@@ -1071,7 +1071,7 @@ Functions: `publishSkill(formData: FormData)`, `extractFrontmatter(file: File)` 
 
 - [x] **Step 2: Create FileUpload component**
 
-Drag-and-drop zone + click-to-browse. Accepts `.skill,.md`. Shows filename, size. Max 50MB validation client-side. Visual feedback on drag-over.
+Drag-and-drop zone + click-to-browse. Accepts `.zip,.md`. Shows filename, size. Max 50MB validation client-side. Visual feedback on drag-over.
 
 - [x] **Step 3: Create SkillForm component**
 

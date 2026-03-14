@@ -74,7 +74,7 @@
 
 ```typescript
 const MAX_FILE_SIZE_BYTES = 52_428_800;
-const ACCEPTED_EXTENSIONS = ['.skill', '.md'];
+const ACCEPTED_EXTENSIONS = ['.zip', '.md'];
 
 export function validateFileExtension(fileName: string): boolean {
   const lowerName = fileName.toLowerCase();
@@ -88,7 +88,7 @@ export function validateFileSize(fileSize: number): boolean {
 export function buildFileValidationError(file: File): string | null {
   const hasValidExtension = validateFileExtension(file.name);
   if (!hasValidExtension) {
-    return `Invalid file type. Only .skill and .md files are accepted.`;
+    return `Invalid file type. Only .zip and .md files are accepted.`;
   }
 
   const hasValidSize = validateFileSize(file.size);
@@ -455,7 +455,7 @@ Run: `cd /c/Repos/skill-library/frontend && npx tsc --noEmit`
 Run: `cd /c/Repos/skill-library/frontend && npm run dev`
 Navigate to `/publish`. Verify:
 1. Dropzone shows (State 1)
-2. Dropping a .skill file shows extracting spinner (State 2)
+2. Dropping a .zip file shows extracting spinner (State 2)
 3. Form appears with pre-filled fields (State 3)
 4. Transitions are smooth, not abrupt
 5. All fields work correctly

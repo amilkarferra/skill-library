@@ -4,7 +4,7 @@
 
 **Goal:** Build the complete FastAPI backend for the Skill Library platform with SQL Server and Azure Blob Storage.
 
-**Architecture:** FastAPI REST API with SQLAlchemy ORM over SQL Server. JWT auth with refresh tokens. Azure Blob Storage for .skill files. Server-side search with paging. Screaming Architecture: folders organized by domain feature, not by technical layer.
+**Architecture:** FastAPI REST API with SQLAlchemy ORM over SQL Server. JWT auth with refresh tokens. Azure Blob Storage for .zip/.md files. Server-side search with paging. Screaming Architecture: folders organized by domain feature, not by technical layer.
 
 **Tech Stack:** Python 3.12, FastAPI, SQLAlchemy 2.0, pyodbc, python-jose (JWT), azure-storage-blob, python-multipart, pydantic v2, PyJWT, cryptography (for Azure AD token validation).
 
@@ -1000,10 +1000,10 @@ Feature: Create Skill
 
   Scenario: Successful skill creation
     Given I am authenticated as "amilkar"
-    When I POST /skills with displayName "Angular Senior Dev", category "frontend", and a .skill file
+    When I POST /skills with displayName "Angular Senior Dev", category "frontend", and a .zip file
     Then I receive 201 with the skill data
     And the slug is "angular-senior-dev"
-    And the .skill file is stored in Azure Blob Storage
+    And the file is stored in Azure Blob Storage
     And a SkillVersion v1.0.0 is created
 
   Scenario: Duplicate slug
@@ -1123,8 +1123,8 @@ git commit -m "feat: add skills CRUD with search, filtering, and server-side pag
 ```gherkin
 Feature: Blob Storage
 
-  Scenario: Upload .skill file
-    Given a valid .skill file of 5MB
+  Scenario: Upload .zip file
+    Given a valid .zip file of 5MB
     When I upload it to blob storage
     Then the file is stored at path "skills/{skill_id}/{version}/{filename}"
     And the blob URL is returned
@@ -1132,7 +1132,7 @@ Feature: Blob Storage
   Scenario: Upload .md file
     Given a single .md file
     When I upload it
-    Then the backend wraps it in a .skill zip before storing
+    Then the backend wraps it in a .zip before storing
 
   Scenario: File too large
     Given a file of 60MB
@@ -1140,7 +1140,7 @@ Feature: Blob Storage
     Then I receive 413 with message "File too large. Maximum 50MB"
 
   Scenario: Generate download URL
-    Given a stored .skill file
+    Given a stored skill file
     When I request a download URL
     Then a temporary SAS URL is generated with 1 hour expiry
 ```

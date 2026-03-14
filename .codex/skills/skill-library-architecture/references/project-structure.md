@@ -204,7 +204,13 @@ frontend/
 │       │   ├── SkillQuickActions.tsx
 │       │   ├── UserInitials.tsx
 │       │   ├── EmptyState.tsx
-│       │   └── ConfirmDialog.tsx
+│       │   ├── ConfirmDialog.tsx
+│       │   ├── NavigationSidebar.tsx
+│       │   ├── SidebarLayout.tsx
+│       │   ├── Skeleton.tsx
+│       │   ├── RoleBadge.tsx
+│       │   ├── SessionExpiredBanner.tsx
+│       │   └── QuickPublishDropzone.tsx
 │       │
 │       ├── models/                      # 1 interface per file
 │       │   ├── User.ts
@@ -234,6 +240,7 @@ frontend/
 │       ├── services/
 │       │   ├── api.client.ts            # HTTP client with token interceptor
 │       │   ├── api.config.ts
+│       │   ├── token.refresh.ts         # Token refresh coordinator with mutex
 │       │   └── token.storage.ts
 │       │
 │       ├── hooks/

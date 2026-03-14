@@ -85,9 +85,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tags: `GET /tags/popular` (most used, limit 20)
 - Search with text/category/author/tags filters and 4 sort options (newest, most_likes, most_downloads, name_asc)
 - Pagination via generic `PaginatedResponse[T]`
-- Azure Blob Storage integration for .skill/.md file upload and SAS URL download
+- Azure Blob Storage integration for .zip/.md file upload and SAS URL download
 - Azure Key Vault secret resolution at startup (`key_vault_resolver.py`): `DefaultAzureCredential` + `InteractiveBrowserCredential` fallback. Populates env vars from Key Vault secrets before Pydantic Settings initialization
-- Frontmatter extraction service (YAML from SKILL.md inside .skill zip or standalone .md)
+- Frontmatter extraction service (YAML from SKILL.md inside .zip or standalone .md)
 - Semver validation for version numbers
 - Collaboration mode logic: Closed (owner/collaborator publish directly), Open (external users propose, owner approves/rejects)
 - Soft delete for User, Skill, SkillVersion, Comment
