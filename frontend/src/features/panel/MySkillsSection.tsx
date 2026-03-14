@@ -11,7 +11,7 @@ import { PanelTableSkeleton } from './PanelTableSkeleton';
 import { ProposedVersionsSection } from './ProposedVersionsSection';
 import { RequestsSection } from './RequestsSection';
 import { fetchMySkills } from './panel.service';
-import { del, patch } from '../../shared/services/api.client';
+import { ApiError, del, patch } from '../../shared/services/api.client';
 import type { SkillSummary } from '../../shared/models/SkillSummary';
 
 import './MySkillsSection.css';
@@ -22,6 +22,7 @@ export function MySkillsSection() {
   const [skills, setSkills] = useState<SkillSummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [restoreError, setRestoreError] = useState<string | null>(null);
   const { dialogState, openDialog, closeDialog } = useConfirmDialog();
   const { pendingVersionProposals, pendingCollaborationRequests } =
     useNotificationsStore();
@@ -80,17 +81,28 @@ export function MySkillsSection() {
     });
   }, [openDialog, executeDelete]);
 
+  const CONFLICT_STATUS_CODE = 409;
+
   const handleRestore = useCallback(async (skill: SkillSummary) => {
+    setRestoreError(null);
     try {
       await patch<void>(`/skills/${skill.name}/restore`);
       updateSkillActiveStatus(skill.id, true);
-    } catch {
+    } catch (error) {
+      const isSlugConflict = error instanceof ApiError && error.statusCode === CONFLICT_STATUS_CODE;
+      if (isSlugConflict) {
+        setRestoreError(
+          `Cannot restore "${skill.displayName}": a skill with this name already exists. Edit the skill name first.`
+        );
+        return;
+      }
       await loadSkills();
     }
   }, [loadSkills, updateSkillActiveStatus]);
 
   const hasSkills = skills.length > 0;
   const hasLoadError = loadError !== null;
+  const hasRestoreError = restoreError !== null;
   const headerSubtitle = buildHeaderSubtitle(skills);
   const isDataReady = !isLoading && !hasLoadError;
 
@@ -107,6 +119,9 @@ export function MySkillsSection() {
       {isLoading && <PanelTableSkeleton />}
       {hasLoadError && (
         <AlertMessage variant="error">{loadError}</AlertMessage>
+      )}
+      {hasRestoreError && (
+        <AlertMessage variant="error">{restoreError}</AlertMessage>
       )}
       {isDataReady && !hasSkills && (
         <EmptyState
