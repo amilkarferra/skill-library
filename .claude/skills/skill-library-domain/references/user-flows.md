@@ -1,13 +1,27 @@
 # User Flows
 
 ## 1. Authentication
-1. User clicks "Sign in with Microsoft"
-2. Frontend acquires Azure AD token via MSAL
-3. Frontend sends AD token to `POST /auth/callback`
-4. Backend validates AD token, auto-creates User on first login, returns 30-min JWT
-5. Frontend stores JWT in memory only (no localStorage for security)
-6. On JWT expiration: `token.refresh.ts` mutex coordinates a single refresh — acquires fresh AD token via MSAL silent, exchanges for new JWT
-7. If silent refresh fails (session expired): banner appears prompting user to click "Reconnect", which triggers MSAL popup auth
+
+### Sign In (popup-based, stays on current page)
+1. User clicks "Sign in" button in Navbar (visible on any page)
+2. Button shows loading spinner, Microsoft popup opens
+3. User authenticates in popup via Azure AD
+4. Popup closes automatically (MSAL v5 redirect bridge broadcasts response to main window)
+5. Frontend sends AD token to `POST /auth/callback`
+6. Backend validates AD token, auto-creates User on first login, returns 30-min JWT
+7. Frontend stores JWT in memory only (no localStorage for security)
+8. User remains on the same page they were browsing
+
+### Sign Out (popup-based)
+1. User clicks logout button in Navbar
+2. Button shows loading spinner, Microsoft sign-out popup opens
+3. User selects account to sign out of (multi-account) or popup auto-completes (single account)
+4. Popup closes automatically (redirect bridge detects logout — no auth params — and calls `window.close()`)
+5. Frontend clears auth session and state, navigates to Explorer
+
+### Session Management
+1. On JWT expiration: `token.refresh.ts` mutex coordinates a single refresh — acquires fresh AD token via MSAL silent, exchanges for new JWT
+2. If silent refresh fails (session expired): banner appears prompting user to click "Reconnect", which triggers MSAL popup auth
 
 ## 2. Browse Catalog
 1. User lands on home page (public, no auth)

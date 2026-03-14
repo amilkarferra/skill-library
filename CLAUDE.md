@@ -43,7 +43,7 @@ Modular by domain. Each module has `models.py` (SQLAlchemy), `schemas.py` (Pydan
 
 Feature-based organization. Each feature has its own `*.service.ts` for API calls.
 
-- **`features/auth/`** — MSAL login, 30-min JWT with MSAL token refresh, `useAuth` hook
+- **`features/auth/`** — MSAL popup-based login/logout (v5 redirect bridge), 30-min JWT with MSAL token refresh, `useAuth` hook
 - **`features/catalog/`** — Skill search/filter with sidebar (categories, tags, sort), paginated list
 - **`features/skill-detail/`** — Tabs: Overview (markdown), Versions, Comments. Sidebar: download, like, collaboration
 - **`features/publish/`** — Create skills and propose versions. Multipart/form-data file upload. Duplicate detection with similar skills warning and slug preview
@@ -59,7 +59,7 @@ Feature-based organization. Each feature has its own `*.service.ts` for API call
 
 **Design system**: Indigo palette, no rounded corners, thin borders, Segoe UI font, CSS custom properties.
 
-**Shared UI components** (AD-07): `Button` (7 variants, 3 sizes), `AlertMessage` (3 variants), `FormField`, `FormLabel`, `TextInput`, `TextArea` — used across all features to eliminate CSS duplication.
+**Shared UI components** (AD-07): `Button` (9 variants, 3 sizes, `isLoading` spinner), `AlertMessage` (3 variants), `FormField`, `FormLabel`, `TextInput`, `TextArea` — used across all features to eliminate CSS duplication.
 
 ### Key Configuration
 

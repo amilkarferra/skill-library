@@ -27,8 +27,9 @@ backend/
 │   │
 │   ├── skills/
 │   │   ├── router.py                    # CRUD /skills, /categories, /tags/popular
-│   │   ├── service.py                   # Skill CRUD logic
+│   │   ├── service.py                   # Skill CRUD logic, slug uniqueness
 │   │   ├── search_service.py            # Search, filter, sort, pagination
+│   │   ├── similarity_service.py        # Similar skills detection (multi-word scoring)
 │   │   ├── slug.py                      # URL slug generation
 │   │   ├── models/
 │   │   │   ├── skill.py                 # Skill ORM
@@ -115,8 +116,9 @@ frontend/
 │   │
 │   ├── features/
 │   │   ├── auth/
-│   │   │   ├── LoginPage.tsx
-│   │   │   ├── msal-config.ts           # MSAL instance config
+│   │   │   ├── LoginPage.tsx            # Legacy (login now via popup from Navbar)
+│   │   │   ├── msal-config.ts           # MSAL instance config, popupRedirectUri
+│   │   │   ├── redirect-callback.ts     # Redirect bridge: login (broadcast) / logout (close)
 │   │   │   ├── useAuth.ts
 │   │   │   └── auth.service.ts
 │   │   │
@@ -151,6 +153,10 @@ frontend/
 │   │   │   ├── FileBar.tsx
 │   │   │   ├── ExtractingState.tsx
 │   │   │   ├── CatalogPreviewCard.tsx
+│   │   │   ├── SimilarSkillsWarning.tsx   # Warning with contextual actions
+│   │   │   ├── useSlugPreview.ts          # Debounced slug + similar skills hook
+│   │   │   ├── similar-skills.logic.ts    # Levenshtein ranking for similar skills
+│   │   │   ├── publish-validation.ts      # File validation (type, size) for upload
 │   │   │   └── publish.service.ts
 │   │   │
 │   │   ├── panel/
@@ -181,7 +187,7 @@ frontend/
 │       │   ├── SidebarLayout.tsx
 │       │   ├── Navbar.tsx
 │       │   ├── AppLogo.tsx
-│       │   ├── Button.tsx               # 7 variants, 3 sizes
+│       │   ├── Button.tsx               # 9 variants, 3 sizes, isLoading spinner
 │       │   ├── AlertMessage.tsx
 │       │   ├── FormField.tsx
 │       │   ├── FormLabel.tsx
@@ -235,7 +241,12 @@ frontend/
 │       │   ├── AuthState.ts
 │       │   ├── AuthCallbackResponse.ts
 │       │   ├── PaginationState.ts
+│       │   ├── SlugPreview.ts
+│       │   ├── SimilarSkill.ts
 │       │   └── NotificationCount.ts
+│       │
+│       ├── logic/
+│       │   └── string-similarity.ts       # Levenshtein distance, normalization (shared)
 │       │
 │       ├── services/
 │       │   ├── api.client.ts            # HTTP client with token interceptor
